@@ -2,7 +2,14 @@ import GCPAPISync
 import SwiftUI
 import UIKit
 
-/// The week at a glance: one card per metric, each opening its detail screen.
+/// A screen the dashboard opens.
+enum Route: Hashable {
+    case overview
+    case metric(Metric)
+}
+
+/// The week at a glance: the overview and one card per metric, each opening its detail
+/// screen.
 struct DashboardView: View {
     let history: HealthHistory
     var refreshProblem: Problem?
@@ -14,12 +21,17 @@ struct DashboardView: View {
                 if let refreshProblem {
                     ProblemBanner(problem: refreshProblem)
                 }
+                NavigationLink(value: Route.overview) {
+                    OverviewCard(history: history)
+                }
+                .buttonStyle(.plain)
+                .matchedTransitionSource(id: Route.overview, in: transition)
                 ForEach(Metric.allCases) { metric in
-                    NavigationLink(value: metric) {
+                    NavigationLink(value: Route.metric(metric)) {
                         MetricCard(metric: metric, history: history)
                     }
                     .buttonStyle(.plain)
-                    .matchedTransitionSource(id: metric, in: transition)
+                    .matchedTransitionSource(id: Route.metric(metric), in: transition)
                 }
                 Text("Data from Garmin Connect. Not affiliated with Garmin.")
                     .font(.caption)

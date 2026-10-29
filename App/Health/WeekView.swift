@@ -16,9 +16,14 @@ struct WeekView: View {
         NavigationStack {
             content
                 .navigationTitle("Last 7 Days")
-                .navigationDestination(for: Metric.self) { metric in
-                    MetricDetailView(metric: metric, model: model)
-                        .navigationTransition(.zoom(sourceID: metric, in: cardTransition))
+                .navigationDestination(for: Route.self) { route in
+                    Group {
+                        switch route {
+                        case .overview: OverviewDetailView(model: model)
+                        case .metric(let metric): MetricDetailView(metric: metric, model: model)
+                        }
+                    }
+                    .navigationTransition(.zoom(sourceID: route, in: cardTransition))
                 }
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {

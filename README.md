@@ -24,8 +24,18 @@ An open-source iPhone app for your Garmin health data, built on Garmin's officia
   checked with Garmin, then kept in this iPhone's Keychain: never synced to iCloud, never in
   backups, only ever sent to Garmin. Access tokens are cached in the Keychain too.
 - **The last 7 days at a glance**: steps against your goal, sleep stages and score, resting
-  heart rate, HRV with Garmin's status, Body Battery range, stress, and intensity minutes
-  against the weekly goal of 150.
+  heart rate, HRV with Garmin's status, VO2max, Body Battery range, stress, and intensity
+  minutes against the weekly goal of 150.
+- **Trends**: HRV, resting heart rate, sleep score, stress and VO2max on one chart, each
+  scaled to 0–1 over the range shown, to see how they move together. Over 30 and 90 days, a
+  7-day average smooths out single days; *Higher Is Better* flips resting heart rate and
+  stress so that up always means a better day.
+- **Detail screens** for every metric over 7, 30 or 90 days: scrub through the chart, see
+  every day's value, and read what the metric means.
+- **VO2max from your runs**: the Personal API does not return Garmin's VO2max, so it is
+  estimated like Runalyze does: the oxygen cost of each run's grade-adjusted pace (Daniels and
+  Gilbert) over the share of VO2max its average heart rate implies (Swain et al.), averaged
+  over 30 days and weighted by duration.
 - **Explore with sample data** without an account, also used for previews, screenshots and
   App Review.
 
@@ -83,8 +93,8 @@ Scripts/test.sh
 
 ## Roadmap
 
-Ideas for what comes next: day and trend detail screens, activities with maps and laps,
-background refresh with widgets, HealthKit export, and longer time ranges.
+Ideas for what comes next: activities with maps and laps, background refresh with widgets,
+HealthKit export, and ranges beyond 90 days.
 
 ## License
 

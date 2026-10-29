@@ -99,19 +99,35 @@ import Testing
             switch request.path {
             case tokenPath: (200, "token")
             case "/usersummary-service/v2/dailysummaries": (200, #"{"data": []}"#)
-            case "/sleep-service/sleep/dailySleepSummariesByDate": (200, "[]")
-            default: (200, #"{"hrvSummaries": []}"#)
+            case "/hrv-service/hrv/daily/2026-10-22/2026-10-28": (200, #"{"hrvSummaries": []}"#)
+            default: (200, "[]")
             }
         }
         let week = try await HealthLoader.load(
             from: try client(transport), endingOn: .day("2026-10-28"))
         #expect(week.days.count == 7)
-        let paths = await transport.requests.map(\.path).filter { $0 != tokenPath }.sorted()
+        let requests = await transport.requests.filter { $0.path != tokenPath }
         #expect(
-            paths == [
+            requests.map(\.path).sorted() == [
+                "/activitylist-service/activities/search/activities",
+                "/biometric-service/heartRateZones/v2",
                 "/hrv-service/hrv/daily/2026-10-22/2026-10-28",
                 "/sleep-service/sleep/dailySleepSummariesByDate",
                 "/usersummary-service/v2/dailysummaries",
             ])
+        // VO2max looks at the runs of the 30 days before the first day, too.
+        let search = requests.first { $0.path.hasPrefix("/activitylist-service") }?.query
+        #expect(search?["startDate"] == "2026-09-23")
+        #expect(search?["endDate"] == "2026-10-28")
+        #expect(search?["activityType"] == "running")
+    }
+
+    @Test func demoRunsArePaged() async throws {
+        // 90 days need a VO2max window of 119 days, more runs than one page holds.
+        let end = GarminDate.day("2026-10-28")
+        let quarter = try await HealthLoader.load(
+            from: try client(DemoTransport()), endingOn: end, days: 90)
+        #expect(quarter == HealthHistory.sample(endingOn: end, days: 90))
+        #expect(quarter.days.allSatisfy { $0.vo2max != nil })
     }
 }

@@ -43,12 +43,16 @@ struct MetricChart: View {
         case .sleep: SleepChart(days: days, selected: selected)
         case .restingHeartRate:
             TrendChart(
-                days: days, metric: \.restingHeartRate, label: metric.title, tint: metric.tint,
-                selected: selected)
+                days: days, label: metric.title, tint: metric.tint, selected: selected
+            ) { $0.restingHeartRate.map(Double.init) }
         case .hrv:
             TrendChart(
-                days: days, metric: \.hrv, label: metric.title, tint: metric.tint,
-                selected: selected)
+                days: days, label: metric.title, tint: metric.tint, selected: selected
+            ) { $0.hrv.map(Double.init) }
+        case .vo2max:
+            TrendChart(
+                days: days, label: metric.title, tint: metric.tint, selected: selected
+            ) { $0.vo2max }
         case .bodyBattery: BodyBatteryChart(days: days, selected: selected)
         case .stress: StressChart(days: days, selected: selected)
         case .intensityMinutes: IntensityChart(days: days, selected: selected)
@@ -57,7 +61,7 @@ struct MetricChart: View {
 }
 
 /// A vertical rule marking the selected day.
-private struct SelectionRule: ChartContent {
+struct SelectionRule: ChartContent {
     let date: Date
 
     var body: some ChartContent {
@@ -173,37 +177,45 @@ struct SleepChart: View {
     }
 }
 
-/// A line through one value per day, for resting heart rate and HRV.
+/// A line through one value per day, for resting heart rate, HRV and VO2max.
 struct TrendChart: View {
     let days: [DayHealth]
-    let metric: KeyPath<DayHealth, Int?>
     let label: String
     let tint: Color
     var selected: Date?
+    let value: (DayHealth) -> Double?
 
     var body: some View {
-        Chart {
-            ForEach(days) { day in
-                if let value = day[keyPath: metric] {
-                    AreaMark(
-                        x: .value("Day", day.start, unit: .day),
-                        yStart: .value(label, lowerBound),
-                        yEnd: .value(label, value)
+        let points = days.compactMap { day in value(day).map { (day: day, value: $0) } }
+        let low = points.map(\.value).min() ?? 0
+        let high = points.map(\.value).max() ?? 10
+        let padding = max(2, (high - low) * 0.15)
+        let lowerBound = max(0, low - padding)
+        let upperBound = high + padding
+        return Chart {
+            ForEach(points, id: \.day.id) { point in
+                AreaMark(
+                    x: .value("Day", point.day.start, unit: .day),
+                    yStart: .value(label, lowerBound),
+                    yEnd: .value(label, point.value)
+                )
+                .interpolationMethod(.catmullRom)
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [tint.opacity(0.25), tint.opacity(0)], startPoint: .top,
+                        endPoint: .bottom))
+                LineMark(
+                    x: .value("Day", point.day.start, unit: .day), y: .value(label, point.value)
+                )
+                .interpolationMethod(.catmullRom)
+                .lineStyle(StrokeStyle(lineWidth: 3, lineCap: .round))
+                .foregroundStyle(tint)
+                if days.count <= 31 {
+                    PointMark(
+                        x: .value("Day", point.day.start, unit: .day), y: .value(label, point.value)
                     )
-                    .interpolationMethod(.catmullRom)
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [tint.opacity(0.25), tint.opacity(0)], startPoint: .top,
-                            endPoint: .bottom))
-                    LineMark(x: .value("Day", day.start, unit: .day), y: .value(label, value))
-                        .interpolationMethod(.catmullRom)
-                        .lineStyle(StrokeStyle(lineWidth: 3, lineCap: .round))
-                        .foregroundStyle(tint)
-                    if days.count <= 31 {
-                        PointMark(x: .value("Day", day.start, unit: .day), y: .value(label, value))
-                            .foregroundStyle(tint)
-                            .symbolSize(40)
-                    }
+                    .foregroundStyle(tint)
+                    .symbolSize(40)
                 }
             }
             if let selected {
@@ -213,10 +225,6 @@ struct TrendChart: View {
         .chartYScale(domain: lowerBound...upperBound)
         .dayChartStyle(count: days.count)
     }
-
-    private var values: [Int] { days.compactMap { $0[keyPath: metric] } }
-    private var lowerBound: Int { max(0, (values.min() ?? 0) - 5) }
-    private var upperBound: Int { (values.max() ?? 10) + 5 }
 }
 
 struct BodyBatteryChart: View {

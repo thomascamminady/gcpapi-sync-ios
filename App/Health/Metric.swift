@@ -7,6 +7,7 @@ enum Metric: String, CaseIterable, Identifiable, Hashable {
     case sleep
     case restingHeartRate
     case hrv
+    case vo2max
     case bodyBattery
     case stress
     case intensityMinutes
@@ -19,6 +20,7 @@ enum Metric: String, CaseIterable, Identifiable, Hashable {
         case .sleep: String(localized: "Sleep")
         case .restingHeartRate: String(localized: "Resting Heart Rate")
         case .hrv: String(localized: "Heart Rate Variability")
+        case .vo2max: String(localized: "VO2max")
         case .bodyBattery: String(localized: "Body Battery")
         case .stress: String(localized: "Stress")
         case .intensityMinutes: String(localized: "Intensity Minutes")
@@ -31,6 +33,7 @@ enum Metric: String, CaseIterable, Identifiable, Hashable {
         case .sleep: "bed.double.fill"
         case .restingHeartRate: "heart.fill"
         case .hrv: "waveform.path.ecg"
+        case .vo2max: "lungs.fill"
         case .bodyBattery: "bolt.heart.fill"
         case .stress: "brain.head.profile"
         case .intensityMinutes: "flame.fill"
@@ -43,6 +46,7 @@ enum Metric: String, CaseIterable, Identifiable, Hashable {
         case .sleep: .indigo
         case .restingHeartRate: .red
         case .hrv: .purple
+        case .vo2max: .mint
         case .bodyBattery: .green
         case .stress, .intensityMinutes: .orange
         }
@@ -74,6 +78,14 @@ enum Metric: String, CaseIterable, Identifiable, Hashable {
                 localized: """
                     The overnight average of the variation between heartbeats. Garmin compares \
                     it with your personal baseline; Balanced means you are in your usual range.
+                    """)
+        case .vo2max:
+            String(
+                localized: """
+                    Garmin does not share its VO2max through the Personal API, so it is \
+                    estimated from your runs: the oxygen cost of each run's grade-adjusted \
+                    pace, divided by the effort its average heart rate implies. A day's value \
+                    averages the runs of the 30 days before it, weighted by duration.
                     """)
         case .bodyBattery:
             String(
@@ -132,6 +144,11 @@ enum Metric: String, CaseIterable, Identifiable, Hashable {
             return Summary(
                 value: Format.number(history.latest(\.hrv)), unit: "ms",
                 detail: String(localized: "Last night · \(count)-day average \(average) ms"))
+        case .vo2max:
+            let average = Format.decimal(history.mean(\.vo2max))
+            return Summary(
+                value: Format.decimal(history.latest(\.vo2max)), unit: "ml/kg/min",
+                detail: String(localized: "Estimated from runs · \(count)-day average \(average)"))
         case .bodyBattery:
             let low = Format.number(history.average(\.bodyBatteryLow))
             let high = Format.number(history.average(\.bodyBatteryHigh))
@@ -166,6 +183,7 @@ enum Metric: String, CaseIterable, Identifiable, Hashable {
         case .sleep: nil
         case .restingHeartRate: "bpm"
         case .hrv: "ms"
+        case .vo2max: "ml/kg/min"
         case .bodyBattery: String(localized: "high")
         case .stress: String(localized: "average")
         case .intensityMinutes: String(localized: "minutes")
@@ -179,6 +197,7 @@ enum Metric: String, CaseIterable, Identifiable, Hashable {
         case .sleep: Format.duration(seconds: day.sleep?.total)
         case .restingHeartRate: Format.number(day.restingHeartRate)
         case .hrv: Format.number(day.hrv)
+        case .vo2max: Format.decimal(day.vo2max)
         case .bodyBattery: Format.number(day.bodyBatteryHigh)
         case .stress: Format.number(day.stress)
         case .intensityMinutes: Format.number(day.intensityMinutes)
@@ -204,7 +223,7 @@ enum Metric: String, CaseIterable, Identifiable, Hashable {
             day.bodyBatteryLow.map { String(localized: "Lowest \($0)") }
         case .stress:
             day.stress.map { Format.stressLabel($0) }
-        case .restingHeartRate, .intensityMinutes:
+        case .restingHeartRate, .vo2max, .intensityMinutes:
             nil
         }
     }

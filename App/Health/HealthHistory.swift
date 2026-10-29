@@ -30,6 +30,8 @@ nonisolated struct DayHealth: Identifiable, Hashable, Sendable {
     var activeCalories: Int?
     /// Moderate minutes plus twice the vigorous ones, as Garmin counts them.
     var intensityMinutes: Int?
+    /// VO2max estimated from the runs of the 30 days ending on this day.
+    var vo2max: Double?
 
     var id: GarminDate { date }
 
@@ -51,6 +53,12 @@ nonisolated struct HealthHistory: Hashable, Sendable {
     /// The most recent day's value of a metric, if any day has it.
     func latest<Value>(_ metric: KeyPath<DayHealth, Value?>) -> Value? {
         days.reversed().lazy.compactMap { $0[keyPath: metric] }.first
+    }
+
+    /// The mean of a fractional metric over the days that have it.
+    func mean(_ metric: KeyPath<DayHealth, Double?>) -> Double? {
+        let values = days.compactMap { $0[keyPath: metric] }
+        return values.isEmpty ? nil : values.reduce(0, +) / Double(values.count)
     }
 
     /// The sum of a metric over the days that have it.
@@ -76,7 +84,7 @@ nonisolated struct HealthHistory: Hashable, Sendable {
 
 /// Fetches a week of health data from Garmin.
 nonisolated enum HealthLoader {
-    /// The `days` days ending on `end`, fetched with three concurrent requests.
+    /// The `days` days ending on `end`, fetched with five concurrent requests.
     static func load(
         from client: GarminClient, endingOn end: GarminDate, days: Int = 7
     )
@@ -86,17 +94,29 @@ nonisolated enum HealthLoader {
         async let summaries = client.getDailySummaries(start: start, end: end)
         async let sleep = client.getDailySleepSummaries(start: start, end: end)
         async let hrv = client.getDailyHRVSummaries(start: start, end: end)
+        // VO2max needs the runs of the 30 days before each day, and the maximum heart rate.
+        async let runs = client.searchActivities(
+            limit: 10_000,
+            filters: ActivityFilters(
+                startDate: start.adding(days: 1 - VO2maxEstimator.window), endDate: end,
+                activityType: "running"))
+        async let zones = client.getHeartRateZones()
         return assemble(
             dates: (0..<days).map { start.adding(days: $0) },
-            summaries: try await summaries, sleep: try await sleep, hrv: try await hrv
+            summaries: try await summaries, sleep: try await sleep, hrv: try await hrv,
+            runs: try await runs, zones: try await zones
         )
     }
 
-    /// One `DayHealth` per date from Garmin's three responses, which may miss days.
+    /// One `DayHealth` per date from Garmin's responses, which may miss days.
     static func assemble(
         dates: [GarminDate], summaries: [UserDailySummaryV2], sleep: [DailySleep],
-        hrv: [HrvSummary]
+        hrv: [HrvSummary], runs: [SummarizedActivity] = [], zones: [HeartRateZones] = []
     ) -> HealthHistory {
+        let estimates =
+            VO2maxEstimator.maxHeartRate(from: zones).map { maxHeartRate in
+                runs.compactMap { VO2maxEstimator.estimate($0, maxHeartRate: maxHeartRate) }
+            } ?? []
         let summaryByDay = Dictionary(
             summaries.compactMap { item in item.calendarDate.map { ($0, item) } }
         ) { first, _ in first }
@@ -115,6 +135,7 @@ nonisolated enum HealthLoader {
                 day.sleep = sleepByDay[date].flatMap(night)
                 day.hrv = hrvByDay[date]?.lastNightAvg
                 day.hrvStatus = hrvByDay[date]?.status
+                day.vo2max = VO2maxEstimator.trend(estimates, on: date)
                 return day
             })
     }

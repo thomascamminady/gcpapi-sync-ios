@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 
 /// Text for the dashboard's numbers.
-enum Format {
+nonisolated enum Format {
     /// `7h 32m`, or an en dash without a value.
     static func duration(seconds: Int?) -> String {
         guard let seconds else { return "–" }
@@ -13,6 +13,11 @@ enum Format {
     /// A localized number, or an en dash without a value.
     static func number(_ value: Int?) -> String {
         value?.formatted() ?? "–"
+    }
+
+    /// A value with one decimal, or an en dash without a value.
+    static func decimal(_ value: Double?) -> String {
+        value?.formatted(.number.precision(.fractionLength(1))) ?? "–"
     }
 
     /// Garmin's HRV status as a label and a color.
