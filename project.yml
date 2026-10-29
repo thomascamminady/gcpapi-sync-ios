@@ -1,0 +1,91 @@
+# The Xcode project is generated from this file: `xcodegen generate`.
+# Sources live in synchronized folders, so adding a file needs no project change.
+name: GCPAPISync
+options:
+  bundleIdPrefix: dev.camminady
+  deploymentTarget:
+    iOS: "26.0"
+  developmentLanguage: en
+  groupSortPosition: top
+
+packages:
+  GCPAPISync:
+    # Switch to the GitHub URL (from: 0.1.20261022) once gcpapi-sync-swift is published.
+    path: ../gcpapi-sync-swift
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    # Swift 6.2 "approachable concurrency": code runs on the main actor unless it opts out.
+    SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    SWIFT_APPROACHABLE_CONCURRENCY: "YES"
+    SWIFT_UPCOMING_FEATURE_EXISTENTIAL_ANY: "YES"
+    SWIFT_UPCOMING_FEATURE_INTERNAL_IMPORTS_BY_DEFAULT: "YES"
+    SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY: "YES"
+    SWIFT_TREAT_WARNINGS_AS_ERRORS: "YES"
+    GCC_TREAT_WARNINGS_AS_ERRORS: "YES"
+    ENABLE_USER_SCRIPT_SANDBOXING: "YES"
+    ENABLE_MODULE_VERIFIER: "YES"
+    DEAD_CODE_STRIPPING: "YES"
+    LOCALIZATION_PREFERS_STRING_CATALOGS: "YES"
+    STRING_CATALOG_GENERATE_SYMBOLS: "YES"
+    TARGETED_DEVICE_FAMILY: "1"
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: ""
+
+targets:
+  GCPAPISyncApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+        type: syncedFolder
+    dependencies:
+      - package: GCPAPISync
+    settings:
+      base:
+        PRODUCT_NAME: GCPAPISyncApp
+        PRODUCT_BUNDLE_IDENTIFIER: dev.camminady.gcpapi-sync
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: "YES"
+        INFOPLIST_KEY_CFBundleDisplayName: GCPAPI Sync
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.healthcare-fitness
+        INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: "YES"
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: "NO"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ENABLE_PREVIEWS: "YES"
+
+  GCPAPISyncAppTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: AppTests
+        type: syncedFolder
+    # The tests run inside the app, which links GCPAPISync; linking it again would build
+    # the package as a separate dynamic framework.
+    dependencies:
+      - target: GCPAPISyncApp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.camminady.gcpapi-sync.tests
+        GENERATE_INFOPLIST_FILE: "YES"
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/GCPAPISyncApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GCPAPISyncApp
+        BUNDLE_LOADER: $(TEST_HOST)
+
+schemes:
+  GCPAPISyncApp:
+    build:
+      targets:
+        GCPAPISyncApp: all
+        GCPAPISyncAppTests: [test]
+    test:
+      targets:
+        - GCPAPISyncAppTests
+      gatherCoverageData: true
+      coverageTargets:
+        - GCPAPISyncApp

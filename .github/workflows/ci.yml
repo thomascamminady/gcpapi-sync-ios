@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  SWIFTLINT_VERSION: "0.65.1"
+  SWIFTLINT_SHA256: caeed6f4a679c35539ffaf124f6c4ab4a8416917f7d8796279dc52b74026059d
+
+jobs:
+  lint:
+    name: swift-format and SwiftLint
+    runs-on: ubuntu-latest
+    # Swift 6.4, the toolchain whose swift-format output is checked in.
+    container: swift:6.4@sha256:82152e9f18ee21fc997fd4580b93a14097e465cb10d7a7eee3f2dc85364dd135
+    steps:
+      - run: apt-get update -q && apt-get install -yq --no-install-recommends curl unzip ca-certificates
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: SwiftLint ${{ env.SWIFTLINT_VERSION }}
+        run: |
+          curl -fsSL -o /tmp/swiftlint.zip "https://github.com/realm/SwiftLint/releases/download/${SWIFTLINT_VERSION}/swiftlint_linux_amd64.zip"
+          echo "${SWIFTLINT_SHA256}  /tmp/swiftlint.zip" | sha256sum -c -
+          unzip -q /tmp/swiftlint.zip -d /usr/local/bin
+      - run: swift format lint --strict --recursive --parallel App AppTests
+      - run: swiftlint lint --strict --quiet
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  test:
+    name: Build and test on the iOS simulator
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: xcodebuild -version
+      - name: The Xcode project matches project.yml
+        run: |
+          brew install xcodegen
+          xcodegen generate --quiet
+          git diff --exit-code -- GCPAPISync.xcodeproj
+      - name: Build (warnings are errors) and test
+        run: Scripts/test.sh

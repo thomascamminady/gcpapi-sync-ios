@@ -1,0 +1,16 @@
+# Build output
+.build/
+DerivedData/
+*.xcresult
+
+# Xcode user state
+xcuserdata/
+*.xcuserstate
+
+# Secrets
+.apikey
+.env
+*.apikey
+
+# macOS
+.DS_Store
