@@ -26,13 +26,16 @@ final class HealthModel {
 
     private let fetch: @Sendable (_ end: GarminDate, _ days: Int) async throws -> HealthHistory
     private let today: () -> GarminDate
+    private let now: () -> Date
 
     /// A model loading the `days` days ending on a date with `fetch`.
     init(
         today: @escaping () -> GarminDate = { GarminDate.today() },
+        now: @escaping () -> Date = { .now },
         fetch: @escaping @Sendable (_ end: GarminDate, _ days: Int) async throws -> HealthHistory
     ) {
         self.today = today
+        self.now = now
         self.fetch = fetch
     }
 
@@ -41,6 +44,14 @@ final class HealthModel {
         self.init { end, days in
             try await HealthLoader.load(from: client, endingOn: end, days: days)
         }
+    }
+
+    /// Load unless the week is less than `maxAge` seconds old, such as when switching tabs.
+    func loadIfNeeded(maxAge: TimeInterval = 15 * 60) async {
+        if let lastUpdated, now().timeIntervalSince(lastUpdated) < maxAge {
+            return
+        }
+        await load()
     }
 
     /// Load (or reload) the dashboard's week. Keeps showing older data if a refresh fails.
@@ -52,7 +63,7 @@ final class HealthModel {
             histories = [Self.dashboardDays: week]
             historyProblems = [:]
             refreshProblem = nil
-            lastUpdated = .now
+            lastUpdated = now()
         } catch {
             // Pull to refresh cancels its task when the gesture ends; that is no failure.
             guard !Task.isCancelled, !(error is CancellationError) else { return }

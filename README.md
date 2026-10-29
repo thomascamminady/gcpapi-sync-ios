@@ -36,6 +36,11 @@ An open-source iPhone app for your Garmin health data, built on Garmin's officia
   estimated like Runalyze does: the oxygen cost of each run's grade-adjusted pace (Daniels and
   Gilbert) over the share of VO2max its average heart rate implies (Swain et al.), averaged
   over 30 days and weighted by duration.
+- **Training**: Garmin's training load of every activity turned into fitness (six-week
+  average), fatigue (one-week average) and form, with form zones that say whether you are
+  building fitness, fresh, or overreaching; weekly hours by sport; and every activity of the
+  last 90 days, searchable and filterable, with Garmin's training effect, primary benefit and
+  time in heart rate and power zones.
 - **Explore with sample data** without an account, also used for previews, screenshots and
   App Review.
 
@@ -104,7 +109,7 @@ Scripts/test.sh
 
 ## Roadmap
 
-Ideas for what comes next: activities with maps and laps, background refresh with widgets,
+Ideas for what comes next: maps and laps for activities, background refresh with widgets,
 HealthKit export, and ranges beyond 90 days.
 
 ## License

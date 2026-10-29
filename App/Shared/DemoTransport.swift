@@ -22,7 +22,7 @@ nonisolated struct DemoTransport: HTTPTransport {
         } else if path == "/biometric-service/heartRateZones/v2" {
             body = try JSONEncoder().encode([HeartRateZones.sample])
         } else if path == "/activitylist-service/activities/search/activities" {
-            body = try JSONEncoder().encode(runs(request.query))
+            body = try JSONEncoder().encode(activities(request.query))
         } else {
             return HTTPResponse(statusCode: 404, body: Data(), request: request)
         }
@@ -46,13 +46,16 @@ nonisolated struct DemoTransport: HTTPTransport {
         return (0...max(0, first.days(to: last))).map { first.adding(days: $0) }
     }
 
-    /// The page of runs `query` asks for, oldest first.
-    private func runs(_ query: [String: String]) -> [SummarizedActivity] {
-        let runs = dates(from: query["startDate"], to: query["endDate"])
-            .compactMap(SummarizedActivity.sampleRun)
-        let start = min(Int(query["start"] ?? "") ?? 0, runs.count)
-        let limit = Int(query["limit"] ?? "") ?? runs.count
-        return Array(runs[start...].prefix(limit))
+    /// The page of activities `query` asks for, oldest first.
+    private func activities(_ query: [String: String]) -> [SummarizedActivity] {
+        let activities = dates(from: query["startDate"], to: query["endDate"])
+            .flatMap(SummarizedActivity.sampleActivities)
+            .filter { activity in
+                query["activityType"].map { $0 == activity.activityType?.typeKey } ?? true
+            }
+        let start = min(Int(query["start"] ?? "") ?? 0, activities.count)
+        let limit = Int(query["limit"] ?? "") ?? activities.count
+        return Array(activities[start...].prefix(limit))
     }
 
     private static func summary(_ day: DayHealth) -> UserDailySummaryV2 {

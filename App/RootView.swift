@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Connect first; then the week.
+/// Connect first; then health and training.
 struct RootView: View {
     @Environment(Session.self) private var session
 
@@ -11,7 +11,7 @@ struct RootView: View {
                 ConnectView()
                     .transition(.opacity)
             case .signedIn(let client):
-                WeekView(model: HealthModel(client: client))
+                MainView(client: client)
                     .transition(.opacity)
             }
         }

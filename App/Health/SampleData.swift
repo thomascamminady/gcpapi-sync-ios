@@ -63,6 +63,12 @@ extension DayHealth {
 }
 
 extension SummarizedActivity {
+    /// The synthetic activities of `date`: runs on four days a week, strength training on two,
+    /// and a long ride every other Sunday-like day.
+    nonisolated static func sampleActivities(on date: GarminDate) -> [Self] {
+        [sampleRun(on: date), sampleStrength(on: date), sampleRide(on: date)].compactMap(\.self)
+    }
+
     /// A synthetic morning run on four days a week, slowly getting faster and slower again.
     nonisolated static func sampleRun(on date: GarminDate) -> Self? {
         let seed = date.sampleSeed
@@ -71,16 +77,110 @@ extension SummarizedActivity {
         }
         let duration = date.sampleWave(3.1, 900, 2700).rounded()
         let speed = date.sampleWave(41, 0.15, 3.3)
+        let heartRate = date.sampleWave(2.3, 6, 152).rounded()
+        let intensity = heartRate / Double(HeartRateZones.sampleMaximum)
+        let hard = seed % 7 == 4
         return SummarizedActivity(
             activityId: 20_000_000_000 + seed,
-            activityName: "Morning Run",
+            activityName: hard ? "Intervals" : "Morning Run",
             startTimeLocal: LocalDateTime(date: date, time: seven),
             activityType: ActivityType(typeKey: "running"),
             distance: (speed * duration).rounded(),
             duration: duration,
+            elevationGain: date.sampleWave(4.1, 40, 60).rounded(),
             averageSpeed: speed,
-            averageHR: date.sampleWave(2.3, 6, 152).rounded(),
-            avgGradeAdjustedSpeed: speed
+            calories: (duration / 60 * 12).rounded(),
+            averageHR: heartRate,
+            maxHR: heartRate + 18,
+            averageRunningCadenceInStepsPerMinute: date.sampleWave(5.9, 3, 172).rounded(),
+            aerobicTrainingEffect: hard
+                ? 3.9 : (date.sampleWave(3.7, 0.5, 2.8) * 10).rounded() / 10,
+            anaerobicTrainingEffect: hard ? 2.6 : 0.4,
+            locationName: "Riverside",
+            trainingEffectLabel: hard ? "VO2MAX" : "AEROBIC_BASE",
+            activityTrainingLoad: (duration / 60 * (0.6 + 4 * max(0, intensity - 0.55))).rounded()
+                + (hard ? 60 : 0),
+            aerobicTrainingEffectMessage: hard
+                ? "IMPROVING_VO2_MAX_15" : "MAINTAINING_AEROBIC_BASE_1",
+            anaerobicTrainingEffectMessage: hard
+                ? "MAINTAINING_ANAEROBIC_BASE_1" : "NO_ANAEROBIC_BENEFIT_0",
+            avgGradeAdjustedSpeed: speed,
+            hrTimeInZone1: (duration * 0.05).rounded(),
+            hrTimeInZone2: (duration * (hard ? 0.2 : 0.3)).rounded(),
+            hrTimeInZone3: (duration * (hard ? 0.3 : 0.45)).rounded(),
+            hrTimeInZone4: (duration * (hard ? 0.3 : 0.18)).rounded(),
+            hrTimeInZone5: (duration * (hard ? 0.15 : 0.02)).rounded()
+        )
+    }
+
+    /// Strength training on two days a week.
+    nonisolated static func sampleStrength(on date: GarminDate) -> Self? {
+        let seed = date.sampleSeed
+        guard [1, 3].contains(seed % 7), let evening = try? GarminTime(hour: 18, minute: 30) else {
+            return nil
+        }
+        let duration = date.sampleWave(4.3, 300, 2700).rounded()
+        return SummarizedActivity(
+            activityId: 21_000_000_000 + seed,
+            activityName: "Strength",
+            startTimeLocal: LocalDateTime(date: date, time: evening),
+            activityType: ActivityType(typeKey: "strength_training"),
+            duration: duration,
+            calories: (duration / 60 * 6).rounded(),
+            averageHR: 108,
+            maxHR: 141,
+            aerobicTrainingEffect: 1.4,
+            anaerobicTrainingEffect: 1.1,
+            trainingEffectLabel: "UNKNOWN",
+            activityTrainingLoad: (duration / 60 * 0.7).rounded(),
+            aerobicTrainingEffectMessage: "MINOR_AEROBIC_BENEFIT_0",
+            anaerobicTrainingEffectMessage: "MINOR_ANAEROBIC_BENEFIT_0",
+            hrTimeInZone1: (duration * 0.6).rounded(),
+            hrTimeInZone2: (duration * 0.35).rounded(),
+            hrTimeInZone3: (duration * 0.05).rounded(),
+            hrTimeInZone4: 0,
+            hrTimeInZone5: 0
+        )
+    }
+
+    /// A long ride every other week.
+    nonisolated static func sampleRide(on date: GarminDate) -> Self? {
+        let seed = date.sampleSeed
+        guard seed % 14 == 6, let nine = try? GarminTime(hour: 9) else { return nil }
+        let duration = date.sampleWave(5.3, 1800, 7200).rounded()
+        let speed = 7.4
+        return SummarizedActivity(
+            activityId: 22_000_000_000 + seed,
+            activityName: "Long Ride",
+            startTimeLocal: LocalDateTime(date: date, time: nine),
+            activityType: ActivityType(typeKey: "road_biking"),
+            distance: (speed * duration).rounded(),
+            duration: duration,
+            elevationGain: 640,
+            averageSpeed: speed,
+            calories: (duration / 60 * 10).rounded(),
+            averageHR: 134,
+            maxHR: 168,
+            averageBikingCadenceInRevPerMinute: 86,
+            avgPower: 188,
+            aerobicTrainingEffect: 3.3,
+            anaerobicTrainingEffect: 0.6,
+            normPower: 204,
+            locationName: "Hill Country",
+            trainingEffectLabel: "AEROBIC_BASE",
+            activityTrainingLoad: (duration / 60 * 1.2).rounded(),
+            aerobicTrainingEffectMessage: "IMPROVING_AEROBIC_ENDURANCE_10",
+            anaerobicTrainingEffectMessage: "NO_ANAEROBIC_BENEFIT_0",
+            hrTimeInZone1: (duration * 0.1).rounded(),
+            hrTimeInZone2: (duration * 0.55).rounded(),
+            hrTimeInZone3: (duration * 0.3).rounded(),
+            hrTimeInZone4: (duration * 0.05).rounded(),
+            hrTimeInZone5: 0,
+            powerTimeInZone1: (duration * 0.15).rounded(),
+            powerTimeInZone2: (duration * 0.45).rounded(),
+            powerTimeInZone3: (duration * 0.3).rounded(),
+            powerTimeInZone4: (duration * 0.08).rounded(),
+            powerTimeInZone5: (duration * 0.02).rounded()
         )
     }
 }
@@ -91,6 +191,19 @@ extension HeartRateZones {
 
     /// Synthetic running zones.
     nonisolated static let sample = Self(
-        trainingMethod: "HR_MAX", restingHeartRateUsed: 48, maxHeartRateUsed: sampleMaximum,
+        trainingMethod: "HR_MAX", restingHeartRateUsed: 48, zone1Floor: 95, zone2Floor: 114,
+        zone3Floor: 133, zone4Floor: 152, zone5Floor: 171, maxHeartRateUsed: sampleMaximum,
         sport: "RUNNING")
+}
+
+extension TrainingData {
+    /// Synthetic training for previews, loading placeholders and the demo mode.
+    nonisolated static func sample(endingOn end: GarminDate) -> Self {
+        let first = end.adding(days: 1 - TrainingLoader.shownDays - TrainingLoader.warmUpDays)
+        return TrainingLoader.assemble(
+            activities: (0...first.days(to: end)).flatMap {
+                SummarizedActivity.sampleActivities(on: first.adding(days: $0))
+            },
+            zones: [.sample], endingOn: end, calendar: .current)
+    }
 }

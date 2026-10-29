@@ -5,6 +5,17 @@ extension View {
     /// Day labels that fit `count` days (weekdays for a week, dates for longer ranges) and a
     /// light grid, shared by every chart.
     func dayChartStyle(count: Int) -> some View {
+        dayAxis(count: count)
+            .chartYAxis {
+                AxisMarks(position: .leading) { _ in
+                    AxisGridLine()
+                    AxisValueLabel()
+                }
+            }
+    }
+
+    /// The x axis of ``dayChartStyle(count:)`` alone, for charts with their own y axis.
+    func dayAxis(count: Int) -> some View {
         chartXAxis {
             if count <= 10 {
                 AxisMarks(values: .stride(by: .day)) { _ in
@@ -20,12 +31,6 @@ extension View {
                     AxisGridLine()
                     AxisValueLabel(format: .dateTime.month(.abbreviated))
                 }
-            }
-        }
-        .chartYAxis {
-            AxisMarks(position: .leading) { _ in
-                AxisGridLine()
-                AxisValueLabel()
             }
         }
     }

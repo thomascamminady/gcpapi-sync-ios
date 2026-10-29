@@ -3,14 +3,9 @@ import SwiftUI
 
 /// The signed-in screen: the last seven days of health data.
 struct WeekView: View {
-    @State private var model: HealthModel
-    @State private var showsSettings = false
+    let model: HealthModel
     @Namespace private var cardTransition
     @Environment(Session.self) private var session
-
-    init(model: HealthModel) {
-        _model = State(initialValue: model)
-    }
 
     var body: some View {
         NavigationStack {
@@ -27,15 +22,10 @@ struct WeekView: View {
                 }
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button("Settings", systemImage: "person.crop.circle") {
-                            showsSettings = true
-                        }
+                        SettingsButton(lastUpdated: model.lastUpdated)
                     }
                 }
-                .sheet(isPresented: $showsSettings) {
-                    SettingsView(lastUpdated: model.lastUpdated)
-                }
-                .task { await model.load() }
+                .task { await model.loadIfNeeded() }
                 .refreshable { await model.load() }
         }
     }
