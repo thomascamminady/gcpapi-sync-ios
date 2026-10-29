@@ -21,7 +21,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		A2D74FC4AC1B9FAAF7F226BC /* gcpapi-sync-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "gcpapi-sync-swift"; path = "../gcpapi-sync-swift"; sourceTree = SOURCE_ROOT; };
 		A8CD5EE9CF52A4BDF935B809 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
 		ADF380AD5423BB33BEDA5EAB /* GCPAPISyncAppTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GCPAPISyncAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9AD00AB665882253A316720 /* GCPAPISyncApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = GCPAPISyncApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -66,7 +65,6 @@
 				D33EAF289DB49DE563919095 /* App */,
 				BE247F617721FB8895B138C5 /* AppTests */,
 				415EA8FFF001F7A3DD1CAA1F /* Config */,
-				6A9D6CAA5BFA9844D2B79292 /* Packages */,
 				C6F9F51FC0C5AE60037DE454 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -77,14 +75,6 @@
 				A8CD5EE9CF52A4BDF935B809 /* Signing.xcconfig */,
 			);
 			path = Config;
-			sourceTree = "<group>";
-		};
-		6A9D6CAA5BFA9844D2B79292 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				A2D74FC4AC1B9FAAF7F226BC /* gcpapi-sync-swift */,
-			);
-			name = Packages;
 			sourceTree = "<group>";
 		};
 		C6F9F51FC0C5AE60037DE454 /* Products */ = {
@@ -173,7 +163,7 @@
 			mainGroup = 13382B760F82C99C997A8638;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				3766E0F3F33376709BBD4445 /* XCLocalSwiftPackageReference "../gcpapi-sync-swift" */,
+				F41E25CA5A5CAE9D3F075F21 /* XCRemoteSwiftPackageReference "gcpapi-sync-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C6F9F51FC0C5AE60037DE454 /* Products */;
@@ -500,16 +490,21 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		3766E0F3F33376709BBD4445 /* XCLocalSwiftPackageReference "../gcpapi-sync-swift" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "../gcpapi-sync-swift";
+/* Begin XCRemoteSwiftPackageReference section */
+		F41E25CA5A5CAE9D3F075F21 /* XCRemoteSwiftPackageReference "gcpapi-sync-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/thomascamminady/gcpapi-sync-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.20261022;
+			};
 		};
-/* End XCLocalSwiftPackageReference section */
+/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		3EA8A9A0E225828E820BF78B /* GCPAPISync */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = F41E25CA5A5CAE9D3F075F21 /* XCRemoteSwiftPackageReference "gcpapi-sync-swift" */;
 			productName = GCPAPISync;
 		};
 /* End XCSwiftPackageProductDependency section */

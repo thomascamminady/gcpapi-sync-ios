@@ -1,0 +1,33 @@
+{
+  "originHash" : "941c56fcd23c40aaf6a926c53fa79e5877cf7eee8ad618ffc5a53f23afa59cc7",
+  "pins" : [
+    {
+      "identity" : "gcpapi-sync-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/thomascamminady/gcpapi-sync-swift",
+      "state" : {
+        "revision" : "b53bdaf5eed14e4a5b5ac177e2512d536a3d413b",
+        "version" : "0.1.20261022"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser.git",
+      "state" : {
+        "revision" : "6a52f3251125d74daf04fcbd5e6f08a75d074382",
+        "version" : "1.8.2"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log.git",
+      "state" : {
+        "revision" : "c9c6bb9d275ec0d95c3ad16391f3f045dc623104",
+        "version" : "1.16.2"
+      }
+    }
+  ],
+  "version" : 3
+}

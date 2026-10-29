@@ -10,8 +10,10 @@ options:
 
 packages:
   GCPAPISync:
-    # Switch to the GitHub URL (from: 0.1.20261022) once gcpapi-sync-swift is published.
-    path: ../gcpapi-sync-swift
+    # To work on the package and the app together, add a local clone of gcpapi-sync-swift
+    # to the open project (File > Add Package Dependencies > Add Local); it overrides this.
+    url: https://github.com/thomascamminady/gcpapi-sync-swift
+    from: 0.1.20261022
 
 settings:
   base:
