@@ -21,10 +21,11 @@ jobs:
   lint:
     name: swift-format and SwiftLint
     runs-on: ubuntu-latest
-    # Swift 6.4, the toolchain whose swift-format output is checked in.
-    container: swift:6.4@sha256:82152e9f18ee21fc997fd4580b93a14097e465cb10d7a7eee3f2dc85364dd135
+    # Swift 6.4, the toolchain whose swift-format output is checked in, on Ubuntu 24.04:
+    # SwiftLint's Linux binary needs libxml2.so.2, which Ubuntu 26.04 no longer ships.
+    container: swift:6.4-noble@sha256:6304481cf2717966b7ba175162e397ea2f2cc3161909f2b2a5cf40036079a0f7
     steps:
-      - run: apt-get update -q && apt-get install -yq --no-install-recommends curl unzip ca-certificates
+      - run: apt-get update -q && apt-get install -yq --no-install-recommends curl unzip ca-certificates libxml2
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
