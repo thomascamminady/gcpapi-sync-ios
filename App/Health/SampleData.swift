@@ -1,7 +1,7 @@
 import Foundation
 import GCPAPISync
 
-extension HealthWeek {
+extension HealthHistory {
     /// A plausible, synthetic week for previews, loading placeholders and the demo mode.
     nonisolated static func sample(endingOn end: GarminDate, days: Int = 7) -> Self {
         Self(

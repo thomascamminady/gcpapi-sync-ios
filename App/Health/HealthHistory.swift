@@ -38,7 +38,7 @@ nonisolated struct DayHealth: Identifiable, Hashable, Sendable {
 }
 
 /// A run of consecutive days, oldest first.
-nonisolated struct HealthWeek: Hashable, Sendable {
+nonisolated struct HealthHistory: Hashable, Sendable {
     let days: [DayHealth]
 
     /// The mean of a metric over the days that have it.
@@ -75,12 +75,12 @@ nonisolated struct HealthWeek: Hashable, Sendable {
 }
 
 /// Fetches a week of health data from Garmin.
-nonisolated enum HealthWeekLoader {
+nonisolated enum HealthLoader {
     /// The `days` days ending on `end`, fetched with three concurrent requests.
     static func load(
         from client: GarminClient, endingOn end: GarminDate, days: Int = 7
     )
-        async throws -> HealthWeek
+        async throws -> HealthHistory
     {
         let start = end.adding(days: 1 - days)
         async let summaries = client.getDailySummaries(start: start, end: end)
@@ -96,7 +96,7 @@ nonisolated enum HealthWeekLoader {
     static func assemble(
         dates: [GarminDate], summaries: [UserDailySummaryV2], sleep: [DailySleep],
         hrv: [HrvSummary]
-    ) -> HealthWeek {
+    ) -> HealthHistory {
         let summaryByDay = Dictionary(
             summaries.compactMap { item in item.calendarDate.map { ($0, item) } }
         ) { first, _ in first }
@@ -106,7 +106,7 @@ nonisolated enum HealthWeekLoader {
         let hrvByDay = Dictionary(
             hrv.compactMap { item in item.calendarDate.map { ($0, item) } }
         ) { first, _ in first }
-        return HealthWeek(
+        return HealthHistory(
             days: dates.map { date in
                 var day = DayHealth(date: date)
                 if let summary = summaryByDay[date] {

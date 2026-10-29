@@ -11,7 +11,7 @@ struct RootView: View {
                 ConnectView()
                     .transition(.opacity)
             case .signedIn(let client):
-                WeekView(model: WeekModel(client: client))
+                WeekView(model: HealthModel(client: client))
                     .transition(.opacity)
             }
         }

@@ -2,10 +2,11 @@ import GCPAPISync
 import SwiftUI
 import UIKit
 
-/// The week at a glance: one card per metric.
+/// The week at a glance: one card per metric, each opening its detail screen.
 struct DashboardView: View {
-    let week: HealthWeek
+    let history: HealthHistory
     var refreshProblem: Problem?
+    let transition: Namespace.ID
 
     var body: some View {
         ScrollView {
@@ -13,13 +14,13 @@ struct DashboardView: View {
                 if let refreshProblem {
                     ProblemBanner(problem: refreshProblem)
                 }
-                stepsCard
-                sleepCard
-                heartRateCard
-                hrvCard
-                bodyBatteryCard
-                stressCard
-                intensityCard
+                ForEach(Metric.allCases) { metric in
+                    NavigationLink(value: metric) {
+                        MetricCard(metric: metric, history: history)
+                    }
+                    .buttonStyle(.plain)
+                    .matchedTransitionSource(id: metric, in: transition)
+                }
                 Text("Data from Garmin Connect. Not affiliated with Garmin.")
                     .font(.caption)
                     .foregroundStyle(.tertiary)
@@ -28,102 +29,6 @@ struct DashboardView: View {
             .padding(.horizontal)
         }
         .background(Color(uiColor: .systemGroupedBackground))
-    }
-
-    private var stepsCard: some View {
-        MetricCard(
-            title: String(localized: "Steps"), symbol: "figure.walk", tint: .teal,
-            value: Format.number(week.average(\.steps)), unit: String(localized: "per day"),
-            detail: String(
-                localized:
-                    "Today \(Format.number(week.days.last?.steps)) · \(goalDays) of 7 days at goal")
-        ) {
-            StepsChart(days: week.days)
-        }
-    }
-
-    private var goalDays: Int {
-        week.days.filter { day in
-            guard let steps = day.steps, let goal = day.stepGoal else { return false }
-            return steps >= goal
-        }.count
-    }
-
-    private var sleepCard: some View {
-        let average = week.averageSleep
-        return MetricCard(
-            title: String(localized: "Sleep"), symbol: "bed.double.fill", tint: .indigo,
-            value: Format.duration(seconds: average?.total), unit: String(localized: "average"),
-            detail: average?.score.map { String(localized: "Average sleep score \($0)") }
-                ?? String(localized: "No sleep score")
-        ) {
-            SleepChart(days: week.days)
-        }
-    }
-
-    private var heartRateCard: some View {
-        MetricCard(
-            title: String(localized: "Resting Heart Rate"), symbol: "heart.fill", tint: .red,
-            value: Format.number(week.latest(\.restingHeartRate)), unit: "bpm",
-            detail: String(
-                localized: "7-day average \(Format.number(week.average(\.restingHeartRate))) bpm")
-        ) {
-            TrendChart(
-                days: week.days, metric: \.restingHeartRate,
-                label: String(localized: "Resting heart rate"), tint: .red)
-        }
-    }
-
-    private var hrvCard: some View {
-        MetricCard(
-            title: String(localized: "Heart Rate Variability"), symbol: "waveform.path.ecg",
-            tint: .purple, value: Format.number(week.latest(\.hrv)), unit: "ms",
-            detail: String(
-                localized: "Last night · 7-day average \(Format.number(week.average(\.hrv))) ms")
-        ) {
-            VStack(alignment: .leading, spacing: 8) {
-                if let status = Format.hrvStatus(week.latest(\.hrvStatus)) {
-                    StatusBadge(label: status.label, color: status.color)
-                }
-                TrendChart(
-                    days: week.days, metric: \.hrv, label: String(localized: "HRV"), tint: .purple)
-            }
-        }
-    }
-
-    private var bodyBatteryCard: some View {
-        MetricCard(
-            title: String(localized: "Body Battery"), symbol: "bolt.heart.fill", tint: .green,
-            value: Format.number(week.days.last?.bodyBatteryHigh),
-            unit: String(localized: "today's high"),
-            detail: String(localized: "Daily range from lowest to highest")
-        ) {
-            BodyBatteryChart(days: week.days)
-        }
-    }
-
-    private var stressCard: some View {
-        let average = week.average(\.stress)
-        return MetricCard(
-            title: String(localized: "Stress"), symbol: "brain.head.profile", tint: .orange,
-            value: Format.number(average), unit: String(localized: "average"),
-            detail: Format.stressLabel(average)
-        ) {
-            StressChart(days: week.days)
-        }
-    }
-
-    private var intensityCard: some View {
-        let total = week.total(\.intensityMinutes)
-        return MetricCard(
-            title: String(localized: "Intensity Minutes"), symbol: "flame.fill", tint: .orange,
-            value: total.formatted(), unit: String(localized: "of 150"),
-            detail: total >= 150
-                ? String(localized: "Weekly goal reached")
-                : String(localized: "\(150 - total) minutes to the weekly goal")
-        ) {
-            IntensityChart(days: week.days)
-        }
     }
 }
 
@@ -147,5 +52,8 @@ struct ProblemBanner: View {
 }
 
 #Preview {
-    DashboardView(week: .sample(endingOn: .today()))
+    @Previewable @Namespace var transition
+    NavigationStack {
+        DashboardView(history: .sample(endingOn: .today()), transition: transition)
+    }
 }

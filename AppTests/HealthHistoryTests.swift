@@ -4,12 +4,12 @@ import Testing
 
 @testable import GCPAPISyncApp
 
-@Suite struct HealthWeekTests {
+@Suite struct HealthHistoryTests {
     private let monday = GarminDate.day("2026-10-19")
 
     @Test func assembleMapsGarminsModels() {
         let tuesday = monday.adding(days: 1)
-        let week = HealthWeekLoader.assemble(
+        let week = HealthLoader.assemble(
             dates: [monday, tuesday],
             summaries: [
                 UserDailySummaryV2(
@@ -55,7 +55,7 @@ import Testing
     }
 
     @Test func daysWithoutDataStayEmpty() {
-        let week = HealthWeekLoader.assemble(dates: [monday], summaries: [], sleep: [], hrv: [])
+        let week = HealthLoader.assemble(dates: [monday], summaries: [], sleep: [], hrv: [])
         #expect(week.days == [DayHealth(date: monday)])
         #expect(week.average(\.steps) == nil)
         #expect(week.latest(\.hrv) == nil)
@@ -75,7 +75,7 @@ import Testing
             total: 3600, deep: 600, light: 1800, rem: 900, awake: 300, score: 70)
         days[1].sleep = SleepNight(
             total: 7200, deep: 1200, light: 3600, rem: 1800, awake: 600, score: nil)
-        let week = HealthWeek(days: days)
+        let week = HealthHistory(days: days)
         #expect(week.average(\.steps) == 1501)
         #expect(week.latest(\.hrv) == 60)
         #expect(week.total(\.intensityMinutes) == 75)
@@ -88,8 +88,8 @@ import Testing
     @Test func loadsAWeekThroughGarminsJSON() async throws {
         // The demo answers in Garmin's own format, so this runs the full decoding path.
         let end = GarminDate.day("2026-10-28")
-        let week = try await HealthWeekLoader.load(from: try client(DemoTransport()), endingOn: end)
-        #expect(week == HealthWeek.sample(endingOn: end))
+        let week = try await HealthLoader.load(from: try client(DemoTransport()), endingOn: end)
+        #expect(week == HealthHistory.sample(endingOn: end))
         #expect(week.days.count == 7)
         #expect(week.days.first?.date == .day("2026-10-22"))
     }
@@ -103,7 +103,7 @@ import Testing
             default: (200, #"{"hrvSummaries": []}"#)
             }
         }
-        let week = try await HealthWeekLoader.load(
+        let week = try await HealthLoader.load(
             from: try client(transport), endingOn: .day("2026-10-28"))
         #expect(week.days.count == 7)
         let paths = await transport.requests.map(\.path).filter { $0 != tokenPath }.sorted()
