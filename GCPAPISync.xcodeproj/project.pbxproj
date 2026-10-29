@@ -496,7 +496,7 @@
 			repositoryURL = "https://github.com/thomascamminady/gcpapi-sync-swift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.20261022;
+				minimumVersion = 0.2.20261022;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

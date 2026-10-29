@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/thomascamminady/gcpapi-sync-swift",
       "state" : {
-        "revision" : "b53bdaf5eed14e4a5b5ac177e2512d536a3d413b",
-        "version" : "0.1.20261022"
+        "revision" : "323d72895879801b6d86fd9d764947d26bc99ef2",
+        "version" : "0.2.20261022"
       }
     },
     {

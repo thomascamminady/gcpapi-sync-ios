@@ -13,7 +13,7 @@ packages:
     # To work on the package and the app together, add a local clone of gcpapi-sync-swift
     # to the open project (File > Add Package Dependencies > Add Local); it overrides this.
     url: https://github.com/thomascamminady/gcpapi-sync-swift
-    from: 0.1.20261022
+    from: 0.2.20261022
 
 settings:
   base:
