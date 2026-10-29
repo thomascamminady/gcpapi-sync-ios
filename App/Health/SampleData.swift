@@ -17,6 +17,11 @@ extension GarminDate {
         (try? GarminDate(year: 2000, month: 1, day: 1).days(to: self)) ?? 0
     }
 
+    /// Whether the synthetic athlete trains hard on this day: intervals or a long ride.
+    nonisolated var isHardSampleDay: Bool {
+        sampleSeed % 7 == 4 || sampleSeed % 14 == 6
+    }
+
     /// `base` plus a sine wave of `period` days.
     nonisolated func sampleWave(_ period: Double, _ amplitude: Double, _ base: Double) -> Double {
         base + amplitude * sin(Double(sampleSeed) * 2 * .pi / period)
@@ -28,12 +33,17 @@ extension DayHealth {
     nonisolated static func sample(for date: GarminDate) -> Self {
         // A slow cycle of about five weeks, like a training block, under the daily noise.
         let form = sin(Double(date.sampleSeed) * 2 * .pi / 37)
+        // Hard training lowers HRV and sleep and raises resting heart rate and stress the next
+        // day, and a little the day after.
+        let strain =
+            (date.adding(days: -1).isHardSampleDay ? 1 : 0)
+            + (date.adding(days: -2).isHardSampleDay ? 0.4 : 0)
         func wave(
-            _ period: Double, _ amplitude: Double, _ base: Double, form weight: Double = 0
-        )
-            -> Int
-        {
-            Int((date.sampleWave(period, amplitude, base) + weight * form).rounded())
+            _ period: Double, _ amplitude: Double, _ base: Double, form weight: Double = 0,
+            strain effect: Double = 0
+        ) -> Int {
+            let value = date.sampleWave(period, amplitude, base) + weight * form + effect * strain
+            return Int(value.rounded())
         }
         let sleep = wave(5.3, 1800, 26_400)
         // The runs the demo serves, oldest first, so this matches what the app computes.
@@ -46,13 +56,13 @@ extension DayHealth {
             date: date,
             steps: wave(3.7, 3500, 9800),
             stepGoal: 10_000,
-            restingHeartRate: wave(6.1, 3, 48, form: -3),
-            hrv: wave(4.6, 9, 58, form: 8),
+            restingHeartRate: wave(6.1, 3, 48, form: -3, strain: 3),
+            hrv: wave(4.6, 9, 58, form: 8, strain: -9),
             hrvStatus: "BALANCED",
             sleep: SleepNight(
                 total: sleep, deep: sleep / 5, light: sleep / 2, rem: sleep / 4,
-                awake: sleep / 20, score: wave(5.3, 9, 80, form: 6)),
-            stress: wave(3.4, 9, 30, form: -8),
+                awake: sleep / 20, score: wave(5.3, 9, 80, form: 6, strain: -7)),
+            stress: wave(3.4, 9, 30, form: -8, strain: 8),
             bodyBatteryLow: wave(4.3, 8, 22),
             bodyBatteryHigh: wave(5.7, 10, 85),
             activeCalories: wave(3.9, 250, 650),
@@ -79,7 +89,7 @@ extension SummarizedActivity {
         let speed = date.sampleWave(41, 0.15, 3.3)
         let heartRate = date.sampleWave(2.3, 6, 152).rounded()
         let intensity = heartRate / Double(HeartRateZones.sampleMaximum)
-        let hard = seed % 7 == 4
+        let hard = date.isHardSampleDay
         return SummarizedActivity(
             activityId: 20_000_000_000 + seed,
             activityName: hard ? "Intervals" : "Morning Run",

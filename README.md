@@ -41,6 +41,13 @@ An open-source iPhone app for your Garmin health data, built on Garmin's officia
   building fitness, fresh, or overreaching; weekly hours by sport; and every activity of the
   last 90 days, searchable and filterable, with Garmin's training effect, primary benefit and
   time in heart rate and power zones.
+- **Recovery Response**, which no other Garmin tool shows: how *your* HRV, resting heart
+  rate, sleep score and stress respond to your hardest training days. Every hard day (top
+  fifth of your training days by load) is lined up with the days around it, each value is
+  compared with your usual level (the median of the 28 days before), and the changes are
+  averaged, with 95% confidence intervals and rest days as the control. The result is a
+  sentence such as *"HRV is 15% lower the day after hard training and back to usual within
+  2 days"*, or an honest *"No clear change"* when the data does not show one.
 - **Explore with sample data** without an account, also used for previews, screenshots and
   App Review.
 

@@ -82,29 +82,34 @@ nonisolated struct HealthHistory: Hashable, Sendable {
     }
 }
 
-/// Fetches a week of health data from Garmin.
+/// Fetches days of health data from Garmin.
 nonisolated enum HealthLoader {
-    /// The `days` days ending on `end`, fetched with five concurrent requests.
+    /// The `days` days ending on `end`, fetched with five concurrent requests, or three
+    /// without estimating VO2max.
     static func load(
-        from client: GarminClient, endingOn end: GarminDate, days: Int = 7
-    )
-        async throws -> HealthHistory
-    {
+        from client: GarminClient, endingOn end: GarminDate, days: Int = 7,
+        estimatingVO2max: Bool = true
+    ) async throws -> HealthHistory {
         let start = end.adding(days: 1 - days)
         async let summaries = client.getDailySummaries(start: start, end: end)
         async let sleep = client.getDailySleepSummaries(start: start, end: end)
         async let hrv = client.getDailyHRVSummaries(start: start, end: end)
-        // VO2max needs the runs of the 30 days before each day, and the maximum heart rate.
-        async let runs = client.searchActivities(
-            limit: 10_000,
-            filters: ActivityFilters(
-                startDate: start.adding(days: 1 - VO2maxEstimator.window), endDate: end,
-                activityType: "running"))
-        async let zones = client.getHeartRateZones()
+        var runs: [SummarizedActivity] = []
+        var zones: [HeartRateZones] = []
+        if estimatingVO2max {
+            // VO2max needs the runs of the 30 days before each day, and the maximum heart rate.
+            async let searchedRuns = client.searchActivities(
+                limit: 10_000,
+                filters: ActivityFilters(
+                    startDate: start.adding(days: 1 - VO2maxEstimator.window), endDate: end,
+                    activityType: "running"))
+            async let fetchedZones = client.getHeartRateZones()
+            (runs, zones) = try await (searchedRuns, fetchedZones)
+        }
         return assemble(
             dates: (0..<days).map { start.adding(days: $0) },
             summaries: try await summaries, sleep: try await sleep, hrv: try await hrv,
-            runs: try await runs, zones: try await zones
+            runs: runs, zones: zones
         )
     }
 

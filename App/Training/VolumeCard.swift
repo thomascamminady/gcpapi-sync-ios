@@ -54,7 +54,8 @@ struct VolumeCard: View {
         let weeksBefore = weeks.count - 1
         let typical = Format.hours(seconds: average)
         return String(
-            localized: "\(week.activityCount) activities · \(weeksBefore)-week average \(typical)")
+            localized:
+                "\(Format.activities(week.activityCount)) · \(weeksBefore)-week average \(typical)")
     }
 
     private var chart: some View {

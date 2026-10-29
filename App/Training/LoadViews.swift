@@ -37,7 +37,7 @@ struct LoadSummary: View {
     let day: TrainingLoad.Day
 
     var body: some View {
-        HStack(alignment: .top, spacing: 20) {
+        HStack(alignment: .top, spacing: 16) {
             LoadFigure(title: "Fitness", value: day.fitness, color: fitnessColor)
             LoadFigure(title: "Fatigue", value: day.fatigue, color: fatigueColor)
             LoadFigure(title: "Form", value: day.form, signed: true)
@@ -85,6 +85,8 @@ struct FormZoneBadge: View {
     var body: some View {
         Label(zone.title, systemImage: zone.symbol)
             .font(.caption.weight(.semibold))
+            .lineLimit(1)
+            .fixedSize()
             .padding(.horizontal, 10)
             .padding(.vertical, 4)
             .foregroundStyle(zone.color)

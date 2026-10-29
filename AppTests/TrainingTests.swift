@@ -252,6 +252,11 @@ private actor TrainingResults {
     }
 }
 
+/// The demo's health, as the recovery response's source.
+nonisolated private func sampleHealth(_ end: GarminDate, _ days: Int) -> HealthHistory {
+    .sample(endingOn: end, days: days)
+}
+
 /// A clock that tests move forward.
 private final class Clock {
     var now = Date(timeIntervalSince1970: 1_800_000_000)
@@ -263,7 +268,8 @@ private final class Clock {
     @Test func loadsAndKeepsDataWhenARefreshFails() async {
         let sample = TrainingData.sample(endingOn: end)
         let results = TrainingResults([.success(sample), .failure(.offline), .success(sample)])
-        let model = TrainingModel(today: { end }, fetch: { _ in try await results.next() })
+        let model = TrainingModel(
+            today: { end }, fetch: { _ in try await results.next() }, fetchHealth: sampleHealth)
         #expect(model.phase == .loading)
         await model.load()
         #expect(model.phase == .loaded(sample))
@@ -276,10 +282,12 @@ private final class Clock {
     }
 
     @Test func aFirstFailureIsShownInPlace() async {
-        let model = TrainingModel { _ in throw Problem.rateLimited }
+        let model = TrainingModel(
+            fetch: { _ in throw Problem.rateLimited }, fetchHealth: sampleHealth)
         await model.load()
         #expect(model.phase == .failed(.rateLimited))
-        let cancelled = TrainingModel { _ in throw CancellationError() }
+        let cancelled = TrainingModel(
+            fetch: { _ in throw CancellationError() }, fetchHealth: sampleHealth)
         await cancelled.load()
         #expect(cancelled.phase == .loading)
     }
@@ -290,7 +298,8 @@ private final class Clock {
             .success(.sample(endingOn: end)), .success(.sample(endingOn: end)),
         ])
         let model = TrainingModel(
-            today: { end }, now: { clock.now }, fetch: { _ in try await results.next() })
+            today: { end }, now: { clock.now }, fetch: { _ in try await results.next() },
+            fetchHealth: sampleHealth)
         await model.loadIfNeeded()
         await model.loadIfNeeded()
         #expect(await results.count == 1)
@@ -316,6 +325,13 @@ private final class Clock {
 }
 
 @Suite struct WorkoutFormatTests {
+    @Test func plurals() {
+        #expect(Format.days(1) == "1 day")
+        #expect(Format.days(2) == "2 days")
+        #expect(Format.activities(1) == "1 activity")
+        #expect(Format.activities(4) == "4 activities")
+    }
+
     @Test func clocks() {
         #expect(Format.clock(seconds: 3070) == "51:10")
         #expect(Format.clock(seconds: 3930) == "1:05:30")

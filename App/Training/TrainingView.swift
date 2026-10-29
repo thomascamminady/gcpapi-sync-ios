@@ -5,6 +5,7 @@ import UIKit
 /// A screen the training tab opens.
 enum TrainingRoute: Hashable {
     case load
+    case recovery
     case activities
     case workout(Workout)
 }
@@ -39,6 +40,11 @@ struct TrainingView: View {
         case .load:
             TrainingLoadDetailView(days: data.load)
                 .navigationTransition(.zoom(sourceID: route, in: transition))
+        case .recovery:
+            if case .loaded(let response) = model.recovery {
+                RecoveryDetailView(response: response)
+                    .navigationTransition(.zoom(sourceID: route, in: transition))
+            }
         case .activities:
             ActivityListView(data: data)
         case .workout(let workout):
@@ -49,13 +55,16 @@ struct TrainingView: View {
     @ViewBuilder private var content: some View {
         switch model.phase {
         case .loading:
-            TrainingDashboard(data: .sample(endingOn: .today()), transition: transition)
-                .redacted(reason: .placeholder)
-                .allowsHitTesting(false)
-                .accessibilityLabel("Loading")
+            TrainingDashboard(
+                data: .sample(endingOn: .today()), recovery: .loading, transition: transition
+            )
+            .redacted(reason: .placeholder)
+            .allowsHitTesting(false)
+            .accessibilityLabel("Loading")
         case .loaded(let data):
             TrainingDashboard(
-                data: data, refreshProblem: model.refreshProblem, transition: transition)
+                data: data, recovery: model.recovery, refreshProblem: model.refreshProblem,
+                transition: transition)
         case .failed(let problem):
             ContentUnavailableView {
                 Label(problem.title, systemImage: problem.symbol)
@@ -74,6 +83,7 @@ struct TrainingView: View {
 /// Load, volume and the latest activities.
 struct TrainingDashboard: View {
     let data: TrainingData
+    let recovery: TrainingModel.RecoveryPhase
     var refreshProblem: Problem?
     let transition: Namespace.ID
 
@@ -90,6 +100,7 @@ struct TrainingDashboard: View {
                 }
                 .buttonStyle(.plain)
                 .matchedTransitionSource(id: TrainingRoute.load, in: transition)
+                recoveryCard
                 VolumeCard(weeks: data.weeks)
                 activities
                 Text("Training load, training effect and zones are Garmin's.")
@@ -100,6 +111,18 @@ struct TrainingDashboard: View {
             .padding(.horizontal)
         }
         .background(Color(uiColor: .systemGroupedBackground))
+    }
+
+    @ViewBuilder private var recoveryCard: some View {
+        if case .loaded(let response) = recovery, response.isSufficient {
+            NavigationLink(value: TrainingRoute.recovery) {
+                RecoveryCard(phase: recovery)
+            }
+            .buttonStyle(.plain)
+            .matchedTransitionSource(id: TrainingRoute.recovery, in: transition)
+        } else {
+            RecoveryCard(phase: recovery)
+        }
     }
 
     private var activities: some View {
@@ -138,6 +161,10 @@ struct TrainingDashboard: View {
 }
 
 #Preview {
-    TrainingView(model: TrainingModel { end in .sample(endingOn: end) })
-        .environment(Session.preview)
+    TrainingView(
+        model: TrainingModel(
+            fetch: { end in .sample(endingOn: end) },
+            fetchHealth: { end, days in .sample(endingOn: end, days: days) })
+    )
+    .environment(Session.preview)
 }

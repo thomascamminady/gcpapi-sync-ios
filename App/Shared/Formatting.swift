@@ -15,6 +15,16 @@ nonisolated enum Format {
         value?.formatted() ?? "–"
     }
 
+    /// `1 day`, `2 days`: grammatical agreement by Foundation's automatic inflection.
+    static func days(_ count: Int) -> String {
+        String(AttributedString(localized: "^[\(count) day](inflect: true)").characters)
+    }
+
+    /// `1 activity`, `4 activities`.
+    static func activities(_ count: Int) -> String {
+        String(AttributedString(localized: "^[\(count) activity](inflect: true)").characters)
+    }
+
     /// A value with one decimal, or an en dash without a value.
     static func decimal(_ value: Double?) -> String {
         value?.formatted(.number.precision(.fractionLength(1))) ?? "–"

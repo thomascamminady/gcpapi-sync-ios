@@ -66,12 +66,17 @@ nonisolated struct HeartRateZoneSet: Hashable, Sendable {
 nonisolated struct TrainingData: Hashable, Sendable {
     /// Newest first.
     let workouts: [Workout]
-    /// One day each, oldest first.
-    let load: [TrainingLoad.Day]
+    /// One day each, oldest first, including the days before those shown.
+    let loadHistory: [TrainingLoad.Day]
     /// Oldest first.
     let weeks: [TrainingWeek]
     /// Heart rate zones by Garmin sport name, such as `RUNNING` or `DEFAULT`.
     let zones: [String: HeartRateZoneSet]
+
+    /// The days shown, oldest first.
+    var load: [TrainingLoad.Day] {
+        Array(loadHistory.suffix(TrainingLoader.shownDays))
+    }
 
     /// The zones Garmin uses for `sport`.
     func heartRateZones(for sport: Sport) -> HeartRateZoneSet? {
@@ -153,10 +158,9 @@ nonisolated enum TrainingLoader {
         }
         let first = end.adding(days: 1 - shownDays - warmUpDays)
         let shownFrom = end.adding(days: 1 - shownDays)
-        let load = TrainingLoad.days(workouts, from: first, through: end)
         return TrainingData(
             workouts: workouts.filter { $0.date >= shownFrom && $0.date <= end },
-            load: load.filter { $0.date >= shownFrom },
+            loadHistory: TrainingLoad.days(workouts, from: first, through: end),
             weeks: TrainingWeek.weeks(
                 workouts, through: end, count: shownWeeks, calendar: calendar),
             zones: zones.reduce(into: [:]) { result, zones in
