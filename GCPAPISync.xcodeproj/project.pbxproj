@@ -22,6 +22,7 @@
 
 /* Begin PBXFileReference section */
 		A2D74FC4AC1B9FAAF7F226BC /* gcpapi-sync-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "gcpapi-sync-swift"; path = "../gcpapi-sync-swift"; sourceTree = SOURCE_ROOT; };
+		A8CD5EE9CF52A4BDF935B809 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
 		ADF380AD5423BB33BEDA5EAB /* GCPAPISyncAppTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GCPAPISyncAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9AD00AB665882253A316720 /* GCPAPISyncApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = GCPAPISyncApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -64,9 +65,18 @@
 			children = (
 				D33EAF289DB49DE563919095 /* App */,
 				BE247F617721FB8895B138C5 /* AppTests */,
+				415EA8FFF001F7A3DD1CAA1F /* Config */,
 				6A9D6CAA5BFA9844D2B79292 /* Packages */,
 				C6F9F51FC0C5AE60037DE454 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		415EA8FFF001F7A3DD1CAA1F /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				A8CD5EE9CF52A4BDF935B809 /* Signing.xcconfig */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 		6A9D6CAA5BFA9844D2B79292 /* Packages */ = {
@@ -238,6 +248,7 @@
 		};
 		180494503F774AB23862D9C9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A8CD5EE9CF52A4BDF935B809 /* Signing.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -273,7 +284,6 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -354,6 +364,7 @@
 		};
 		C7C966A2A586781101C2E237 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A8CD5EE9CF52A4BDF935B809 /* Signing.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -389,7 +400,6 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;

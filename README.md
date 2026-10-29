@@ -69,8 +69,19 @@ git clone https://github.com/thomascamminady/gcpapi-sync-ios.git && cd gcpapi-sy
 open GCPAPISync.xcodeproj
 ```
 
-Run the `GCPAPISyncApp` scheme; launch with `-demo` to start in sample-data mode. For a
-device, choose your team under *Signing & Capabilities*.
+Run the `GCPAPISyncApp` scheme; launch with `-demo` to start in sample-data mode.
+
+To run on an iPhone, put your team ID in `Config/Signing.local.xcconfig` (ignored by git), then
+pick the phone as the run destination:
+
+```text
+echo 'DEVELOPMENT_TEAM = ABCDE12345' > Config/Signing.local.xcconfig
+```
+
+A free Apple Account works: its Personal Team ID is shown in Xcode under *Settings → Apple
+Accounts*. The phone needs Developer Mode (*Settings → Privacy & Security*), and apps signed by a
+Personal Team must be trusted once under *Settings → General → VPN & Device Management* and
+run for seven days before they need to be installed again.
 
 The Xcode project is generated from `project.yml` with [XcodeGen](https://github.com/yonaskolb/XcodeGen)
 (`brew install xcodegen && xcodegen generate`) and committed for convenience; source folders

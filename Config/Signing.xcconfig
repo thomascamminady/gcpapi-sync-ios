@@ -1,0 +1,11 @@
+// Code signing for running on a device; simulator builds and CI need no team.
+//
+// To run on your iPhone, put your team ID in Config/Signing.local.xcconfig, which git
+// ignores, so that every contributor signs with their own team:
+//
+//     DEVELOPMENT_TEAM = ABCDE12345
+//
+// The team ID is shown in Xcode under Settings > Apple Accounts, and is the OU of your
+// Apple Development certificate. Apps signed with a free Personal Team run for seven days.
+DEVELOPMENT_TEAM =
+#include? "Signing.local.xcconfig"

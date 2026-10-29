@@ -32,7 +32,11 @@ settings:
     STRING_CATALOG_GENERATE_SYMBOLS: "YES"
     TARGETED_DEVICE_FAMILY: "1"
     CODE_SIGN_STYLE: Automatic
-    DEVELOPMENT_TEAM: ""
+
+# The signing team comes from Config/Signing.local.xcconfig, which is not committed.
+configFiles:
+  Debug: Config/Signing.xcconfig
+  Release: Config/Signing.xcconfig
 
 targets:
   GCPAPISyncApp:

@@ -7,7 +7,8 @@ DerivedData/
 xcuserdata/
 *.xcuserstate
 
-# Secrets
+# Secrets and personal settings
+Config/Signing.local.xcconfig
 .apikey
 .env
 *.apikey
