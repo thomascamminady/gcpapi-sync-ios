@@ -20,12 +20,14 @@ struct MainView: View {
     @State private var health: HealthModel
     @State private var training: TrainingModel
     @SceneStorage("selectedTab") private var tab = AppTab.health
+    @Environment(\.scenePhase) private var scenePhase
     private let preferences = Preferences.shared
 
-    init(client: GarminClient) {
-        let training = TrainingModel(client: client)
+    /// The app for `client`, opening with what `snapshots` saved last time.
+    init(client: GarminClient, snapshots: SnapshotStore? = nil, recordings: RecordingCache? = nil) {
+        let training = TrainingModel(client: client, store: snapshots, recordings: recordings)
         training.analysis = Preferences.shared.settings.analysis
-        _health = State(initialValue: HealthModel(client: client))
+        _health = State(initialValue: HealthModel(client: client, store: snapshots))
         _training = State(initialValue: training)
     }
 
@@ -58,6 +60,15 @@ struct MainView: View {
         }
         .onChange(of: preferences.settings.weekStart) {
             Task { await training.load() }
+        }
+        // Coming back to the app syncs whatever is more than five minutes old.
+        .onChange(of: scenePhase) { _, phase in
+            guard phase == .active else { return }
+            Task {
+                async let week: Void = health.loadIfNeeded(maxAge: 5 * 60)
+                async let activities: Void = training.loadIfNeeded(maxAge: 5 * 60)
+                _ = await (week, activities)
+            }
         }
     }
 }

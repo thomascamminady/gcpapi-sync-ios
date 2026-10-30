@@ -12,7 +12,7 @@ nonisolated enum TrainingLoad {
     static let fitnessDays = 42.0
     static let fatigueDays = 7.0
 
-    struct Day: Identifiable, Hashable, Sendable {
+    struct Day: Identifiable, Hashable, Codable, Sendable {
         let date: GarminDate
         let load: Double
         let fitness: Double

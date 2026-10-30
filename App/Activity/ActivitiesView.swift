@@ -21,6 +21,7 @@ struct ActivitiesView: View {
                             model: model)
                     }
                 }
+                .navigationSubtitle(SyncStatus.text(model.lastUpdated))
                 .task { await model.loadIfNeeded() }
                 .refreshable { await model.load() }
         }

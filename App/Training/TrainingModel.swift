@@ -45,10 +45,16 @@ final class TrainingModel {
     private let fetchRecording: @Sendable (_ id: Int) async throws -> Data?
     private let today: () -> GarminDate
     private let now: () -> Date
+    private let store: SnapshotStore?
+
+    /// The snapshot names of the training data and the recovery response.
+    nonisolated static let snapshot = "training"
+    nonisolated static let recoverySnapshot = "recovery"
 
     init(
         today: @escaping () -> GarminDate = { GarminDate.today() },
         now: @escaping () -> Date = { .now },
+        store: SnapshotStore? = nil,
         fetch:
             @escaping @Sendable (_ end: GarminDate, _ analysis: AnalysisSettings) async throws
             -> TrainingData,
@@ -62,11 +68,24 @@ final class TrainingModel {
         self.fetch = fetch
         self.fetchHealth = fetchHealth
         self.fetchRecording = fetchRecording
+        self.store = store
+        // Open with what was loaded last, until it is refreshed.
+        if let saved = store?.load(TrainingData.self, named: Self.snapshot) {
+            phase = .loaded(saved.value)
+            lastUpdated = saved.saved
+        }
+        if let saved = store?.load(RecoveryResponse.self, named: Self.recoverySnapshot) {
+            recovery = .loaded(saved.value)
+        }
     }
 
-    /// A model loading from Garmin through `client`.
-    convenience init(client: GarminClient) {
+    /// A model loading from Garmin through `client`, saving what it loads to `store` and the
+    /// recordings to `recordings`.
+    convenience init(
+        client: GarminClient, store: SnapshotStore? = nil, recordings: RecordingCache? = nil
+    ) {
         self.init(
+            store: store,
             fetch: { end, analysis in
                 try await TrainingLoader.load(from: client, endingOn: end, analysis: analysis)
             },
@@ -75,8 +94,13 @@ final class TrainingModel {
                     from: client, endingOn: end, days: days, estimatingVO2max: false)
             },
             fetchRecording: { id in
+                if let cached = recordings?.data(for: id) {
+                    return cached
+                }
                 let file = try await client.downloadActivity(id)
-                return file.fileExtension == "fit" ? file.content : nil
+                guard file.fileExtension == "fit" else { return nil }
+                recordings?.store(file.content, for: id)
+                return file.content
             })
     }
 
@@ -129,6 +153,7 @@ final class TrainingModel {
             phase = .loaded(data)
             refreshProblem = nil
             lastUpdated = now()
+            try? store?.save(data, as: Self.snapshot, at: lastUpdated ?? .now)
         } catch {
             guard !Task.isCancelled, !(error is CancellationError) else { return }
             if case .loaded = phase {
@@ -146,10 +171,11 @@ final class TrainingModel {
         guard let end = data.loadHistory.last?.date else { return }
         do {
             let history = try await fetchHealth(end, data.loadHistory.count)
-            recovery = .loaded(
-                RecoveryResponse(
-                    history: history, loads: data.loadHistory, hardShare: analysis.hardShare,
-                    baselineDays: analysis.baselineDays))
+            let response = RecoveryResponse(
+                history: history, loads: data.loadHistory, hardShare: analysis.hardShare,
+                baselineDays: analysis.baselineDays)
+            recovery = .loaded(response)
+            try? store?.save(response, as: Self.recoverySnapshot)
         } catch {
             guard !Task.isCancelled, !(error is CancellationError) else { return }
             if case .loaded = recovery {

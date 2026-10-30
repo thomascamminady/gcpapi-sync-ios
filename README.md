@@ -56,6 +56,10 @@ An open-source iPhone app for your Garmin health data, built on Garmin's officia
   which tiles and charts show, route colors and map style, the parameters of the analyses,
   and every color: three themes (Balanced, checked for color-vision deficiencies; Vivid;
   Soft) with each color changeable on its own. The same thing has the same color everywhere.
+- **Always up to date**: the app opens at once with what it loaded last, syncs with Garmin when
+  it comes to the foreground and when you pull down, and refreshes in the background about
+  once an hour (can be turned off). Saved data stays on the device, out of backups, and is
+  deleted when you disconnect.
 - **Explore with sample data** without an account, also used for previews, screenshots and
   App Review.
 

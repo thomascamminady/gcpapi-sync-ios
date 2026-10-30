@@ -33,6 +33,7 @@ struct SettingsView: View {
                     Text(lastUpdated, format: .relative(presentation: .named))
                 }
             }
+            Toggle("Refresh in the Background", isOn: $preferences.settings.refreshesInBackground)
             Button(session.isDemo ? "Leave Sample Data" : "Disconnect", role: .destructive) {
                 confirmsDisconnect = true
             }
