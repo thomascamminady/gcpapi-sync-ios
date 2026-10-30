@@ -4,10 +4,11 @@ import SwiftUI
 /// The tabs of the signed-in app.
 enum AppTab: String {
     case health
+    case activities
     case training
 }
 
-/// The signed-in app: health and training, each in its own tab.
+/// The signed-in app: the health summary, activities and training, each in its own tab.
 struct MainView: View {
     @State private var health: HealthModel
     @State private var training: TrainingModel
@@ -20,10 +21,13 @@ struct MainView: View {
 
     var body: some View {
         TabView(selection: $tab) {
-            Tab("Health", systemImage: "heart.text.square", value: .health) {
+            Tab("Summary", systemImage: "heart.text.square", value: .health) {
                 WeekView(model: health)
             }
-            Tab("Training", systemImage: "figure.run", value: .training) {
+            Tab("Activities", systemImage: "figure.run", value: .activities) {
+                ActivitiesView(model: training)
+            }
+            Tab("Training", systemImage: "chart.line.uptrend.xyaxis", value: .training) {
                 TrainingView(model: training)
             }
         }

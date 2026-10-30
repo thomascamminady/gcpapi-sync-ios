@@ -23,6 +23,12 @@ nonisolated struct DemoTransport: HTTPTransport {
             body = try JSONEncoder().encode([HeartRateZones.sample])
         } else if path == "/activitylist-service/activities/search/activities" {
             body = try JSONEncoder().encode(activities(request.query))
+        } else if path.hasPrefix("/download-service/files/activity/"),
+            let id = path.split(separator: "/").last.flatMap({ Int($0) }),
+            let activity = SummarizedActivity.sample(id: id)
+        {
+            body = StoredZip.archive(
+                name: "\(id)_ACTIVITY.fit", content: FITWriter.encode(.sample(of: activity)))
         } else {
             return HTTPResponse(statusCode: 404, body: Data(), request: request)
         }

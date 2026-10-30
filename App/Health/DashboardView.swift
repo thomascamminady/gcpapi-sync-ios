@@ -8,8 +8,7 @@ enum Route: Hashable {
     case metric(Metric)
 }
 
-/// The week at a glance: the overview and one card per metric, each opening its detail
-/// screen.
+/// The week at a glance: a tile per metric and the trends, each opening its detail screen.
 struct DashboardView: View {
     let history: HealthHistory
     var refreshProblem: Problem?
@@ -21,18 +20,23 @@ struct DashboardView: View {
                 if let refreshProblem {
                     ProblemBanner(problem: refreshProblem)
                 }
+                LazyVGrid(
+                    columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())],
+                    spacing: 12
+                ) {
+                    ForEach(Metric.allCases) { metric in
+                        NavigationLink(value: Route.metric(metric)) {
+                            SummaryTile(metric: metric, history: history)
+                        }
+                        .buttonStyle(.plain)
+                        .matchedTransitionSource(id: Route.metric(metric), in: transition)
+                    }
+                }
                 NavigationLink(value: Route.overview) {
                     OverviewCard(history: history)
                 }
                 .buttonStyle(.plain)
                 .matchedTransitionSource(id: Route.overview, in: transition)
-                ForEach(Metric.allCases) { metric in
-                    NavigationLink(value: Route.metric(metric)) {
-                        MetricCard(metric: metric, history: history)
-                    }
-                    .buttonStyle(.plain)
-                    .matchedTransitionSource(id: Route.metric(metric), in: transition)
-                }
                 Text("Data from Garmin Connect. Not affiliated with Garmin.")
                     .font(.caption)
                     .foregroundStyle(.tertiary)

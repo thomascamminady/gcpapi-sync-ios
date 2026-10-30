@@ -12,13 +12,10 @@ struct WorkoutRow: View {
                 Text(workout.name)
                     .font(.body.weight(.semibold))
                     .lineLimit(1)
-                Text(
-                    workout.start ?? workout.date.startOfDay(in: .current),
-                    format: .dateTime.weekday(.abbreviated).day().month(.abbreviated).hour()
-                        .minute()
-                )
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                Text(when)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
             }
             Spacer(minLength: 8)
             VStack(alignment: .trailing, spacing: 2) {
@@ -31,6 +28,13 @@ struct WorkoutRow: View {
         }
         .contentShape(.rect)
         .accessibilityElement(children: .combine)
+    }
+
+    /// `Thu, 29 Oct · 07:12`.
+    private var when: String {
+        let start = workout.start ?? workout.date.startOfDay(in: .current)
+        let day = start.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
+        return "\(day) · \(start.formatted(.dateTime.hour().minute()))"
     }
 
     /// The distance, or the duration for activities without one.
@@ -85,12 +89,23 @@ struct ActivityListView: View {
             .sorted { $0.start > $1.start }
     }
 
+    /// The activities of the last seven days, today included.
+    private var recent: [Workout] {
+        let first = GarminDate.today().adding(days: -6)
+        return data.workouts.filter { $0.date >= first }
+    }
+
     var body: some View {
         List {
+            if query.isEmpty, sport == nil {
+                Section("Last 7 Days") {
+                    RecentSummary(workouts: recent)
+                }
+            }
             ForEach(weeks, id: \.start) { week in
                 Section {
                     ForEach(week.workouts) { workout in
-                        NavigationLink(value: TrainingRoute.workout(workout)) {
+                        NavigationLink(value: ActivityRoute.workout(workout)) {
                             WorkoutRow(workout: workout)
                         }
                     }

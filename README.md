@@ -23,9 +23,15 @@ An open-source iPhone app for your Garmin health data, built on Garmin's officia
 - **Connect** with a Personal API key (Garmin Connect → Settings → Personal API). The key is
   checked with Garmin, then kept in this iPhone's Keychain: never synced to iCloud, never in
   backups, only ever sent to Garmin. Access tokens are cached in the Keychain too.
-- **The last 7 days at a glance**: steps against your goal, sleep stages and score, resting
-  heart rate, HRV with Garmin's status, VO2max, Body Battery range, stress, and intensity
-  minutes against the weekly goal of 150.
+- **Summary**: a tile per metric in the style of the Health app (steps, sleep, resting heart
+  rate, HRV, VO2max, Body Battery, stress and intensity minutes), each with its latest value
+  and a sparkline of the week, opening a detail screen over 7, 30 or 90 days.
+- **Activities**: every activity of the last 90 days, searchable and filterable by sport. An
+  activity opens with its route on a map, colored by heart rate zone, and charts of heart rate
+  (on your zones), pace or speed, elevation, cadence and power that scrub together and move a
+  marker along the route; splits per kilometre or mile, the watch's laps, strength sets,
+  Garmin's training effect, and time in zones. Recordings are Garmin's original FIT files,
+  read by a FIT decoder of the app's own; pauses are left out, as Garmin does.
 - **Trends**: HRV, resting heart rate, sleep score, stress and VO2max on one chart, each
   scaled to 0–1 over the range shown, to see how they move together. Over 30 and 90 days, a
   7-day average smooths out single days; *Higher Is Better* flips resting heart rate and
@@ -38,9 +44,7 @@ An open-source iPhone app for your Garmin health data, built on Garmin's officia
   over 30 days and weighted by duration.
 - **Training**: Garmin's training load of every activity turned into fitness (six-week
   average), fatigue (one-week average) and form, with form zones that say whether you are
-  building fitness, fresh, or overreaching; weekly hours by sport; and every activity of the
-  last 90 days, searchable and filterable, with Garmin's training effect, primary benefit and
-  time in heart rate and power zones.
+  building fitness, fresh, or overreaching; and weekly hours by sport.
 - **Recovery Response**, which no other Garmin tool shows: how *your* HRV, resting heart
   rate, sleep score and stress respond to your hardest training days. Every hard day (top
   fifth of your training days by load) is lined up with the days around it, each value is
@@ -116,8 +120,8 @@ Scripts/test.sh
 
 ## Roadmap
 
-Ideas for what comes next: maps and laps for activities, background refresh with widgets,
-HealthKit export, and ranges beyond 90 days.
+Ideas for what comes next: background refresh with widgets, HealthKit export, comparing an
+activity with earlier ones on the same route, and ranges beyond 90 days.
 
 ## License
 

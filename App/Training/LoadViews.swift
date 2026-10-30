@@ -74,6 +74,7 @@ private struct LoadFigure: View {
             .font(.title2.weight(.bold).monospacedDigit())
             .contentTransition(.numericText())
         }
+        .fixedSize()
         .accessibilityElement(children: .combine)
     }
 }

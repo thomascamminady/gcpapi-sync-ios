@@ -6,11 +6,9 @@ import UIKit
 enum TrainingRoute: Hashable {
     case load
     case recovery
-    case activities
-    case workout(Workout)
 }
 
-/// The training tab: load, volume and recent activities.
+/// The training tab: load, recovery and volume.
 struct TrainingView: View {
     let model: TrainingModel
     @Namespace private var transition
@@ -45,10 +43,6 @@ struct TrainingView: View {
                 RecoveryDetailView(response: response)
                     .navigationTransition(.zoom(sourceID: route, in: transition))
             }
-        case .activities:
-            ActivityListView(data: data)
-        case .workout(let workout):
-            WorkoutDetailView(workout: workout, zones: data.heartRateZones(for: workout.sport))
         }
     }
 
@@ -80,14 +74,12 @@ struct TrainingView: View {
     }
 }
 
-/// Load, volume and the latest activities.
+/// Load, recovery and volume.
 struct TrainingDashboard: View {
     let data: TrainingData
     let recovery: TrainingModel.RecoveryPhase
     var refreshProblem: Problem?
     let transition: Namespace.ID
-
-    private var recent: [Workout] { Array(data.workouts.prefix(5)) }
 
     var body: some View {
         ScrollView {
@@ -102,7 +94,6 @@ struct TrainingDashboard: View {
                 .matchedTransitionSource(id: TrainingRoute.load, in: transition)
                 recoveryCard
                 VolumeCard(weeks: data.weeks)
-                activities
                 Text("Training load, training effect and zones are Garmin's.")
                     .font(.caption)
                     .foregroundStyle(.tertiary)
@@ -123,40 +114,6 @@ struct TrainingDashboard: View {
         } else {
             RecoveryCard(phase: recovery)
         }
-    }
-
-    private var activities: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("Recent Activities").font(.title3.weight(.bold))
-                Spacer()
-                NavigationLink("Show All", value: TrainingRoute.activities)
-            }
-            if recent.isEmpty {
-                Text("No activities in the last 90 days.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .cardStyle()
-            } else {
-                VStack(spacing: 0) {
-                    ForEach(recent) { workout in
-                        NavigationLink(value: TrainingRoute.workout(workout)) {
-                            WorkoutRow(workout: workout)
-                                .padding(.vertical, 10)
-                        }
-                        .buttonStyle(.plain)
-                        if workout.id != recent.last?.id {
-                            Divider()
-                        }
-                    }
-                }
-                .padding(.horizontal, 16)
-                .background(
-                    Color(uiColor: .secondarySystemGroupedBackground), in: .rect(cornerRadius: 20))
-            }
-        }
-        .padding(.top, 4)
     }
 }
 

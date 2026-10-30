@@ -2,16 +2,29 @@ import GCPAPISync
 import SwiftUI
 import UIKit
 
-/// One activity: its numbers, Garmin's training effect, and time in zones.
+/// One activity: its route, its recording over time, splits and laps, its numbers, Garmin's
+/// training effect, and time in zones.
 struct WorkoutDetailView: View {
     let workout: Workout
     let zones: HeartRateZoneSet?
+    let model: TrainingModel
+    /// The scrubbed moment, in seconds of timer time, shared by the charts and the map.
+    @State private var selection: Double?
+
+    private var track: ActivityTrack? {
+        if case .loaded(let track) = model.tracks[workout.id] { track } else { nil }
+    }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 header
+                if let track, !track.route.isEmpty {
+                    RouteMapCard(
+                        track: track, sport: workout.sport, zones: zones, selection: selection)
+                }
                 stats
+                recording
                 if workout.aerobicEffect != nil || workout.trainingLoad != nil {
                     effect
                 }
@@ -34,6 +47,53 @@ struct WorkoutDetailView: View {
         .background(Color(uiColor: .systemGroupedBackground))
         .navigationTitle(workout.name)
         .navigationBarTitleDisplayMode(.inline)
+        .task { await model.loadTrack(for: workout) }
+    }
+
+    /// The charts, splits, laps and sets of the recording, as far as it is loaded.
+    @ViewBuilder private var recording: some View {
+        switch model.tracks[workout.id] {
+        case .loaded(let track):
+            if !track.samples.isEmpty {
+                TrackChartsCard(
+                    track: track, sport: workout.sport, zones: zones, selection: $selection)
+            }
+            if track.splits.count > 1 {
+                SplitsCard(splits: track.splits, sport: workout.sport)
+            }
+            if track.laps.count > 1 {
+                LapsCard(laps: track.laps, sport: workout.sport)
+            }
+            if !SetsCard.logged(track.sets).isEmpty {
+                SetsCard(sets: track.sets)
+            }
+        case .failed(let problem):
+            VStack(alignment: .leading, spacing: 10) {
+                Label(problem.title, systemImage: problem.symbol)
+                    .font(.headline)
+                Text(problem.message)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Button("Try Again") {
+                    Task { await model.loadTrack(for: workout) }
+                }
+                .buttonStyle(.glass)
+            }
+            .cardStyle()
+        case .unavailable:
+            Label("No recording to analyze for this activity.", systemImage: "waveform.slash")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .cardStyle()
+        case .loading, nil:
+            HStack(spacing: 10) {
+                ProgressView()
+                Text("Loading the recording…")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            .cardStyle()
+        }
     }
 
     private static let heartRateZoneNames = [
@@ -205,7 +265,7 @@ private struct ZoneCard: View {
     var names: [String] = []
     var detail: (Int) -> String? = { _ in nil }
 
-    private static let colors: [Color] = [.gray, .blue, .green, .orange, .red, .purple, .pink]
+    private static let colors = ZoneStyle.colors
 
     /// `7:30 · 15%`.
     private static func time(_ seconds: Double, of total: Double) -> String {

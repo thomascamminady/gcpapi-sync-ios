@@ -17,7 +17,18 @@ final class TrainingModel {
         case failed(Problem)
     }
 
+    /// An activity's recording, as far as it is loaded.
+    enum TrackPhase: Equatable {
+        case loading
+        case loaded(ActivityTrack)
+        /// No recording to show: manual activities, or files that are not FIT.
+        case unavailable
+        case failed(Problem)
+    }
+
     private(set) var phase: Phase = .loading
+    /// Recordings by activity id.
+    private(set) var tracks: [Int: TrackPhase] = [:]
     /// The recovery response, loaded after the training data.
     private(set) var recovery: RecoveryPhase = .loading
     /// A failed refresh while older data is shown.
@@ -27,6 +38,7 @@ final class TrainingModel {
     private let fetch: @Sendable (_ end: GarminDate) async throws -> TrainingData
     private let fetchHealth:
         @Sendable (_ end: GarminDate, _ days: Int) async throws -> HealthHistory
+    private let fetchRecording: @Sendable (_ id: Int) async throws -> Data?
     private let today: () -> GarminDate
     private let now: () -> Date
 
@@ -36,12 +48,14 @@ final class TrainingModel {
         fetch: @escaping @Sendable (_ end: GarminDate) async throws -> TrainingData,
         fetchHealth:
             @escaping @Sendable (_ end: GarminDate, _ days: Int) async throws
-            -> HealthHistory
+            -> HealthHistory,
+        fetchRecording: @escaping @Sendable (_ id: Int) async throws -> Data? = { _ in nil }
     ) {
         self.today = today
         self.now = now
         self.fetch = fetch
         self.fetchHealth = fetchHealth
+        self.fetchRecording = fetchRecording
     }
 
     /// A model loading from Garmin through `client`.
@@ -51,7 +65,38 @@ final class TrainingModel {
             fetchHealth: { end, days in
                 try await HealthLoader.load(
                     from: client, endingOn: end, days: days, estimatingVO2max: false)
+            },
+            fetchRecording: { id in
+                let file = try await client.downloadActivity(id)
+                return file.fileExtension == "fit" ? file.content : nil
             })
+    }
+
+    /// Download and analyze `workout`'s recording, unless it is loaded already.
+    func loadTrack(for workout: Workout) async {
+        switch tracks[workout.id] {
+        case .loaded, .unavailable, .loading: return
+        case .failed, nil: break
+        }
+        tracks[workout.id] = .loading
+        do {
+            guard let data = try await fetchRecording(workout.id) else {
+                tracks[workout.id] = .unavailable
+                return
+            }
+            tracks[workout.id] = .loaded(
+                try await TrackBuilder.track(
+                    from: data, sport: workout.sport,
+                    splitLength: Format.usesMiles ? 1609.344 : 1000))
+        } catch is FITError {
+            tracks[workout.id] = .unavailable
+        } catch {
+            guard !Task.isCancelled, !(error is CancellationError) else {
+                tracks[workout.id] = nil
+                return
+            }
+            tracks[workout.id] = .failed(Problem(error))
+        }
     }
 
     /// Load unless the data is less than `maxAge` seconds old.

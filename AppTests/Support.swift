@@ -64,7 +64,7 @@ func client(_ transport: any HTTPTransport, apiKey: String = "good-key") throws 
 
 extension GarminDate {
     /// A date from a literal known to be valid.
-    static func day(_ text: String) -> GarminDate {
+    nonisolated static func day(_ text: String) -> GarminDate {
         (try? GarminDate(text)) ?? .today()
     }
 }

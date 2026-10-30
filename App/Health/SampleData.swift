@@ -14,7 +14,7 @@ extension HealthHistory {
 extension GarminDate {
     /// A stable number per date that drives smooth day-to-day variation in the samples.
     nonisolated var sampleSeed: Int {
-        (try? GarminDate(year: 2000, month: 1, day: 1).days(to: self)) ?? 0
+        Self.sampleOrigin.days(to: self)
     }
 
     /// Whether the synthetic athlete trains hard on this day: intervals or a long ride.

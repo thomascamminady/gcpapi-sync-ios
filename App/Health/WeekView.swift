@@ -1,7 +1,7 @@
 import GCPAPISync
 import SwiftUI
 
-/// The signed-in screen: the last seven days of health data.
+/// The summary tab: the last seven days of health data.
 struct WeekView: View {
     let model: HealthModel
     @Namespace private var cardTransition
@@ -10,7 +10,7 @@ struct WeekView: View {
     var body: some View {
         NavigationStack {
             content
-                .navigationTitle("Last 7 Days")
+                .navigationTitle("Summary")
                 .navigationDestination(for: Route.self) { route in
                     Group {
                         switch route {
