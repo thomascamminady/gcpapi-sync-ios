@@ -64,6 +64,13 @@ An open-source iPhone app for your Garmin health data, built on Garmin's officia
   it comes to the foreground and when you pull down, and refreshes in the background about
   once an hour (can be turned off). Saved data stays on the device, out of backups, and is
   deleted when you disconnect.
+- **Your data, your way**: export daily health and activities as CSV, everything as JSON, or
+  activities as a calendar (ICS) through the share sheet (Mail, AirDrop, Files: iCloud Drive,
+  Dropbox, the device); keep a folder of CSV files up to date after every sync; share an
+  activity's original recording (FIT) or route (GPX); or turn on an *Activities* calendar in the
+  Calendar app.
+- **Private by design**: no accounts, servers, analytics, ads or tracking; see
+  [PRIVACY.md](PRIVACY.md) and the [App Store checklist](docs/APP_STORE.md).
 - **Explore with sample data** without an account, also used for previews, screenshots and
   App Review.
 

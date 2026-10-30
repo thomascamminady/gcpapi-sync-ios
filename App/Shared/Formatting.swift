@@ -20,6 +20,11 @@ nonisolated enum Format {
         String(AttributedString(localized: "^[\(count) day](inflect: true)").characters)
     }
 
+    /// `1 file`, `4 files`.
+    static func files(_ count: Int) -> String {
+        String(AttributedString(localized: "^[\(count) file](inflect: true)").characters)
+    }
+
     /// `1 activity`, `4 activities`.
     static func activities(_ count: Int) -> String {
         String(AttributedString(localized: "^[\(count) activity](inflect: true)").characters)
