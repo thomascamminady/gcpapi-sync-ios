@@ -181,6 +181,11 @@ final class TrainingModel {
         similar[workout.id] = .found(matches.sorted { $0.date > $1.date })
     }
 
+    /// `workout`'s original recording (FIT), from the cache or downloaded.
+    func recording(for workout: Workout) async throws -> Data? {
+        try await fetchRecording(workout.id)
+    }
+
     /// Forget the analyzed recordings, as after changing units.
     func resetTracks() {
         tracks = [:]

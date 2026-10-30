@@ -53,6 +53,26 @@ struct WorkoutDetailView: View {
         .navigationTitle(workout.name)
         .navigationBarTitleDisplayMode(.inline)
         .task { await model.loadTrack(for: workout) }
+        .toolbar {
+            if workout.distance != nil || workout.startPoint != nil {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu("Export", systemImage: "square.and.arrow.up") {
+                        ShareLink(
+                            item: RecordingFile(workout: workout, format: .fit, model: model),
+                            preview: SharePreview(workout.name)
+                        ) {
+                            Label("Original Recording (FIT)", systemImage: "doc")
+                        }
+                        ShareLink(
+                            item: RecordingFile(workout: workout, format: .gpx, model: model),
+                            preview: SharePreview(workout.name)
+                        ) {
+                            Label("Route (GPX)", systemImage: "map")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /// The charts, splits, laps and sets of the recording, as far as it is loaded.

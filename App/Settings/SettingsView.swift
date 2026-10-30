@@ -4,6 +4,7 @@ import SwiftUI
 /// The settings tab: the account, and everything about how the app shows data.
 struct SettingsView: View {
     let lastUpdated: Date?
+    let export: DataExport
     @Environment(Session.self) private var session
     @Bindable private var preferences = Preferences.shared
     @State private var confirmsDisconnect = false
@@ -19,6 +20,15 @@ struct SettingsView: View {
                 summarySection
                 activitySection
                 AnalysisSection(analysis: $preferences.settings.analysis)
+                Section {
+                    NavigationLink("Export and Calendar") {
+                        ExportView(export: export)
+                    }
+                } header: {
+                    Text("Your Data")
+                } footer: {
+                    Text("Your data stays on this iPhone and with Garmin. Nothing is collected.")
+                }
                 aboutSection
             }
             .navigationTitle("Settings")
@@ -156,6 +166,9 @@ struct SettingsView: View {
             LabeledContent("GCPAPISync", value: packageVersion)
             if let url = Self.sourceCode {
                 Link("Source Code", destination: url)
+            }
+            NavigationLink("Licenses") {
+                LicensesView()
             }
         } header: {
             Text("About")
@@ -299,6 +312,11 @@ private struct ThemePreview: View {
 }
 
 #Preview {
-    SettingsView(lastUpdated: .now)
-        .environment(Session.preview)
+    SettingsView(
+        lastUpdated: .now,
+        export: DataExport(
+            fetchHealth: { end, days in .sample(endingOn: end, days: days) },
+            fetchActivities: { _, _ in [] })
+    )
+    .environment(Session.preview)
 }

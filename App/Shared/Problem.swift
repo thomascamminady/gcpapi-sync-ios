@@ -10,6 +10,7 @@ nonisolated enum Problem: Error, Equatable, Sendable {
     case rateLimited
     case garminUnavailable
     case keychain
+    case calendarDenied
     case unexpected(String)
 
     /// Classify an error thrown by the client.
@@ -36,6 +37,7 @@ nonisolated enum Problem: Error, Equatable, Sendable {
         case .rateLimited: String(localized: "Too many requests")
         case .garminUnavailable: String(localized: "Garmin is unavailable")
         case .keychain: String(localized: "The Keychain is unavailable")
+        case .calendarDenied: String(localized: "No access to Calendar")
         case .unexpected: String(localized: "Something went wrong")
         }
     }
@@ -60,6 +62,9 @@ nonisolated enum Problem: Error, Equatable, Sendable {
             String(
                 localized:
                     "Your key could not be stored securely. Unlock your iPhone and try again.")
+        case .calendarDenied:
+            String(
+                localized: "Allow access in the Settings app under Privacy & Security › Calendars.")
         case .unexpected(let detail): detail
         }
     }
@@ -71,6 +76,7 @@ nonisolated enum Problem: Error, Equatable, Sendable {
         case .timedOut, .rateLimited: "hourglass"
         case .garminUnavailable: "exclamationmark.icloud"
         case .keychain: "lock.trianglebadge.exclamationmark"
+        case .calendarDenied: "calendar.badge.exclamationmark"
         case .unexpected: "exclamationmark.triangle"
         }
     }
