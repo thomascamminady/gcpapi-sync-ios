@@ -40,6 +40,9 @@ nonisolated struct Workout: Identifiable, Hashable, Codable, Sendable {
     /// Seconds in power zones 1 to 7; empty when unknown.
     let powerZones: [Double]
     let location: String?
+    /// Where the activity started and ended, when it was recorded with GPS.
+    let startPoint: GeoPoint?
+    let endPoint: GeoPoint?
 
     /// The workout of a Garmin activity with a start date and a duration.
     init?(_ activity: SummarizedActivity) {
@@ -81,6 +84,13 @@ nonisolated struct Workout: Identifiable, Hashable, Codable, Sendable {
             activity.powerTimeInZone7,
         ])
         location = activity.locationName
+        startPoint = Self.point(activity.startLatitude, activity.startLongitude)
+        endPoint = Self.point(activity.endLatitude, activity.endLongitude)
+    }
+
+    private static func point(_ latitude: Double?, _ longitude: Double?) -> GeoPoint? {
+        guard let latitude, let longitude, latitude != 0 || longitude != 0 else { return nil }
+        return GeoPoint(latitude: latitude, longitude: longitude)
     }
 
     /// The moment of a local date and time in the current time zone.

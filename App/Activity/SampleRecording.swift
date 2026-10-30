@@ -14,6 +14,26 @@ extension SummarizedActivity {
     }
 }
 
+/// Where the synthetic athlete starts and finishes: whole laps of an oval loop.
+nonisolated enum SampleLoop {
+    static let start = GeoPoint(latitude: 47.3605, longitude: 8.5480)
+
+    /// The loop for `distance` metres in whole laps of about `length` metres.
+    static func lap(for distance: Double, about length: Double) -> Double {
+        distance / max(1, (distance / length).rounded())
+    }
+
+    /// The point `distance` metres around a loop of `lap` metres that starts at ``start``.
+    static func point(at distance: Double, lap: Double) -> GeoPoint {
+        let angle = distance / lap * 2 * .pi
+        let radius = lap / (2 * .pi)
+        return GeoPoint(
+            latitude: start.latitude + radius * 0.6 * sin(angle) / 111_320,
+            longitude: start.longitude + radius * 1.3 * (cos(angle) - 1)
+                / (111_320 * cos(start.latitude * .pi / 180)))
+    }
+}
+
 extension GarminDate {
     /// The day the demo's seeds count from.
     nonisolated static let sampleOrigin =
@@ -37,14 +57,16 @@ extension FITActivity {
                 start: start, duration: duration,
                 profile: Profile(
                     speed: activity.averageSpeed ?? 7, heartRate: activity.averageHR ?? 135,
-                    loop: 12_000, hills: 40, lapLength: 5000, intervals: false,
+                    loop: SampleLoop.lap(for: activity.distance ?? 12_000, about: 12_000),
+                    hills: 40, lapLength: 5000, intervals: false,
                     power: activity.avgPower))
         default:
             return endurance(
                 start: start, duration: duration,
                 profile: Profile(
                     speed: activity.averageSpeed ?? 3, heartRate: activity.averageHR ?? 150,
-                    loop: 3000, hills: 12, lapLength: 1000,
+                    loop: SampleLoop.lap(for: activity.distance ?? 3000, about: 3000), hills: 12,
+                    lapLength: 1000,
                     intervals: activity.activityName == "Intervals", power: nil))
         }
     }
@@ -71,7 +93,6 @@ extension FITActivity {
         let loop = profile.loop
         let intervals = profile.intervals
         let power = profile.power
-        let center = (latitude: 47.3605, longitude: 8.5480)
         var records: [Record] = []
         var distance = 0.0
         var heartRate = 95.0
@@ -85,14 +106,12 @@ extension FITActivity {
             distance += speed * 5
             // The heart follows the effort with a lag of about a minute.
             heartRate += (target * pow(effort, 0.7) - heartRate) * (1 - exp(-5 / 60.0))
-            let angle = distance / loop * 2 * .pi
-            let radius = loop / (2 * .pi)
+            let position = SampleLoop.point(at: distance, lap: loop)
             records.append(
                 Record(
                     time: start.addingTimeInterval(second),
-                    latitude: center.latitude + radius * 0.6 * sin(angle) / 111_320,
-                    longitude: center.longitude + radius * 1.3 * cos(angle)
-                        / (111_320 * cos(center.latitude * .pi / 180)),
+                    latitude: position.latitude,
+                    longitude: position.longitude,
                     altitude: 410 + profile.hills * sin(distance / 1500 * 2 * .pi),
                     heartRate: Int(heartRate.rounded()),
                     cadence: power == nil ? 86 + effort * 2 : 86,

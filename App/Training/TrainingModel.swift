@@ -26,7 +26,19 @@ final class TrainingModel {
         case failed(Problem)
     }
 
+    /// The search for activities on the same route as another.
+    enum SimilarPhase: Equatable {
+        case searching
+        case found([Workout])
+        case failed(Problem)
+    }
+
     private(set) var phase: Phase = .loading
+    /// Activities on the same routes as others, by activity id.
+    private(set) var similar: [Int: SimilarPhase] = [:]
+    /// The activities of months before the loaded data, by the month's first day.
+    private(set) var archive: [GarminDate: [Workout]] = [:]
+    private(set) var archiveProblems: [GarminDate: Problem] = [:]
     /// Recordings by activity id.
     private(set) var tracks: [Int: TrackPhase] = [:]
     /// The recovery response, loaded after the training data.
@@ -43,6 +55,8 @@ final class TrainingModel {
     private let fetchHealth:
         @Sendable (_ end: GarminDate, _ days: Int) async throws -> HealthHistory
     private let fetchRecording: @Sendable (_ id: Int) async throws -> Data?
+    private let fetchActivities:
+        @Sendable (_ first: GarminDate, _ last: GarminDate) async throws -> [Workout]
     private let today: () -> GarminDate
     private let now: () -> Date
     private let store: SnapshotStore?
@@ -61,13 +75,17 @@ final class TrainingModel {
         fetchHealth:
             @escaping @Sendable (_ end: GarminDate, _ days: Int) async throws
             -> HealthHistory,
-        fetchRecording: @escaping @Sendable (_ id: Int) async throws -> Data? = { _ in nil }
+        fetchRecording: @escaping @Sendable (_ id: Int) async throws -> Data? = { _ in nil },
+        fetchActivities:
+            @escaping @Sendable (_ first: GarminDate, _ last: GarminDate) async throws
+            -> [Workout] = { _, _ in [] }
     ) {
         self.today = today
         self.now = now
         self.fetch = fetch
         self.fetchHealth = fetchHealth
         self.fetchRecording = fetchRecording
+        self.fetchActivities = fetchActivities
         self.store = store
         // Open with what was loaded last, until it is refreshed.
         if let saved = store?.load(TrainingData.self, named: Self.snapshot) {
@@ -101,12 +119,72 @@ final class TrainingModel {
                 guard file.fileExtension == "fit" else { return nil }
                 recordings?.store(file.content, for: id)
                 return file.content
+            },
+            fetchActivities: { first, last in
+                try await TrainingLoader.activities(from: client, first: first, last: last)
+                    .compactMap(Workout.init)
             })
+    }
+
+    /// The activities of the month starting on `first`, newest first: from the loaded data, or
+    /// from the archive; `nil` until the month is loaded.
+    func workouts(inMonthStarting first: GarminDate) -> [Workout]? {
+        let last = CalendarMonth.adding(months: 1, to: first).adding(days: -1)
+        if case .loaded(let data) = phase, let loaded = data.loadHistory.first?.date,
+            first >= loaded
+        {
+            return data.history.filter { $0.date >= first && $0.date <= last }
+        }
+        return archive[first]
+    }
+
+    /// Fetch the month starting on `first`, unless it is loaded already.
+    func loadMonth(startingOn first: GarminDate) async {
+        guard workouts(inMonthStarting: first) == nil else { return }
+        archiveProblems[first] = nil
+        let last = CalendarMonth.adding(months: 1, to: first).adding(days: -1)
+        do {
+            archive[first] = try await fetchActivities(first, last).sorted {
+                ($0.start ?? .distantPast, $0.id) > ($1.start ?? .distantPast, $1.id)
+            }
+        } catch {
+            guard !Task.isCancelled, !(error is CancellationError) else { return }
+            archiveProblems[first] = Problem(error)
+        }
+    }
+
+    /// Look for the loaded activities on the same route as `workout`: candidates from the
+    /// summaries, confirmed by the closest ten recordings.
+    func findSimilarRoutes(to workout: Workout) async {
+        guard case .loaded(let data) = phase else { return }
+        similar[workout.id] = .searching
+        await loadTrack(for: workout)
+        guard case .loaded(let track) = tracks[workout.id] else {
+            if case .failed(let problem) = tracks[workout.id] {
+                similar[workout.id] = .failed(problem)
+            } else {
+                similar[workout.id] = .found([])
+            }
+            return
+        }
+        let route = track.route.map(\.geoPoint)
+        let pool = data.history + archive.values.flatMap(\.self)
+        var matches: [Workout] = []
+        for candidate in RouteMatcher.candidates(for: workout, in: pool).prefix(10) {
+            await loadTrack(for: candidate)
+            if case .loaded(let other) = tracks[candidate.id],
+                RouteMatcher.isSameRoute(route, other.route.map(\.geoPoint))
+            {
+                matches.append(candidate)
+            }
+        }
+        similar[workout.id] = .found(matches.sorted { $0.date > $1.date })
     }
 
     /// Forget the analyzed recordings, as after changing units.
     func resetTracks() {
         tracks = [:]
+        similar = [:]
     }
 
     /// Download and analyze `workout`'s recording, unless it is loaded already.

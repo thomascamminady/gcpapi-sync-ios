@@ -64,8 +64,10 @@ nonisolated struct HeartRateZoneSet: Hashable, Codable, Sendable {
 
 /// What the training screens show.
 nonisolated struct TrainingData: Hashable, Codable, Sendable {
-    /// Newest first.
+    /// The activities shown, newest first.
     let workouts: [Workout]
+    /// Every activity loaded, including those before the days shown, newest first.
+    let history: [Workout]
     /// One day each, oldest first, including the days before those shown.
     let loadHistory: [TrainingLoad.Day]
     /// Oldest first.
@@ -160,6 +162,7 @@ nonisolated enum TrainingLoader {
         let shownFrom = end.adding(days: 1 - shownDays)
         return TrainingData(
             workouts: workouts.filter { $0.date >= shownFrom && $0.date <= end },
+            history: workouts.filter { $0.date <= end },
             loadHistory: TrainingLoad.days(
                 workouts, from: first, through: end, fitnessDays: analysis.fitnessDays,
                 fatigueDays: analysis.fatigueDays),

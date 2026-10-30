@@ -32,6 +32,10 @@ An open-source iPhone app for your Garmin health data, built on Garmin's officia
   marker along the route; splits per kilometre or mile, the watch's laps, strength sets,
   Garmin's training effect, and time in zones. Recordings are Garmin's original FIT files,
   read by a FIT decoder of the app's own; pauses are left out, as Garmin does.
+- **Calendar** of activities, month by month, with a dot per activity in its sport's color.
+- **Same route**: the other activities on an activity's route (found from start, finish and
+  distance, confirmed by comparing the recorded routes, in either direction) and how your pace
+  on it developed.
 - **Trends**: HRV, resting heart rate, sleep score, stress and VO2max on one chart, each
   scaled to 0–1 over the range shown, to see how they move together. Over 30 and 90 days, a
   7-day average smooths out single days; *Higher Is Better* flips resting heart rate and

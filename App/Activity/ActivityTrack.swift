@@ -26,6 +26,8 @@ nonisolated struct ActivityTrack: Hashable, Sendable {
         let longitude: Double
         let elapsed: Double
         let heartRate: Int?
+
+        var geoPoint: GeoPoint { GeoPoint(latitude: latitude, longitude: longitude) }
     }
 
     /// A stretch of the route in one heart rate zone (0 to 4), or without heart rate.
