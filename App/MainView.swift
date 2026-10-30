@@ -6,6 +6,7 @@ enum AppTab: String {
     case health
     case activities
     case training
+    case routes
     case settings
 }
 
@@ -20,6 +21,7 @@ struct MainView: View {
     @State private var health: HealthModel
     @State private var training: TrainingModel
     @State private var export: DataExport
+    @State private var routes: RouteLibrary
     /// Whether loaded data may leave the app: not in the demo.
     private let exportsData: Bool
     @SceneStorage("selectedTab") private var tab = AppTab.health
@@ -33,6 +35,7 @@ struct MainView: View {
         _health = State(initialValue: HealthModel(client: client, store: snapshots))
         _training = State(initialValue: training)
         _export = State(initialValue: DataExport(client: client))
+        _routes = State(initialValue: RouteLibrary(store: snapshots == nil ? nil : .standard))
         exportsData = snapshots != nil
     }
 
@@ -46,6 +49,9 @@ struct MainView: View {
             }
             Tab("Training", systemImage: "chart.line.uptrend.xyaxis", value: .training) {
                 TrainingView(model: training)
+            }
+            Tab("Routes", systemImage: RoutesView.symbol, value: .routes) {
+                RoutesView(library: routes, home: home, usualSpeed: usualRunningSpeed)
             }
             Tab("Settings", systemImage: "gearshape", value: .settings) {
                 SettingsView(lastUpdated: health.lastUpdated, export: export)
@@ -81,6 +87,20 @@ struct MainView: View {
                 _ = await (week, activities)
             }
         }
+    }
+
+    /// Where the latest activity with GPS started: where new routes begin.
+    private var home: GeoPoint? {
+        guard case .loaded(let data) = training.phase else { return nil }
+        return data.history.lazy.compactMap(\.startPoint).first
+    }
+
+    /// The median speed of the recent runs, for estimating how long a route takes.
+    private var usualRunningSpeed: Double? {
+        guard case .loaded(let data) = training.phase else { return nil }
+        let runs = data.workouts.filter { $0.sport == .running }
+        let speeds = runs.compactMap(\.averageSpeed).sorted()
+        return speeds.isEmpty ? nil : speeds[speeds.count / 2]
     }
 
     private func syncExports() {
