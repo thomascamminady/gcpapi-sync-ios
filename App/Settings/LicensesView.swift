@@ -17,7 +17,7 @@ struct LicensesView: View {
     }
 
     nonisolated static let components = [
-        Component(name: "GCPAPI Sync for iPhone", license: "MIT", file: "GCPAPISyncApp"),
+        Component(name: "GCPAPI Sync", license: "MIT", file: "GCPAPISyncApp"),
         Component(name: "gcpapi-sync-swift", license: "MIT", file: "GCPAPISync"),
         Component(name: "SwiftLog (Apple)", license: "Apache 2.0", file: "swift-log"),
     ]
@@ -42,8 +42,8 @@ struct LicensesView: View {
             } footer: {
                 Text(
                     """
-                    This app is free software under the MIT license. Maps © Apple and its data \\
-                    providers. Garmin and Garmin Connect are trademarks of Garmin Ltd.; this app \\
+                    This app is free software under the MIT license. Maps © Apple and its data \
+                    providers. Garmin and Garmin Connect are trademarks of Garmin Ltd.; this app \
                     is not affiliated with Garmin.
                     """
                 )

@@ -61,7 +61,7 @@ nonisolated enum Problem: Error, Equatable, Sendable {
         case .keychain:
             String(
                 localized:
-                    "Your key could not be stored securely. Unlock your iPhone and try again.")
+                    "Your key could not be stored securely. Unlock your device and try again.")
         case .calendarDenied:
             String(
                 localized: "Allow access in the Settings app under Privacy & Security › Calendars.")

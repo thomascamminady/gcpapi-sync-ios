@@ -77,3 +77,13 @@ jobs:
           name: test-results-${{ matrix.region }}
           path: results-${{ matrix.region }}.xcresult
           retention-days: 7
+
+  translations:
+    name: Every string in German
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Export the strings and check their translations
+        run: Scripts/check-translations.sh

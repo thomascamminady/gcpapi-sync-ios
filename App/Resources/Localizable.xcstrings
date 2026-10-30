@@ -1,0 +1,4185 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ h" : {
+      "shouldTranslate" : false
+    },
+    "%@ higher" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ höher"
+          }
+        }
+      }
+    },
+    "%@ is %@ %@ and back to usual within %@." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ ist %3$@ %2$@ und %4$@ später wieder normal."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ is %2$@ %3$@ and back to usual within %4$@."
+          }
+        }
+      }
+    },
+    "%@ is %@ %@ and not back to usual after three days." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ ist %3$@ %2$@ und nach drei Tagen noch nicht wieder normal."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ is %2$@ %3$@ and not back to usual after three days."
+          }
+        }
+      }
+    },
+    "%@ lower" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ niedriger"
+          }
+        }
+      }
+    },
+    "%@ on this route" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ auf dieser Strecke"
+          }
+        }
+      }
+    },
+    "%@ · %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$lld"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
+    "%@ · %lld-week average %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$lld-Wochen-Schnitt %3$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$lld-week average %3$@"
+          }
+        }
+      }
+    },
+    "%@ · 7-day average" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · 7-Tage-Schnitt"
+          }
+        }
+      }
+    },
+    "%@ · about %@ at your usual pace" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · etwa %2$@ in deinem üblichen Tempo"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · about %2$@ at your usual pace"
+          }
+        }
+      }
+    },
+    "%@ · load %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · Belastung %2$lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · load %2$lld"
+          }
+        }
+      }
+    },
+    "%@%%" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ %%"
+          }
+        }
+      }
+    },
+    "%lld" : {
+      "shouldTranslate" : false
+    },
+    "%lld bpm" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld bpm"
+          }
+        }
+      }
+    },
+    "%lld days after hard training" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Tage nach hartem Training"
+          }
+        }
+      }
+    },
+    "%lld of %lld days at goal" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ziel an %1$lld von %2$lld Tagen erreicht"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld days at goal"
+          }
+        }
+      }
+    },
+    "%lld per week below the WHO goal of 150" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld pro Woche, unter dem WHO-Ziel von 150"
+          }
+        }
+      }
+    },
+    "%lld%%" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld %%"
+          }
+        }
+      }
+    },
+    "%lld-day average %@ bpm" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld-Tage-Schnitt %2$@ bpm"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld-day average %2$@ bpm"
+          }
+        }
+      }
+    },
+    "+%lld" : {
+      "shouldTranslate" : false
+    },
+    "30D" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30T"
+          }
+        }
+      }
+    },
+    "3M" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3M"
+          }
+        }
+      }
+    },
+    "6W" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "6W"
+          }
+        }
+      }
+    },
+    "7-Day Average" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7-Tage-Schnitt"
+          }
+        }
+      }
+    },
+    "7D" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7T"
+          }
+        }
+      }
+    },
+    "90D" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "90T"
+          }
+        }
+      }
+    },
+    "A day is hard when its training load is in the top %@ of your training days; hard days in a row count once, from the first. Around each, every value is compared with your usual level: the median of the %lld days before it. Averaging over all hard days cancels out what happens by chance and leaves your typical response; the band is its 95%% confidence interval, and a change counts as clear only when the band excludes zero. Rest days, averaged the same way, show what happens without training.\n\nHRV and sleep belong to the night ending on a day, so they show a hard day's effect from the day after. This shows what tends to follow hard training, not what causes it: travel, illness or stress around hard days count too." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein Tag ist hart, wenn seine Trainingsbelastung zu den obersten %1$@ deiner Trainingstage gehört; harte Tage in Folge zählen einmal, ab dem ersten. Um jeden herum wird jeder Wert mit deinem üblichen Niveau verglichen: dem Median der %2$lld Tage davor. Der Mittelwert über alle harten Tage hebt Zufälle auf und lässt deine typische Reaktion übrig; das Band ist ihr 95-%%-Konfidenzintervall, und eine Änderung gilt nur dann als klar, wenn das Band die Null ausschließt. Ruhetage, ebenso gemittelt, zeigen, was ohne Training geschieht.\n\nHFV und Schlaf gehören zur Nacht, die an einem Tag endet, daher zeigen sie die Wirkung eines harten Tages ab dem Tag danach. Das zeigt, was hartem Training meist folgt, nicht, was es verursacht: Reisen, Krankheit oder Stress rund um harte Tage zählen mit."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "A day is hard when its training load is in the top %1$@ of your training days; hard days in a row count once, from the first. Around each, every value is compared with your usual level: the median of the %2$lld days before it. Averaging over all hard days cancels out what happens by chance and leaves your typical response; the band is its 95%% confidence interval, and a change counts as clear only when the band excludes zero. Rest days, averaged the same way, show what happens without training.\n\nHRV and sleep belong to the night ending on a day, so they show a hard day's effect from the day after. This shows what tends to follow hard training, not what causes it: travel, illness or stress around hard days count too."
+          }
+        }
+      }
+    },
+    "A personal, open-source project. Not affiliated with or endorsed by Garmin or Wahoo Fitness. Garmin and Garmin Connect are trademarks of Garmin Ltd." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein persönliches Open-Source-Projekt, weder mit Garmin noch mit Wahoo Fitness verbunden oder von ihnen unterstützt. Garmin und Garmin Connect sind Marken von Garmin Ltd."
+          }
+        }
+      }
+    },
+    "API key" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API-Schlüssel"
+          }
+        }
+      }
+    },
+    "About" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Info"
+          }
+        }
+      }
+    },
+    "About %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Über %@"
+          }
+        }
+      }
+    },
+    "About Trends" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Über Trends"
+          }
+        }
+      }
+    },
+    "Above the WHO goal of 150" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WHO-Ziel erreicht"
+          }
+        }
+      }
+    },
+    "Accent" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akzent"
+          }
+        }
+      }
+    },
+    "Account" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konto"
+          }
+        }
+      }
+    },
+    "Activities" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktivitäten"
+          }
+        }
+      }
+    },
+    "Activities (CSV)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktivitäten (CSV)"
+          }
+        }
+      }
+    },
+    "Activities as Calendar (ICS)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktivitäten als Kalender (ICS)"
+          }
+        }
+      }
+    },
+    "Activities in Calendar" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktivitäten im Kalender"
+          }
+        }
+      }
+    },
+    "Activity Charts" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktivitätsdiagramme"
+          }
+        }
+      }
+    },
+    "Activity name" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name der Aktivität"
+          }
+        }
+      }
+    },
+    "Adds a calendar named Activities to the Calendar app with your activities of the last 365 days, kept up to date. Calendar access is asked for only now and used only for this calendar; it syncs wherever your calendars sync." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fügt der Kalender-App einen Kalender „Aktivitäten“ mit deinen Aktivitäten der letzten 365 Tage hinzu und hält ihn aktuell. Der Zugriff auf den Kalender wird erst jetzt erfragt und nur für diesen Kalender genutzt; er wird überall synchronisiert, wo deine Kalender synchronisiert werden."
+          }
+        }
+      }
+    },
+    "Aerobic" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aerob"
+          }
+        }
+      }
+    },
+    "Aerobic training effect %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aerober Trainingseffekt %@"
+          }
+        }
+      }
+    },
+    "After every sync, %@ and %@ in the folder are updated. Earlier rows stay, so the files grow into your complete history." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach jeder Synchronisierung werden %1$@ und %2$@ im Ordner aktualisiert. Frühere Zeilen bleiben erhalten, so wachsen die Dateien zu deiner vollständigen Historie."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "After every sync, %1$@ and %2$@ in the folder are updated. Earlier rows stay, so the files grow into your complete history."
+          }
+        }
+      }
+    },
+    "After hard days" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach harten Tagen"
+          }
+        }
+      }
+    },
+    "After rest days" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach Ruhetagen"
+          }
+        }
+      }
+    },
+    "All Sports" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Sportarten"
+          }
+        }
+      }
+    },
+    "Allow access in the Settings app under Privacy & Security › Calendars." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erlaube den Zugriff in den Einstellungen unter „Datenschutz & Sicherheit“ › „Kalender“."
+          }
+        }
+      }
+    },
+    "Anaerobic" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anaerob"
+          }
+        }
+      }
+    },
+    "Analysis" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyse"
+          }
+        }
+      }
+    },
+    "App" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App"
+          }
+        }
+      }
+    },
+    "Automatic" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch"
+          }
+        }
+      }
+    },
+    "Average %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durchschnitt %@"
+          }
+        }
+      }
+    },
+    "Average heart rate %lld bpm" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durchschnittliche Herzfrequenz %lld bpm"
+          }
+        }
+      }
+    },
+    "Average range %@–%@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durchschnittlicher Bereich %1$@–%2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Average range %1$@–%2$@"
+          }
+        }
+      }
+    },
+    "Average sleep score %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durchschnittlicher Schlafindex %lld"
+          }
+        }
+      }
+    },
+    "Average stress level (0–100), estimated from your heart while you are not active: 0–25 is rest, 26–50 low, 51–75 medium and 76–100 high." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durchschnittliches Stresslevel (0–100), geschätzt aus deinem Herzschlag, während du nicht aktiv bist: 0–25 ist Ruhe, 26–50 niedrig, 51–75 mittel und 76–100 hoch."
+          }
+        }
+      }
+    },
+    "Avg Heart Rate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ø Herzfrequenz"
+          }
+        }
+      }
+    },
+    "Avg Power" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ø Leistung"
+          }
+        }
+      }
+    },
+    "Awake" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wach"
+          }
+        }
+      }
+    },
+    "Back to Start" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zurück zum Start"
+          }
+        }
+      }
+    },
+    "Balanced" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgeglichen"
+          }
+        }
+      }
+    },
+    "Balanced is checked for color-vision deficiencies. Colors changed below stay as they are when the theme changes." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„Ausgeglichen“ ist auf Farbsehschwächen geprüft. Unten geänderte Farben bleiben beim Wechsel des Themas erhalten."
+          }
+        }
+      }
+    },
+    "Band" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bereich"
+          }
+        }
+      }
+    },
+    "Base" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grundlage"
+          }
+        }
+      }
+    },
+    "Based on ^[%lld hard day](inflect: true) (training load %lld or more) and ^[%lld rest day](inflect: true) in the last %lld days." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grundlage: ^[%1$lld Tag](inflect: true) mit hartem Training (Trainingsbelastung ab %2$lld) und ^[%3$lld Ruhetag](inflect: true) in den letzten %4$lld Tagen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Based on ^[%1$lld hard day](inflect: true) (training load %2$lld or more) and ^[%3$lld rest day](inflect: true) in the last %4$lld days."
+          }
+        }
+      }
+    },
+    "Before" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Davor"
+          }
+        }
+      }
+    },
+    "Bench Press" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bankdrücken"
+          }
+        }
+      }
+    },
+    "Best" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beste"
+          }
+        }
+      }
+    },
+    "Body Battery" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Body Battery"
+          }
+        }
+      }
+    },
+    "Building fitness: more load than you are used to." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fitness wird aufgebaut: mehr Belastung als gewohnt."
+          }
+        }
+      }
+    },
+    "Cadence" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kadenz"
+          }
+        }
+      }
+    },
+    "Calendar" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalender"
+          }
+        }
+      }
+    },
+    "Calf Raise" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wadenheben"
+          }
+        }
+      }
+    },
+    "Calories" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalorien"
+          }
+        }
+      }
+    },
+    "Cardio" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cardio"
+          }
+        }
+      }
+    },
+    "Carry" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tragen"
+          }
+        }
+      }
+    },
+    "Change" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Änderung"
+          }
+        }
+      }
+    },
+    "Charts" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diagramme"
+          }
+        }
+      }
+    },
+    "Check your internet connection and try again." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prüfe deine Internetverbindung und versuche es erneut."
+          }
+        }
+      }
+    },
+    "Choose Folder…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordner auswählen …"
+          }
+        }
+      }
+    },
+    "Choose the language in System Settings › General › Language & Region › Applications." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle die Sprache in den Systemeinstellungen unter „Allgemein“ › „Sprache & Region“."
+          }
+        }
+      }
+    },
+    "Chop" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Holzhacker"
+          }
+        }
+      }
+    },
+    "Climb" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anstieg"
+          }
+        }
+      }
+    },
+    "Colors" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Farben"
+          }
+        }
+      }
+    },
+    "Comparing routes…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strecken werden verglichen …"
+          }
+        }
+      }
+    },
+    "Comparing your hard training days with the days after them…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine harten Trainingstage werden mit den Tagen danach verglichen …"
+          }
+        }
+      }
+    },
+    "Connect" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbinden"
+          }
+        }
+      }
+    },
+    "Connect Garmin" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garmin verbinden"
+          }
+        }
+      }
+    },
+    "Connected" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbunden"
+          }
+        }
+      }
+    },
+    "Copy the key and paste it below." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopiere den Schlüssel und füge ihn unten ein."
+          }
+        }
+      }
+    },
+    "Core" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rumpf"
+          }
+        }
+      }
+    },
+    "Crunch" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crunch"
+          }
+        }
+      }
+    },
+    "Curl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Curl"
+          }
+        }
+      }
+    },
+    "Cycling" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radfahren"
+          }
+        }
+      }
+    },
+    "Daily Health (CSV)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tägliche Gesundheit (CSV)"
+          }
+        }
+      }
+    },
+    "Daily Load" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tägliche Belastung"
+          }
+        }
+      }
+    },
+    "Data from Garmin Connect. Not affiliated with Garmin." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daten aus Garmin Connect. Nicht mit Garmin verbunden."
+          }
+        }
+      }
+    },
+    "Day" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tag"
+          }
+        }
+      }
+    },
+    "Days" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tage"
+          }
+        }
+      }
+    },
+    "Deadlift" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kreuzheben"
+          }
+        }
+      }
+    },
+    "Deep" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tief"
+          }
+        }
+      }
+    },
+    "Deep %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tief %@"
+          }
+        }
+      }
+    },
+    "Dense Mode" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kompakter Modus"
+          }
+        }
+      }
+    },
+    "Dense mode fits more on the screen: smaller charts, three tiles a row, compact lists." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der kompakte Modus zeigt mehr auf einmal: kleinere Diagramme, drei Kacheln pro Reihe, kompakte Listen."
+          }
+        }
+      }
+    },
+    "Detail Screens Show" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detailansichten zeigen"
+          }
+        }
+      }
+    },
+    "Detraining" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leistungsabbau"
+          }
+        }
+      }
+    },
+    "Disconnect" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trennen"
+          }
+        }
+      }
+    },
+    "Disconnect from Garmin?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Von Garmin trennen?"
+          }
+        }
+      }
+    },
+    "Display" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Darstellung"
+          }
+        }
+      }
+    },
+    "Distance" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Distanz"
+          }
+        }
+      }
+    },
+    "Done" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fertig"
+          }
+        }
+      }
+    },
+    "Drag across a chart to see every value at that moment, and where it was." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Streiche über ein Diagramm, um alle Werte zu diesem Zeitpunkt zu sehen – und wo du warst."
+          }
+        }
+      }
+    },
+    "Duration" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dauer"
+          }
+        }
+      }
+    },
+    "Duration %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dauer %@"
+          }
+        }
+      }
+    },
+    "Each day shows the mean of the week ending on it" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jeder Tag zeigt den Mittelwert der Woche, die mit ihm endet"
+          }
+        }
+      }
+    },
+    "Each metric scaled from its lowest (0) to its highest (1) this week" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jeder Wert skaliert von seinem Tiefst- (0) bis zu seinem Höchststand (1) dieser Woche"
+          }
+        }
+      }
+    },
+    "Easy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Locker"
+          }
+        }
+      }
+    },
+    "Elevation" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Höhe"
+          }
+        }
+      }
+    },
+    "Elevation Gain" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Höhenmeter"
+          }
+        }
+      }
+    },
+    "End" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ende"
+          }
+        }
+      }
+    },
+    "Enter your API key" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API-Schlüssel eingeben"
+          }
+        }
+      }
+    },
+    "Estimated from runs · %lld-day average %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aus Läufen geschätzt · %1$lld-Tage-Schnitt %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Estimated from runs · %1$lld-day average %2$@"
+          }
+        }
+      }
+    },
+    "Every activity's training load is Garmin's estimate of the oxygen debt (EPOC) it caused. Fitness is your load averaged over about six weeks, fatigue over about one week. Form is fitness minus fatigue: it drops while you train more than you are used to and rises as you rest. Its zones are shares of fitness, so they fit every athlete." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Trainingsbelastung einer Aktivität ist Garmins Schätzung der Sauerstoffschuld (EPOC), die sie verursacht hat. Fitness ist deine Belastung gemittelt über etwa sechs Wochen, Ermüdung über etwa eine Woche. Form ist Fitness minus Ermüdung: Sie sinkt, solange du mehr trainierst als gewohnt, und steigt, wenn du dich erholst. Ihre Zonen sind Anteile der Fitness und passen so zu allen."
+          }
+        }
+      }
+    },
+    "Everything (JSON)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alles (JSON)"
+          }
+        }
+      }
+    },
+    "Expand Map" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karte vergrößern"
+          }
+        }
+      }
+    },
+    "Explore with Sample Data" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit Beispieldaten ausprobieren"
+          }
+        }
+      }
+    },
+    "Export" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export"
+          }
+        }
+      }
+    },
+    "Export GPX" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GPX exportieren"
+          }
+        }
+      }
+    },
+    "Export and Calendar" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export und Kalender"
+          }
+        }
+      }
+    },
+    "Fair" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mittelmäßig"
+          }
+        }
+      }
+    },
+    "Far more load than you are used to: plan rest." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weit mehr Belastung als gewohnt: Plane Erholung ein."
+          }
+        }
+      }
+    },
+    "Fatigue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ermüdung"
+          }
+        }
+      }
+    },
+    "Fetching from Garmin…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird von Garmin geladen …"
+          }
+        }
+      }
+    },
+    "Files" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateien"
+          }
+        }
+      }
+    },
+    "Find Same Route" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gleiche Strecke finden"
+          }
+        }
+      }
+    },
+    "Find the other activities on this route and see how your pace on it developed. This downloads up to ten recordings." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finde die anderen Aktivitäten auf dieser Strecke und sieh, wie sich dein Tempo darauf entwickelt hat. Dafür werden bis zu zehn Aufzeichnungen geladen."
+          }
+        }
+      }
+    },
+    "Finish" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ziel"
+          }
+        }
+      }
+    },
+    "Fitness" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fitness"
+          }
+        }
+      }
+    },
+    "Fitness and Fatigue" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fitness und Ermüdung"
+          }
+        }
+      }
+    },
+    "Fitness and fatigue average your training load over these days. Recovery Response counts the top share of your training days by load as hard, and compares the days around them with the median of the days before." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fitness und Ermüdung mitteln deine Trainingsbelastung über diese Tage. Die Erholungsreaktion zählt den obersten Anteil deiner Trainingstage nach Belastung als hart und vergleicht die Tage um sie herum mit dem Median der Tage davor."
+          }
+        }
+      }
+    },
+    "Flips resting heart rate and stress, so up always means a better day" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kehrt Ruheherzfrequenz und Stress um, sodass oben immer einen besseren Tag bedeutet"
+          }
+        }
+      }
+    },
+    "Flye" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fliegende"
+          }
+        }
+      }
+    },
+    "Folder" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordner"
+          }
+        }
+      }
+    },
+    "Follow Roads and Paths" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Straßen und Wegen folgen"
+          }
+        }
+      }
+    },
+    "Form" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Form"
+          }
+        }
+      }
+    },
+    "Form Zones" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formzonen"
+          }
+        }
+      }
+    },
+    "Fresh" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Frisch"
+          }
+        }
+      }
+    },
+    "From" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Von"
+          }
+        }
+      }
+    },
+    "GCPAPISync" : {
+      "shouldTranslate" : false
+    },
+    "Garmin" : {
+      "shouldTranslate" : false
+    },
+    "Garmin asked to slow down. Try again in a minute." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garmin bittet um eine Pause. Versuche es in einer Minute erneut."
+          }
+        }
+      }
+    },
+    "Garmin does not share its VO2max through the Personal API, so it is estimated from your runs: the oxygen cost of each run's grade-adjusted pace, divided by the effort its average heart rate implies. A day's value averages the runs of the 30 days before it, weighted by duration." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garmin teilt seine VO2max nicht über die Personal API, daher wird sie aus deinen Läufen geschätzt: der Sauerstoffbedarf des steigungsbereinigten Tempos jedes Laufs, geteilt durch die Anstrengung, die seine durchschnittliche Herzfrequenz anzeigt. Der Wert eines Tages mittelt die Läufe der 30 Tage davor, gewichtet nach Dauer."
+          }
+        }
+      }
+    },
+    "Garmin is not responding" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garmin antwortet nicht"
+          }
+        }
+      }
+    },
+    "Garmin is unavailable" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garmin ist nicht erreichbar"
+          }
+        }
+      }
+    },
+    "Garmin rejected the API key" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garmin hat den API-Schlüssel abgelehnt"
+          }
+        }
+      }
+    },
+    "Garmin took too long to answer. Try again in a moment." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garmin hat zu lange gebraucht. Versuche es gleich noch einmal."
+          }
+        }
+      }
+    },
+    "Garmin's estimate of your energy reserves (0–100), charged by rest and sleep and drained by activity and stress. Bars span each day's lowest to highest level." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garmins Schätzung deiner Energiereserven (0–100), aufgeladen durch Ruhe und Schlaf, verbraucht durch Aktivität und Stress. Die Balken reichen vom niedrigsten bis zum höchsten Stand des Tages."
+          }
+        }
+      }
+    },
+    "Garmin's servers had a problem. Try again later." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bei Garmins Servern gab es ein Problem. Versuche es später erneut."
+          }
+        }
+      }
+    },
+    "Get your API key" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API-Schlüssel erhalten"
+          }
+        }
+      }
+    },
+    "Go to Settings › Personal API and create a key." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffne Einstellungen › Personal API und erstelle einen Schlüssel."
+          }
+        }
+      }
+    },
+    "Goal" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ziel"
+          }
+        }
+      }
+    },
+    "Goal %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ziel %@"
+          }
+        }
+      }
+    },
+    "Good" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gut"
+          }
+        }
+      }
+    },
+    "HR" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HF"
+          }
+        }
+      }
+    },
+    "HRV" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HFV"
+          }
+        }
+      }
+    },
+    "HRV, resting heart rate, sleep score, stress and VO2max have different units, so each line is scaled to its own range over the days shown: 0 is the lowest value and 1 the highest. The chart shows how the metrics move together, not how large they are. Over 30 and 90 days, a 7-day average smooths out single days. VO2max is estimated from your runs." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HFV, Ruheherzfrequenz, Schlafindex, Stress und VO2max haben verschiedene Einheiten, daher wird jede Linie auf ihren eigenen Bereich über die gezeigten Tage skaliert: 0 ist der niedrigste Wert, 1 der höchste. Das Diagramm zeigt, wie sich die Werte gemeinsam bewegen, nicht, wie groß sie sind. Über 30 und 90 Tage glättet ein 7-Tage-Schnitt einzelne Tage. VO2max wird aus deinen Läufen geschätzt."
+          }
+        }
+      }
+    },
+    "Hard Days" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harte Tage"
+          }
+        }
+      }
+    },
+    "Health Metrics" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesundheitswerte"
+          }
+        }
+      }
+    },
+    "Heart Rate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herzfrequenz"
+          }
+        }
+      }
+    },
+    "Heart Rate Variability" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herzfrequenzvariabilität"
+          }
+        }
+      }
+    },
+    "Heart Rate Zone" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herzfrequenzzone"
+          }
+        }
+      }
+    },
+    "Heart Rate Zones" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herzfrequenzzonen"
+          }
+        }
+      }
+    },
+    "Heart Rate and Power Zones" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herzfrequenz- und Leistungszonen"
+          }
+        }
+      }
+    },
+    "Heart rate zone" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herzfrequenzzone"
+          }
+        }
+      }
+    },
+    "Hidden" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgeblendet"
+          }
+        }
+      }
+    },
+    "High" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoch"
+          }
+        }
+      }
+    },
+    "Higher Is Better" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Höher ist besser"
+          }
+        }
+      }
+    },
+    "Highest" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Höchstwert"
+          }
+        }
+      }
+    },
+    "Highly improving" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stark verbessernd"
+          }
+        }
+      }
+    },
+    "Hip Raise" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hüftheben"
+          }
+        }
+      }
+    },
+    "Hip Stability" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hüftstabilität"
+          }
+        }
+      }
+    },
+    "Hip Swing" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hüftschwung"
+          }
+        }
+      }
+    },
+    "Hours" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stunden"
+          }
+        }
+      }
+    },
+    "How It Works" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So funktioniert es"
+          }
+        }
+      }
+    },
+    "How your body responds to your hardest training days: the average change from your usual level on the days around them, compared with rest days." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wie dein Körper auf deine härtesten Trainingstage reagiert: die durchschnittliche Abweichung von deinem üblichen Niveau an den Tagen um sie herum, im Vergleich zu Ruhetagen."
+          }
+        }
+      }
+    },
+    "Hybrid" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hybrid"
+          }
+        }
+      }
+    },
+    "Hyperextension" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rückenstrecken"
+          }
+        }
+      }
+    },
+    "Imperial" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imperial"
+          }
+        }
+      }
+    },
+    "Improving" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbessernd"
+          }
+        }
+      }
+    },
+    "Intensity" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intensität"
+          }
+        }
+      }
+    },
+    "Intensity Minutes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intensitätsminuten"
+          }
+        }
+      }
+    },
+    "It may have expired or been deleted. Create a new key in Garmin Connect under Settings › Personal API." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Er ist vielleicht abgelaufen oder wurde gelöscht. Erstelle in Garmin Connect unter Einstellungen › Personal API einen neuen Schlüssel."
+          }
+        }
+      }
+    },
+    "Keep a Folder Up to Date" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einen Ordner aktuell halten"
+          }
+        }
+      }
+    },
+    "Language" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sprache"
+          }
+        }
+      }
+    },
+    "Language and Region" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sprache und Region"
+          }
+        }
+      }
+    },
+    "Language opens the Settings app, where you choose it for this app alone." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„Sprache“ öffnet die Einstellungen, wo du sie nur für diese App wählst."
+          }
+        }
+      }
+    },
+    "Laps" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Runden"
+          }
+        }
+      }
+    },
+    "Last %lld days" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzte %lld Tage"
+          }
+        }
+      }
+    },
+    "Last 7 Days" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzte 7 Tage"
+          }
+        }
+      }
+    },
+    "Last Week" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzte Woche"
+          }
+        }
+      }
+    },
+    "Last night" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzte Nacht"
+          }
+        }
+      }
+    },
+    "Last night · %lld-day average %@ ms" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzte Nacht · %1$lld-Tage-Schnitt %2$@ ms"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Last night · %1$lld-day average %2$@ ms"
+          }
+        }
+      }
+    },
+    "Lateral Raise" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seitheben"
+          }
+        }
+      }
+    },
+    "Layout" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Layout"
+          }
+        }
+      }
+    },
+    "Leave Sample Data" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beispieldaten verlassen"
+          }
+        }
+      }
+    },
+    "Leg Curl" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beinbeugen"
+          }
+        }
+      }
+    },
+    "Leg Raise" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beinheben"
+          }
+        }
+      }
+    },
+    "Licenses" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lizenzen"
+          }
+        }
+      }
+    },
+    "Light" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leicht"
+          }
+        }
+      }
+    },
+    "List" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liste"
+          }
+        }
+      }
+    },
+    "Load" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belastung"
+          }
+        }
+      }
+    },
+    "Loading" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird geladen"
+          }
+        }
+      }
+    },
+    "Loading activities…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktivitäten werden geladen …"
+          }
+        }
+      }
+    },
+    "Loading the recording…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufzeichnung wird geladen …"
+          }
+        }
+      }
+    },
+    "Low" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niedrig"
+          }
+        }
+      }
+    },
+    "Lowest" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiefstwert"
+          }
+        }
+      }
+    },
+    "Lowest %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiefstwert %lld"
+          }
+        }
+      }
+    },
+    "Lunge" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausfallschritt"
+          }
+        }
+      }
+    },
+    "Maintaining" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erhaltend"
+          }
+        }
+      }
+    },
+    "Map" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karte"
+          }
+        }
+      }
+    },
+    "Max Heart Rate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Max. Herzfrequenz"
+          }
+        }
+      }
+    },
+    "Maximum" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maximum"
+          }
+        }
+      }
+    },
+    "Medium" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mittel"
+          }
+        }
+      }
+    },
+    "Metric" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metrisch"
+          }
+        }
+      }
+    },
+    "Minor benefit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geringer Nutzen"
+          }
+        }
+      }
+    },
+    "Minutes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minuten"
+          }
+        }
+      }
+    },
+    "Minutes of moderate activity plus twice the vigorous ones. The WHO recommends at least 150 per week." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minuten moderater Aktivität plus das Doppelte der intensiven. Die WHO empfiehlt mindestens 150 pro Woche."
+          }
+        }
+      }
+    },
+    "Monday" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Montag"
+          }
+        }
+      }
+    },
+    "Much more rested than fit: fitness is fading." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Viel erholter als fit: Die Fitness lässt nach."
+          }
+        }
+      }
+    },
+    "Needs at least %lld hard training days, counting days in a row once, with health data from the weeks before them; %lld so far." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Braucht mindestens %1$lld harte Trainingstage – Tage in Folge zählen einmal – mit Gesundheitsdaten aus den Wochen davor; bisher %2$lld."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Needs at least %1$lld hard training days, counting days in a row once, with health data from the weeks before them; %2$lld so far."
+          }
+        }
+      }
+    },
+    "Neutral" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutral"
+          }
+        }
+      }
+    },
+    "New Route" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neue Route"
+          }
+        }
+      }
+    },
+    "Next Month" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nächster Monat"
+          }
+        }
+      }
+    },
+    "No Activities" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Aktivitäten"
+          }
+        }
+      }
+    },
+    "No Routes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Routen"
+          }
+        }
+      }
+    },
+    "No access to Calendar" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Zugriff auf den Kalender"
+          }
+        }
+      }
+    },
+    "No activities." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Aktivitäten."
+          }
+        }
+      }
+    },
+    "No benefit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Nutzen"
+          }
+        }
+      }
+    },
+    "No clear change in %@ after hard training." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine klare Änderung bei %@ nach hartem Training."
+          }
+        }
+      }
+    },
+    "No data" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Daten"
+          }
+        }
+      }
+    },
+    "No other loaded activity was on this route." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine andere geladene Aktivität war auf dieser Strecke."
+          }
+        }
+      }
+    },
+    "No recording to analyze for this activity." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für diese Aktivität gibt es keine Aufzeichnung zum Analysieren."
+          }
+        }
+      }
+    },
+    "No sleep score" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Schlafindex"
+          }
+        }
+      }
+    },
+    "Normalized Power" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Normalized Power"
+          }
+        }
+      }
+    },
+    "Not enough %@ data around hard days yet." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch nicht genug Daten zu %@ rund um harte Tage."
+          }
+        }
+      }
+    },
+    "Nothing recorded in the last 90 days." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In den letzten 90 Tagen nichts aufgezeichnet."
+          }
+        }
+      }
+    },
+    "Olympic Lift" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Olympisches Gewichtheben"
+          }
+        }
+      }
+    },
+    "Open Garmin Connect" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garmin Connect öffnen"
+          }
+        }
+      }
+    },
+    "Open Garmin Connect on the web and sign in." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffne Garmin Connect im Web und melde dich an."
+          }
+        }
+      }
+    },
+    "Opens the Settings app" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnet die Einstellungen"
+          }
+        }
+      }
+    },
+    "Original Recording (FIT)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Originalaufzeichnung (FIT)"
+          }
+        }
+      }
+    },
+    "Other" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Andere"
+          }
+        }
+      }
+    },
+    "Overreaching" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überlastung"
+          }
+        }
+      }
+    },
+    "Pace" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pace"
+          }
+        }
+      }
+    },
+    "Paste the key you created in Garmin Connect." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Füge den Schlüssel ein, den du in Garmin Connect erstellt hast."
+          }
+        }
+      }
+    },
+    "Period" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeitraum"
+          }
+        }
+      }
+    },
+    "Places a point of the route" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setzt einen Punkt der Route"
+          }
+        }
+      }
+    },
+    "Plan a Route" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Route planen"
+          }
+        }
+      }
+    },
+    "Plank" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plank"
+          }
+        }
+      }
+    },
+    "Planned Route" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geplante Route"
+          }
+        }
+      }
+    },
+    "Plyo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plyo"
+          }
+        }
+      }
+    },
+    "Poor" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schlecht"
+          }
+        }
+      }
+    },
+    "Power" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leistung"
+          }
+        }
+      }
+    },
+    "Power Zones" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leistungszonen"
+          }
+        }
+      }
+    },
+    "Prepare Files" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateien vorbereiten"
+          }
+        }
+      }
+    },
+    "Previous Month" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorheriger Monat"
+          }
+        }
+      }
+    },
+    "Primary Benefit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primärer Nutzen"
+          }
+        }
+      }
+    },
+    "Productive" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Produktiv"
+          }
+        }
+      }
+    },
+    "Pull-Up" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klimmzug"
+          }
+        }
+      }
+    },
+    "Push-Up" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liegestütz"
+          }
+        }
+      }
+    },
+    "REM" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "REM"
+          }
+        }
+      }
+    },
+    "REM %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "REM %@"
+          }
+        }
+      }
+    },
+    "Range" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeitraum"
+          }
+        }
+      }
+    },
+    "Ranges · %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bereiche · %@"
+          }
+        }
+      }
+    },
+    "Recovery" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erholung"
+          }
+        }
+      }
+    },
+    "Recovery Response" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erholungsreaktion"
+          }
+        }
+      }
+    },
+    "Refresh in the Background" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Im Hintergrund aktualisieren"
+          }
+        }
+      }
+    },
+    "Reset" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zurücksetzen"
+          }
+        }
+      }
+    },
+    "Reset All" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle zurücksetzen"
+          }
+        }
+      }
+    },
+    "Rested and ready for a race or a hard effort." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erholt und bereit für einen Wettkampf oder eine harte Einheit."
+          }
+        }
+      }
+    },
+    "Resting" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruhe"
+          }
+        }
+      }
+    },
+    "Resting HR" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruhe-HF"
+          }
+        }
+      }
+    },
+    "Resting Heart Rate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruheherzfrequenz"
+          }
+        }
+      }
+    },
+    "Restore Defaults" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standards wiederherstellen"
+          }
+        }
+      }
+    },
+    "Reverse" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umkehren"
+          }
+        }
+      }
+    },
+    "Route" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strecke"
+          }
+        }
+      }
+    },
+    "Route (GPX)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strecke (GPX)"
+          }
+        }
+      }
+    },
+    "Route Colors" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Streckenfarben"
+          }
+        }
+      }
+    },
+    "Route map" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Streckenkarte"
+          }
+        }
+      }
+    },
+    "Route name" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name der Route"
+          }
+        }
+      }
+    },
+    "Routes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Routen"
+          }
+        }
+      }
+    },
+    "Row" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rudern"
+          }
+        }
+      }
+    },
+    "Run" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lauf"
+          }
+        }
+      }
+    },
+    "Running" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laufen"
+          }
+        }
+      }
+    },
+    "Same Route" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gleiche Strecke"
+          }
+        }
+      }
+    },
+    "Sample data" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beispieldaten"
+          }
+        }
+      }
+    },
+    "Satellite" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satellit"
+          }
+        }
+      }
+    },
+    "Save" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sichern"
+          }
+        }
+      }
+    },
+    "Scaled" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skaliert"
+          }
+        }
+      }
+    },
+    "Score %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Index %lld"
+          }
+        }
+      }
+    },
+    "See your sleep, heart rate, HRV, stress and activity in one place, straight from Garmin's official Personal API." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schlaf, Herzfrequenz, HFV, Stress und Aktivität an einem Ort, direkt aus Garmins offizieller Personal API."
+          }
+        }
+      }
+    },
+    "Selected" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgewählt"
+          }
+        }
+      }
+    },
+    "Series" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reihe"
+          }
+        }
+      }
+    },
+    "Set %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satz %lld"
+          }
+        }
+      }
+    },
+    "Sets" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sätze"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen"
+          }
+        }
+      }
+    },
+    "Share or Save %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ teilen oder sichern"
+          }
+        }
+      }
+    },
+    "Share to Mail or AirDrop, or save to Files: on this device, in iCloud Drive, Dropbox or any other storage you use. Nothing is sent anywhere else." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Per Mail oder AirDrop teilen oder in „Dateien“ sichern: auf diesem Gerät, in iCloud Drive, Dropbox oder jedem anderen Speicher, den du nutzt. Nichts wird anderswohin gesendet."
+          }
+        }
+      }
+    },
+    "Shoulder Press" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schulterdrücken"
+          }
+        }
+      }
+    },
+    "Shoulder Stability" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schulterstabilität"
+          }
+        }
+      }
+    },
+    "Shown" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eingeblendet"
+          }
+        }
+      }
+    },
+    "Shows details" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt Details"
+          }
+        }
+      }
+    },
+    "Shrug" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schulterheben"
+          }
+        }
+      }
+    },
+    "Sit-Up" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sit-up"
+          }
+        }
+      }
+    },
+    "Sleep" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schlaf"
+          }
+        }
+      }
+    },
+    "Sleep Score" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schlafindex"
+          }
+        }
+      }
+    },
+    "Sleep Stages" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schlafphasen"
+          }
+        }
+      }
+    },
+    "Soft" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sanft"
+          }
+        }
+      }
+    },
+    "Something went wrong" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etwas ist schiefgelaufen"
+          }
+        }
+      }
+    },
+    "Source Code" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quellcode"
+          }
+        }
+      }
+    },
+    "Speed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geschwindigkeit"
+          }
+        }
+      }
+    },
+    "Splits per Kilometre" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwischenzeiten pro Kilometer"
+          }
+        }
+      }
+    },
+    "Splits per Mile" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwischenzeiten pro Meile"
+          }
+        }
+      }
+    },
+    "Sport" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sportart"
+          }
+        }
+      }
+    },
+    "Sports" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sportarten"
+          }
+        }
+      }
+    },
+    "Sprint" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sprint"
+          }
+        }
+      }
+    },
+    "Squat" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kniebeuge"
+          }
+        }
+      }
+    },
+    "Stage" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phase"
+          }
+        }
+      }
+    },
+    "Standard" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standard"
+          }
+        }
+      }
+    },
+    "Start" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
+        }
+      }
+    },
+    "Status" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Status"
+          }
+        }
+      }
+    },
+    "Steps" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schritte"
+          }
+        }
+      }
+    },
+    "Steps counted by your watch. Garmin's daily goal adapts to your recent activity unless you set a fixed one." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Von deiner Uhr gezählte Schritte. Garmins Tagesziel passt sich deiner letzten Aktivität an, außer du legst ein festes fest."
+          }
+        }
+      }
+    },
+    "Stop Updating" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht mehr aktualisieren"
+          }
+        }
+      }
+    },
+    "Strength" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Krafttraining"
+          }
+        }
+      }
+    },
+    "Stress" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stress"
+          }
+        }
+      }
+    },
+    "Stress Levels" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stresslevel"
+          }
+        }
+      }
+    },
+    "Summary" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Übersicht"
+          }
+        }
+      }
+    },
+    "Sunday" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonntag"
+          }
+        }
+      }
+    },
+    "Swimming" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schwimmen"
+          }
+        }
+      }
+    },
+    "Synced %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisiert %@"
+          }
+        }
+      }
+    },
+    "Syncing with Garmin…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisiere mit Garmin …"
+          }
+        }
+      }
+    },
+    "Tap the map to place points; the route follows roads and paths between them. Save it, or export it to Garmin Connect as a course." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tippe auf die Karte, um Punkte zu setzen; die Route folgt dazwischen Straßen und Wegen. Sichere sie oder exportiere sie als Strecke nach Garmin Connect."
+          }
+        }
+      }
+    },
+    "Tap the map to place the start." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tippe auf die Karte, um den Start zu setzen."
+          }
+        }
+      }
+    },
+    "Tempo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tempo"
+          }
+        }
+      }
+    },
+    "The Keychain is unavailable" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Schlüsselbund ist nicht verfügbar"
+          }
+        }
+      }
+    },
+    "The overnight average of the variation between heartbeats. Garmin compares it with your personal baseline; Balanced means you are in your usual range." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der nächtliche Durchschnitt der Schwankung zwischen Herzschlägen. Garmin vergleicht ihn mit deinem persönlichen Ausgangswert; „Ausgeglichen“ heißt, du bist in deinem üblichen Bereich."
+          }
+        }
+      }
+    },
+    "Theme" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thema"
+          }
+        }
+      }
+    },
+    "This Week" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese Woche"
+          }
+        }
+      }
+    },
+    "This app is free software under the MIT license. Maps © Apple and its data providers. Garmin and Garmin Connect are trademarks of Garmin Ltd.; this app is not affiliated with Garmin." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diese App ist freie Software unter der MIT-Lizenz. Karten © Apple und seine Datenanbieter. Garmin und Garmin Connect sind Marken von Garmin Ltd.; diese App ist nicht mit Garmin verbunden."
+          }
+        }
+      }
+    },
+    "Threshold" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schwelle"
+          }
+        }
+      }
+    },
+    "Tiles" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kacheln"
+          }
+        }
+      }
+    },
+    "Time" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeit"
+          }
+        }
+      }
+    },
+    "Time asleep each night, split into deep, light and REM sleep and time awake. The sleep score (0–100) combines duration, quality and recovery." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schlafdauer jeder Nacht, aufgeteilt in Tief-, Leicht- und REM-Schlaf sowie Wachzeit. Der Schlafindex (0–100) verbindet Dauer, Qualität und Erholung."
+          }
+        }
+      }
+    },
+    "To" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bis"
+          }
+        }
+      }
+    },
+    "Today" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heute"
+          }
+        }
+      }
+    },
+    "Too many requests" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zu viele Anfragen"
+          }
+        }
+      }
+    },
+    "Top %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oberste %@"
+          }
+        }
+      }
+    },
+    "Total Body" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ganzkörper"
+          }
+        }
+      }
+    },
+    "Training" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Training"
+          }
+        }
+      }
+    },
+    "Training Effect" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trainingseffekt"
+          }
+        }
+      }
+    },
+    "Training Load" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trainingsbelastung"
+          }
+        }
+      }
+    },
+    "Training Load and Form" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trainingsbelastung und Form"
+          }
+        }
+      }
+    },
+    "Training about as much as you are used to." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Training etwa im gewohnten Umfang."
+          }
+        }
+      }
+    },
+    "Training effect rates the impact on your aerobic and anaerobic fitness from 0 to 5. Training load is the oxygen debt (EPOC) Garmin estimates for the activity; it adds to your fitness and fatigue." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Trainingseffekt bewertet die Wirkung auf deine aerobe und anaerobe Fitness von 0 bis 5. Die Trainingsbelastung ist die Sauerstoffschuld (EPOC), die Garmin für die Aktivität schätzt; sie fließt in deine Fitness und Ermüdung ein."
+          }
+        }
+      }
+    },
+    "Training load %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trainingsbelastung %lld"
+          }
+        }
+      }
+    },
+    "Training load, training effect and zones are Garmin's." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trainingsbelastung, Trainingseffekt und Zonen stammen von Garmin."
+          }
+        }
+      }
+    },
+    "Trends" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trends"
+          }
+        }
+      }
+    },
+    "Triceps Extension" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trizepsstrecken"
+          }
+        }
+      }
+    },
+    "Try Again" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erneut versuchen"
+          }
+        }
+      }
+    },
+    "Unbalanced" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unausgeglichen"
+          }
+        }
+      }
+    },
+    "Undo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widerrufen"
+          }
+        }
+      }
+    },
+    "Units" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einheiten"
+          }
+        }
+      }
+    },
+    "Updated" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktualisiert"
+          }
+        }
+      }
+    },
+    "Use a Different Key" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anderen Schlüssel verwenden"
+          }
+        }
+      }
+    },
+    "Usual" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Üblich"
+          }
+        }
+      }
+    },
+    "Usual Level" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Übliches Niveau"
+          }
+        }
+      }
+    },
+    "VO2 Max" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VO2max"
+          }
+        }
+      }
+    },
+    "VO2max" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VO2max"
+          }
+        }
+      }
+    },
+    "Value" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wert"
+          }
+        }
+      }
+    },
+    "Version" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version"
+          }
+        }
+      }
+    },
+    "Vivid" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kräftig"
+          }
+        }
+      }
+    },
+    "Walking & Hiking" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gehen & Wandern"
+          }
+        }
+      }
+    },
+    "Warm Up" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufwärmen"
+          }
+        }
+      }
+    },
+    "Warm-Up" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufwärmen"
+          }
+        }
+      }
+    },
+    "Week" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Woche"
+          }
+        }
+      }
+    },
+    "Week Starts On" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Woche beginnt am"
+          }
+        }
+      }
+    },
+    "Weekly Volume" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wochenumfang"
+          }
+        }
+      }
+    },
+    "Yesterday" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestern"
+          }
+        }
+      }
+    },
+    "You're offline" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Du bist offline"
+          }
+        }
+      }
+    },
+    "Your API key is removed from this device. Your data on Garmin is not affected." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein API-Schlüssel wird von diesem Gerät entfernt. Deine Daten bei Garmin bleiben unberührt."
+          }
+        }
+      }
+    },
+    "Your Data" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Daten"
+          }
+        }
+      }
+    },
+    "Your data stays on your device and with Garmin. Nothing is collected." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Daten bleiben auf deinem Gerät und bei Garmin. Nichts wird gesammelt."
+          }
+        }
+      }
+    },
+    "Your key could not be stored securely. Unlock your device and try again." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Schlüssel konnte nicht sicher gespeichert werden. Entsperre dein Gerät und versuche es erneut."
+          }
+        }
+      }
+    },
+    "Your key stays in this device's Keychain and is only ever sent to Garmin. This app is not affiliated with Garmin." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Schlüssel bleibt im Schlüsselbund dieses Geräts und wird nur an Garmin gesendet. Diese App ist nicht mit Garmin verbunden."
+          }
+        }
+      }
+    },
+    "Your lowest heart rate of the day at rest. It tends to fall as fitness improves; a sudden rise can come with stress, illness or fatigue." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine niedrigste Herzfrequenz des Tages in Ruhe. Sie sinkt meist, wenn die Fitness steigt; ein plötzlicher Anstieg kann mit Stress, Krankheit oder Ermüdung einhergehen."
+          }
+        }
+      }
+    },
+    "Zone %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zone %lld"
+          }
+        }
+      }
+    },
+    "^[%lld activity](inflect: true)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld Aktivität](inflect: true)"
+          }
+        }
+      }
+    },
+    "^[%lld day](inflect: true)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld Tag](inflect: true)"
+          }
+        }
+      }
+    },
+    "^[%lld file](inflect: true)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld Datei](inflect: true)"
+          }
+        }
+      }
+    },
+    "average" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schnitt"
+          }
+        }
+      }
+    },
+    "high" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Höchststand"
+          }
+        }
+      }
+    },
+    "km" : {
+      "shouldTranslate" : false
+    },
+    "latest high" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "letzter Höchststand"
+          }
+        }
+      }
+    },
+    "mi" : {
+      "shouldTranslate" : false
+    },
+    "minutes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minuten"
+          }
+        }
+      }
+    },
+    "on hard training days" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "an harten Trainingstagen"
+          }
+        }
+      }
+    },
+    "per day" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pro Tag"
+          }
+        }
+      }
+    },
+    "per week" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pro Woche"
+          }
+        }
+      }
+    },
+    "steps" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schritte"
+          }
+        }
+      }
+    },
+    "the day after hard training" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "am Tag nach hartem Training"
+          }
+        }
+      }
+    },
+    "this week" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "diese Woche"
+          }
+        }
+      }
+    },
+    "–" : {
+      "shouldTranslate" : false
+    }
+  },
+  "version" : "1.1"
+}

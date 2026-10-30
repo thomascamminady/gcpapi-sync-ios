@@ -1,7 +1,7 @@
 # SwiftLint with every opt-in rule enabled, run with --strict (warnings fail).
 # Rules are disabled only when they contradict swift-format (which owns layout) or idiomatic
 # Swift; each one says why.
-included: [App, AppTests]
+included: [App, AppTests, AppUITests]
 excluded: [.build, GCPAPISync.xcodeproj]
 opt_in_rules: [all]
 
@@ -27,6 +27,7 @@ disabled_rules:
   - explicit_acl # internal is the default; the public API is explicit and documented
   - explicit_top_level_acl
   - explicit_type_interface # type inference
+  - prefer_nimble # the UI tests use XCTest alone, without a matcher library
   - explicit_enum_raw_value # String raw values equal to the case name (CodingKeys)
   - discouraged_default_parameter # default arguments mirror the Python API's keyword defaults
   - discouraged_optional_boolean # Garmin's booleans are tri-state: true, false or absent

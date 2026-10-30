@@ -41,7 +41,7 @@ struct SimilarRoutesCard: View {
         case nil:
             Text(
                 """
-                Find the other activities on this route and see how your pace on it \\
+                Find the other activities on this route and see how your pace on it \
                 developed. This downloads up to ten recordings.
                 """
             )

@@ -34,7 +34,7 @@ struct WorkoutRow: View {
     /// `Thu, 29 Oct · 07:12`.
     private var when: String {
         let start = workout.start ?? workout.date.startOfDay(in: .current)
-        let day = start.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated))
+        let day = start.formatted(.dateTime.weekday(.abbreviated).day().month(.twoDigits))
         return "\(day) · \(start.formatted(.dateTime.hour().minute()))"
     }
 
@@ -110,6 +110,7 @@ struct ActivityListView: View {
                         NavigationLink(value: ActivityRoute.workout(workout)) {
                             WorkoutRow(workout: workout)
                         }
+                        .accessibilityIdentifier("workout.\(workout.sport.rawValue)")
                     }
                 } header: {
                     WeekHeader(start: week.start, workouts: week.workouts)

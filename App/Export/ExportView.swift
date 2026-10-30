@@ -44,7 +44,7 @@ struct ExportView: View {
         } footer: {
             Text(
                 """
-                Share to Mail or AirDrop, or save to Files: on this iPhone, in iCloud Drive, \\
+                Share to Mail or AirDrop, or save to Files: on this device, in iCloud Drive, \
                 Dropbox or any other storage you use. Nothing is sent anywhere else.
                 """
             )
@@ -114,8 +114,8 @@ struct ExportView: View {
         } footer: {
             Text(
                 """
-                After every sync, \\(FolderSync.dailyFile) and \\(FolderSync.activitiesFile) in \\
-                the folder are updated. Earlier rows stay, so the files grow into your complete \\
+                After every sync, \(FolderSync.dailyFile) and \(FolderSync.activitiesFile) in \
+                the folder are updated. Earlier rows stay, so the files grow into your complete \
                 history.
                 """
             )
@@ -134,8 +134,8 @@ struct ExportView: View {
         } footer: {
             Text(
                 """
-                Adds a calendar named Activities to the Calendar app with your activities of \\
-                the last 365 days, kept up to date. Calendar access is asked for only now and \\
+                Adds a calendar named Activities to the Calendar app with your activities of \
+                the last 365 days, kept up to date. Calendar access is asked for only now and \
                 used only for this calendar; it syncs wherever your calendars sync.
                 """
             )

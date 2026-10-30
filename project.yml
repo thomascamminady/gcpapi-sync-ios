@@ -31,6 +31,8 @@ settings:
     ENABLE_MODULE_VERIFIER: "YES"
     DEAD_CODE_STRIPPING: "YES"
     LOCALIZATION_PREFERS_STRING_CATALOGS: "YES"
+    # The compiler, not a parser, finds the localizable strings: it also sees String(localized:).
+    SWIFT_EMIT_LOC_STRINGS: "YES"
     STRING_CATALOG_GENERATE_SYMBOLS: "YES"
     # iPhone, iPad and the Mac (Mac Catalyst with the Mac idiom).
     TARGETED_DEVICE_FAMILY: "1,2,6"
@@ -96,15 +98,33 @@ targets:
         TEST_HOST: $(BUILT_PRODUCTS_DIR)/GCPAPISyncApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GCPAPISyncApp
         BUNDLE_LOADER: $(TEST_HOST)
 
+  GCPAPISyncAppUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: AppUITests
+        type: syncedFolder
+    dependencies:
+      - target: GCPAPISyncApp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.camminady.gcpapi-sync.uitests
+        GENERATE_INFOPLIST_FILE: "YES"
+        # XCTestCase is not main-actor isolated; the tests that drive the app are.
+        SWIFT_DEFAULT_ACTOR_ISOLATION: nonisolated
+        TEST_TARGET_NAME: GCPAPISyncApp
+
 schemes:
   GCPAPISyncApp:
     build:
       targets:
         GCPAPISyncApp: all
         GCPAPISyncAppTests: [test]
+        GCPAPISyncAppUITests: [test]
     test:
       targets:
         - GCPAPISyncAppTests
+        - GCPAPISyncAppUITests
       gatherCoverageData: true
       coverageTargets:
         - GCPAPISyncApp
