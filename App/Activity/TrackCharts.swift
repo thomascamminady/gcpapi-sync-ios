@@ -68,6 +68,15 @@ enum TrackMeasure: String, CaseIterable, Identifiable {
         }
     }
 
+    /// The plotted pace (negated minutes) or speed of `speed` metres per second.
+    static func plotted(speed: Double, sport: Sport) -> Double {
+        if usesPace(sport) {
+            let unit = sport == .swimming ? 100 : (Format.usesMiles ? 1609.344 : 1000)
+            return -unit / max(speed, 0.1) / 60
+        }
+        return speed * (Format.usesMiles ? 2.23694 : 3.6)
+    }
+
     /// A plotted value as text with its unit.
     func format(_ value: Double, sport: Sport) -> String {
         switch self {

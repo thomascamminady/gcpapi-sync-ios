@@ -26,6 +26,9 @@ struct WorkoutDetailView: View {
                 }
                 stats
                 recording
+                if workout.startPoint != nil, workout.distance != nil {
+                    SimilarRoutesCard(workout: workout, model: model)
+                }
                 if workout.aerobicEffect != nil || workout.trainingLoad != nil {
                     effect
                 }

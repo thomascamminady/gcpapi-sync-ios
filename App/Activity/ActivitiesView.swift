@@ -6,9 +6,16 @@ enum ActivityRoute: Hashable {
     case workout(Workout)
 }
 
-/// The activities tab: every activity of the last 90 days, newest first.
+/// How the activities tab shows activities.
+enum ActivityLayout: String {
+    case list
+    case calendar
+}
+
+/// The activities tab: every activity of the last 90 days as a list, or month by month.
 struct ActivitiesView: View {
     let model: TrainingModel
+    @SceneStorage("activityLayout") private var layout = ActivityLayout.list
 
     var body: some View {
         NavigationStack {
@@ -22,6 +29,16 @@ struct ActivitiesView: View {
                     }
                 }
                 .navigationSubtitle(SyncStatus.text(model.lastUpdated))
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Picker("Layout", selection: $layout) {
+                            Label("List", systemImage: "list.bullet").tag(ActivityLayout.list)
+                            Label("Calendar", systemImage: "calendar").tag(ActivityLayout.calendar)
+                        }
+                        .pickerStyle(.segmented)
+                        .labelStyle(.iconOnly)
+                    }
+                }
                 .task { await model.loadIfNeeded() }
                 .refreshable { await model.load() }
         }
@@ -33,7 +50,10 @@ struct ActivitiesView: View {
             ProgressView("Loading activities…")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         case .loaded(let data):
-            ActivityListView(data: data)
+            switch layout {
+            case .list: ActivityListView(data: data)
+            case .calendar: ActivityCalendarView(model: model)
+            }
         case .failed(let problem):
             ContentUnavailableView {
                 Label(problem.title, systemImage: problem.symbol)
