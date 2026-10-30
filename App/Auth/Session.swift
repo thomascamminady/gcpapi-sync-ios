@@ -86,6 +86,8 @@ final class Session {
         } catch {
             throw Problem(error)
         }
+        // A real account ends the demo.
+        isDemo = false
         state = .signedIn(client)
     }
 

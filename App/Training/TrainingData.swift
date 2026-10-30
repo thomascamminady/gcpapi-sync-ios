@@ -30,10 +30,19 @@ nonisolated struct TrainingWeek: Identifiable, Hashable, Codable, Sendable {
         }
     }
 
-    /// The first day of the week containing `date`.
+    /// The first day of the week containing `date`, by `calendar`'s first weekday.
     static func weekStart(of date: GarminDate, calendar: Calendar) -> GarminDate {
-        let weekday = calendar.component(.weekday, from: date.startOfDay(in: calendar.timeZone))
-        return date.adding(days: -((weekday - calendar.firstWeekday + 7) % 7))
+        date.adding(days: -((date.weekday - calendar.firstWeekday + 7) % 7))
+    }
+}
+
+extension GarminDate {
+    /// The day of the week, 1 (Sunday) to 7 (Saturday) as `Calendar` counts them, from the
+    /// date alone: no time zone can move it, not even one whose clocks skip midnight.
+    nonisolated var weekday: Int {
+        // 1 January 2000 was a Saturday.
+        let days = ((try? GarminDate(year: 2000, month: 1, day: 1)) ?? self).days(to: self)
+        return ((days + 6) % 7 + 7) % 7 + 1
     }
 }
 

@@ -23,11 +23,13 @@ nonisolated enum VO2maxEstimator {
         let vo2max: Double
     }
 
-    /// The maximum heart rate Garmin uses: the running zones', else the default ones'.
+    /// The maximum heart rate Garmin uses: the running zones', else the default ones', else
+    /// that of the first zones that have one; zones without one are skipped.
     static func maxHeartRate(from zones: [HeartRateZones]) -> Double? {
+        let known = zones.filter { $0.maxHeartRateUsed != nil }
         let preferred =
-            zones.first { $0.sport == "RUNNING" } ?? zones.first { $0.sport == "DEFAULT" }
-            ?? zones.first
+            known.first { $0.sport == "RUNNING" } ?? known.first { $0.sport == "DEFAULT" }
+            ?? known.first
         return preferred?.maxHeartRateUsed.map(Double.init)
     }
 
@@ -55,7 +57,9 @@ nonisolated enum VO2maxEstimator {
     /// The duration-weighted mean of the estimates of the `window` days ending on `day`.
     static func trend(_ estimates: [Estimate], on day: GarminDate) -> Double? {
         let first = day.adding(days: 1 - window)
+        // In a fixed order, so that the sum does not depend on the order runs arrive in.
         let recent = estimates.filter { first <= $0.date && $0.date <= day }
+            .sorted { ($0.date, $0.duration, $0.vo2max) < ($1.date, $1.duration, $1.vo2max) }
         let duration = recent.reduce(0) { $0 + $1.duration }
         guard duration > 0 else { return nil }
         return recent.reduce(0) { $0 + $1.vo2max * $1.duration } / duration

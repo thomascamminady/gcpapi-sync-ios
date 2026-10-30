@@ -4,9 +4,10 @@ import GCPAPISync
 /// How HRV, resting heart rate, sleep and stress respond to hard training, learned from the
 /// user's own history.
 ///
-/// A superposed epoch analysis (an event-related average): each hard training day is an
-/// event, and every metric on the days around it is compared with its usual level, the median
-/// of the 28 days before the event. Averaging over many events cancels out what happens by
+/// A superposed epoch analysis (an event-related average): each block of consecutive hard
+/// training days is an event, from its first day, so that no day counts twice; every metric on
+/// the days around it is compared with its usual level, the median of the 28 days before the
+/// event. Averaging over many events cancels out what happens by
 /// chance and leaves the typical response. Rest days, averaged the same way, are the control.
 nonisolated struct RecoveryResponse: Hashable, Codable, Sendable {
     /// Days relative to the training day: the day before, the day itself and three after.
@@ -93,19 +94,22 @@ nonisolated struct RecoveryResponse: Hashable, Codable, Sendable {
     /// The share of training days that counted as hard, and the days of the usual level.
     let hardShare: Double
     let baselineDays: Int
+    /// Training days with a load of at least ``threshold``.
     let hardDays: Int
+    /// Blocks of consecutive hard days: the events, each from its first day.
+    let hardEvents: Int
     let restDays: Int
     /// The training load from which a day counts as hard.
     let threshold: Double?
 
-    /// Whether there are enough hard days to say anything.
-    var isSufficient: Bool { hardDays >= Self.minimumEvents }
+    /// Whether there are enough hard events to say anything.
+    var isSufficient: Bool { hardEvents >= Self.minimumEvents }
 
-    /// The curve with the clearest response, HRV when it has one.
+    /// The curve with the clearest response, HRV when it responds clearly; `nil` when no metric
+    /// does.
     var headline: Curve? {
         let clear = curves.filter { $0.peak?.isClear == true }
-        return clear.first { $0.metric == .hrv }
-            ?? clear.max { strength($0) < strength($1) } ?? curves.first
+        return clear.first { $0.metric == .hrv } ?? clear.max { strength($0) < strength($1) }
     }
 
     private func strength(_ curve: Curve) -> Double {
@@ -120,12 +124,7 @@ nonisolated struct RecoveryResponse: Hashable, Codable, Sendable {
         self.hardShare = hardShare
         self.baselineDays = baselineDays
         let loadByDate = Dictionary(loads.map { ($0.date, $0.load) }) { first, _ in first }
-        let trainingLoads = loads.map(\.load).filter { $0 > 0 }.sorted()
-        let threshold =
-            trainingLoads.isEmpty
-            ? nil
-            : trainingLoads[
-                max(0, Int(((1 - hardShare) * Double(trainingLoads.count)).rounded(.up)) - 1)]
+        let threshold = Self.threshold(loads.map(\.load).filter { $0 > 0 }, share: hardShare)
         func isHard(_ date: GarminDate) -> Bool {
             guard let threshold, let load = loadByDate[date] else { return false }
             return load >= threshold
@@ -140,7 +139,8 @@ nonisolated struct RecoveryResponse: Hashable, Codable, Sendable {
                 hard: Self.points(metric, around: hard, in: byDate, baselineDays: baselineDays),
                 rest: Self.points(metric, around: rest, in: byDate, baselineDays: baselineDays))
         }
-        hardDays = hard.count
+        hardDays = loads.filter { isHard($0.date) }.count
+        hardEvents = hard.count
         restDays = rest.count
         self.threshold = threshold
     }
@@ -173,6 +173,23 @@ nonisolated struct RecoveryResponse: Hashable, Codable, Sendable {
                 lag: lag, mean: mean, margin: 1.96 * (variance / max(1, count)).squareRoot(),
                 events: values.count)
         }
+    }
+
+    /// The load from which a training day is hard: of the loads that occur, the one whose
+    /// share of days at or above it comes closest to `share`, so that tied loads all count or
+    /// none does.
+    static func threshold(_ trainingLoads: [Double], share: Double) -> Double? {
+        let sorted = trainingLoads.sorted()
+        guard !sorted.isEmpty else { return nil }
+        let count = Double(sorted.count)
+        var best: (value: Double, gap: Double)?
+        for (index, value) in sorted.enumerated() where index == 0 || sorted[index - 1] < value {
+            let gap = abs(Double(sorted.count - index) / count - share)
+            if best.map({ gap < $0.gap }) ?? true {
+                best = (value, gap)
+            }
+        }
+        return best?.value
     }
 
     static func median(_ values: [Double]) -> Double? {

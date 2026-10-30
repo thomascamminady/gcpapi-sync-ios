@@ -67,6 +67,9 @@ nonisolated struct Settings: Codable, Equatable, Sendable {
         hiddenTiles = value(.hiddenTiles, defaults.hiddenTiles)
         showsTrends = value(.showsTrends, defaults.showsTrends)
         detailDays = value(.detailDays, defaults.detailDays)
+        if ![7, 30, 90].contains(detailDays) {
+            detailDays = defaults.detailDays
+        }
         routeColoring = value(.routeColoring, defaults.routeColoring)
         mapStyle = value(.mapStyle, defaults.mapStyle)
         hiddenCharts = value(.hiddenCharts, defaults.hiddenCharts)
@@ -139,9 +142,12 @@ final class Preferences {
         defaults.set(settings.weekStart.rawValue, forKey: Self.weekStartKey)
     }
 
-    /// The color of `role`: the user's choice or the default.
+    /// The color of `role`: the user's choice, or the color of their theme.
     func color(_ role: ColorRole) -> Color {
-        settings.colors[role.key].flatMap(Color.init(hex:)) ?? role.defaultColor
+        if let chosen = settings.colors[role.key].flatMap(Color.init(hex:)) {
+            return chosen
+        }
+        return role.hue.map(settings.theme.color) ?? Color(.accent)
     }
 
     /// Use `color` for `role`, or the default again with `nil`.
@@ -179,7 +185,9 @@ extension Calendar {
 extension Color {
     /// A color from `RRGGBB` or `RRGGBBAA`.
     nonisolated init?(hex: String) {
-        guard [6, 8].contains(hex.count), let value = UInt64(hex, radix: 16) else { return nil }
+        guard [6, 8].contains(hex.count), hex.allSatisfy(\.isHexDigit),
+            let value = UInt64(hex, radix: 16)
+        else { return nil }
         let rgba = hex.count == 6 ? value << 8 | 0xFF : value
         self.init(
             red: Double(rgba >> 24 & 0xFF) / 255, green: Double(rgba >> 16 & 0xFF) / 255,

@@ -37,6 +37,7 @@ nonisolated enum TrainingLoad {
         _ workouts: [Workout], from first: GarminDate, through last: GarminDate,
         fitnessDays: Double = fitnessDays, fatigueDays: Double = fatigueDays
     ) -> [Day] {
+        guard first <= last else { return [] }
         var loads: [GarminDate: Double] = [:]
         for workout in workouts {
             loads[workout.date, default: 0] += workout.trainingLoad ?? 0

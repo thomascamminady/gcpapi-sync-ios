@@ -102,7 +102,7 @@ private func scenario(hrv: (Int) -> Int?) -> (HealthHistory, [TrainingLoad.Day])
         #expect(stress.peak == nil)
         #expect(stress.hard.allSatisfy { $0.events < 1 })
         #expect(stress.sentence.contains(OverviewMetric.stress.title))
-        #expect(response.headline?.metric == .hrv)
+        #expect(response.headline == nil)
     }
 
     @Test func fewHardDaysAreNotEnough() {

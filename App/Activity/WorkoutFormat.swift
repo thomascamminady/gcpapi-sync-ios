@@ -28,7 +28,8 @@ extension Format {
         duration(seconds: Int(seconds.rounded()))
     }
 
-    /// `10.2 km` or `6.3 mi`.
+    /// In kilometres or miles, with two decimals below 10 (`5.03 km`, `6.21 mi`) and one from
+    /// 10 on (`10.2 km`, `26.2 mi`).
     nonisolated static func distance(metres: Double) -> String {
         let measurement = Measurement(value: metres, unit: UnitLength.meters)
             .converted(to: usesMiles ? .miles : .kilometers)
@@ -36,7 +37,7 @@ extension Format {
             .measurement(
                 width: .abbreviated, usage: .asProvided,
                 numberFormatStyle: .number.precision(
-                    .fractionLength(measurement.value < 100 ? 2 : 1))))
+                    .fractionLength(abs(measurement.value) < 10 ? 2 : 1))))
     }
 
     /// `640 m` or `2,100 ft`.
