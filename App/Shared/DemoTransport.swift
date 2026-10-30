@@ -52,10 +52,10 @@ nonisolated struct DemoTransport: HTTPTransport {
         return (0...max(0, first.days(to: last))).map { first.adding(days: $0) }
     }
 
-    /// The page of activities `query` asks for, oldest first.
+    /// The page of activities `query` asks for, newest first like Garmin's.
     private func activities(_ query: [String: String]) -> [SummarizedActivity] {
-        let activities = dates(from: query["startDate"], to: query["endDate"])
-            .flatMap(SummarizedActivity.sampleActivities)
+        let activities = dates(from: query["startDate"], to: query["endDate"]).reversed()
+            .flatMap { SummarizedActivity.sampleActivities(on: $0).reversed() }
             .filter { activity in
                 query["activityType"].map { $0 == activity.activityType?.typeKey } ?? true
             }

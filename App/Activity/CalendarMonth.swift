@@ -23,8 +23,7 @@ nonisolated enum CalendarMonth {
     /// The empty cells before the first day, for weeks starting on `calendar`'s first
     /// weekday.
     static func leadingBlanks(of first: GarminDate, calendar: Calendar) -> Int {
-        let weekday = calendar.component(.weekday, from: first.startOfDay(in: calendar.timeZone))
-        return (weekday - calendar.firstWeekday + 7) % 7
+        (first.weekday - calendar.firstWeekday + 7) % 7
     }
 
     /// The very short weekday names, starting with `calendar`'s first weekday.

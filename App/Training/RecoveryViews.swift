@@ -39,7 +39,9 @@ struct RecoveryCard: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         case .loaded(let response):
-            if response.isSufficient, let curve = response.headline {
+            if response.isSufficient,
+                let curve = response.headline ?? response.curves.first(where: { $0.peak != nil })
+            {
                 Text(curve.sentence)
                     .font(.headline)
                     .fixedSize(horizontal: false, vertical: true)
@@ -52,8 +54,9 @@ struct RecoveryCard: View {
             } else {
                 Text(
                     """
-                    Needs at least \(RecoveryResponse.minimumEvents) hard training days with \
-                    health data from the weeks before them; \(response.hardDays) so far.
+                    Needs at least \(RecoveryResponse.minimumEvents) hard training days, \
+                    counting days in a row once, with health data from the weeks before them; \
+                    \(response.hardEvents) so far.
                     """
                 )
                 .font(.subheadline)
@@ -219,8 +222,9 @@ struct RecoveryDetailView: View {
         return String(
             localized: """
                 A day is hard when its training load is in the top \(share) of your training \
-                days. Around each hard day, every value is compared with your usual level: the \
-                median of the \(response.baselineDays) days before it. Averaging over all hard \
+                days; hard days in a row count once, from the first. Around each, every value \
+                is compared with your usual level: the median of the \(response.baselineDays) \
+                days before it. Averaging over all hard \
                 days cancels out what happens by chance and leaves your typical response; the \
                 band is its 95% confidence interval, and a change counts as clear only when the \
                 band excludes zero. Rest days, averaged the same way, show what happens without \
