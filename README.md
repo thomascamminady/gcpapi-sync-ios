@@ -1,5 +1,7 @@
 # gcpapi-sync-ios
 
+<img src="docs/icon.png" width="96" alt="The app icon: a whistle drawn as a running track">
+
 [![CI](https://github.com/thomascamminady/gcpapi-sync-ios/actions/workflows/ci.yml/badge.svg)](https://github.com/thomascamminady/gcpapi-sync-ios/actions/workflows/ci.yml)
 ![iOS](https://img.shields.io/badge/iOS-26-blue)
 ![Swift](https://img.shields.io/badge/Swift-6-orange)
