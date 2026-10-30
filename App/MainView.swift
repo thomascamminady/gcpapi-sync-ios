@@ -3,6 +3,8 @@ import SwiftUI
 
 /// The tabs of the signed-in app.
 enum AppTab: String {
+    /// The dashboard of a wide window, on the iPad and the Mac.
+    case dashboard
     case health
     case activities
     case training
@@ -24,8 +26,9 @@ struct MainView: View {
     @State private var routes: RouteLibrary
     /// Whether loaded data may leave the app: not in the demo.
     private let exportsData: Bool
-    @SceneStorage("selectedTab") private var tab = AppTab.health
+    @SceneStorage("selectedTab") private var tab = AppTab.dashboard
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.horizontalSizeClass) private var sizeClass
     private let preferences = Preferences.shared
 
     /// The app for `client`, opening with what `snapshots` saved last time.
@@ -40,9 +43,17 @@ struct MainView: View {
     }
 
     var body: some View {
-        TabView(selection: $tab) {
-            Tab("Summary", systemImage: "heart.text.square", value: .health) {
-                WeekView(model: health)
+        TabView(selection: selection) {
+            if isWide {
+                Tab("Dashboard", systemImage: "rectangle.split.3x1", value: .dashboard) {
+                    DeskView(training: training, health: health) { tab = .settings }
+                }
+            }
+            // A wide window's dashboard shows the summary's metrics too.
+            if !isWide {
+                Tab("Summary", systemImage: "heart.text.square", value: .health) {
+                    WeekView(model: health)
+                }
             }
             Tab("Activities", systemImage: "figure.run", value: .activities) {
                 ActivitiesView(model: training)
@@ -56,6 +67,9 @@ struct MainView: View {
             Tab("Settings", systemImage: "gearshape", value: .settings) {
                 SettingsView(lastUpdated: health.lastUpdated, export: export)
             }
+            // A wide window's top tab bar has no room for it in every language: the sidebar and
+            // the dashboard's toolbar open it there.
+            .defaultVisibility(isWide ? .hidden : .automatic, for: .tabBar)
         }
         // A tab bar on the iPhone, a sidebar on the iPad and the Mac.
         .tabViewStyle(.sidebarAdaptable)
@@ -86,6 +100,25 @@ struct MainView: View {
                 async let activities: Void = training.loadIfNeeded(maxAge: 5 * 60)
                 _ = await (week, activities)
             }
+        }
+    }
+
+    /// Whether the window is wide enough for the dashboard.
+    private var isWide: Bool {
+        sizeClass == .regular
+    }
+
+    /// The selected tab: a wide window has the dashboard instead of the summary, a narrow one
+    /// the summary instead of the dashboard.
+    private var selection: Binding<AppTab> {
+        Binding {
+            switch tab {
+            case .dashboard where !isWide: .health
+            case .health where isWide: .dashboard
+            default: tab
+            }
+        } set: {
+            tab = $0
         }
     }
 

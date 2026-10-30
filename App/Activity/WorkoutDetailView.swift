@@ -11,6 +11,7 @@ struct WorkoutDetailView: View {
     /// The scrubbed moment, in seconds of timer time, shared by the charts and the map.
     @State private var selection: Double?
     @Environment(\.isDense) private var isDense
+    @State private var width: CGFloat = 0
 
     private var track: ActivityTrack? {
         if case .loaded(let track) = model.tracks[workout.id] { track } else { nil }
@@ -18,24 +19,42 @@ struct WorkoutDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                header
-                if let track, !track.route.isEmpty {
-                    RouteMapCard(
-                        track: track, sport: workout.sport, zones: zones, selection: selection)
+            Group {
+                if width >= Self.twoColumns {
+                    // The overview on the left, the recording's charts and tables on the right.
+                    HStack(alignment: .top, spacing: 16) {
+                        VStack(alignment: .leading, spacing: 16) {
+                            overview
+                        }
+                        .frame(maxWidth: .infinity)
+                        VStack(alignment: .leading, spacing: 16) {
+                            recording
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                    .frame(maxWidth: 1600)
+                    .frame(maxWidth: .infinity)
+                } else {
+                    VStack(alignment: .leading, spacing: 16) {
+                        header
+                        map
+                        stats
+                        recording
+                        similarRoutes
+                        if workout.aerobicEffect != nil || workout.trainingLoad != nil {
+                            effect
+                        }
+                        zoneCards
+                    }
+                    .readableWidth()
                 }
-                stats
-                recording
-                if workout.startPoint != nil, workout.distance != nil {
-                    SimilarRoutesCard(workout: workout, model: model)
-                }
-                if workout.aerobicEffect != nil || workout.trainingLoad != nil {
-                    effect
-                }
-                zoneCards
             }
             .padding()
-            .readableWidth()
+        }
+        .onGeometryChange(for: CGFloat.self) {
+            $0.size.width
+        } action: {
+            width = $0
         }
         .background(Color(uiColor: .systemGroupedBackground))
         .navigationTitle(workout.name)
@@ -60,6 +79,33 @@ struct WorkoutDetailView: View {
                     }
                 }
             }
+        }
+    }
+
+    /// From this width on, the overview and the recording stand side by side.
+    private static let twoColumns: CGFloat = 1000
+
+    /// Everything but the recording, for the left column of a wide window.
+    @ViewBuilder private var overview: some View {
+        header
+        map
+        stats
+        if workout.aerobicEffect != nil || workout.trainingLoad != nil {
+            effect
+        }
+        zoneCards
+        similarRoutes
+    }
+
+    @ViewBuilder private var map: some View {
+        if let track, !track.route.isEmpty {
+            RouteMapCard(track: track, sport: workout.sport, zones: zones, selection: selection)
+        }
+    }
+
+    @ViewBuilder private var similarRoutes: some View {
+        if workout.startPoint != nil, workout.distance != nil {
+            SimilarRoutesCard(workout: workout, model: model)
         }
     }
 
@@ -183,7 +229,9 @@ struct WorkoutDetailView: View {
             ),
         ]
         return LazyVGrid(
-            columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: isDense ? 3 : 2),
+            columns: Array(
+                repeating: GridItem(.flexible(), spacing: 8),
+                count: isDense || width >= Self.twoColumns ? 3 : 2),
             spacing: 8
         ) {
             ForEach(

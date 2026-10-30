@@ -80,24 +80,33 @@ struct TrainingDashboard: View {
 
     var body: some View {
         ScrollView {
-            LazyVStack(spacing: isDense ? 10 : 16) {
+            VStack(spacing: isDense ? 10 : 16) {
                 if let refreshProblem {
                     ProblemBanner(problem: refreshProblem)
                 }
-                NavigationLink(value: TrainingRoute.load) {
-                    LoadCard(days: data.load)
+                // One column on the iPhone, two side by side in a wide window.
+                LazyVGrid(
+                    columns: [
+                        GridItem(
+                            .adaptive(minimum: 440), spacing: isDense ? 10 : 16, alignment: .top)
+                    ],
+                    spacing: isDense ? 10 : 16
+                ) {
+                    NavigationLink(value: TrainingRoute.load) {
+                        LoadCard(days: data.load)
+                    }
+                    .buttonStyle(.plain)
+                    .matchedTransitionSource(id: TrainingRoute.load, in: transition)
+                    recoveryCard
+                    VolumeCard(weeks: data.weeks)
                 }
-                .buttonStyle(.plain)
-                .matchedTransitionSource(id: TrainingRoute.load, in: transition)
-                recoveryCard
-                VolumeCard(weeks: data.weeks)
                 Text("Training load, training effect and zones are Garmin's.")
                     .font(.caption)
                     .foregroundStyle(.tertiary)
                     .padding(.vertical)
             }
             .padding(.horizontal)
-            .readableWidth()
+            .readableWidth(1400)
         }
         .background(Color(uiColor: .systemGroupedBackground))
     }
