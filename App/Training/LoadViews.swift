@@ -248,6 +248,7 @@ struct TrainingLoadDetailView: View {
                 about
             }
             .padding()
+            .readableWidth()
         }
         .background(Color(uiColor: .systemGroupedBackground))
         .navigationTitle("Training Load")

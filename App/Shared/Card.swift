@@ -7,6 +7,11 @@ extension View {
         modifier(CardStyle())
     }
 
+    /// Content no wider than reads well, centered on iPad and the Mac.
+    func readableWidth(_ width: CGFloat = 820) -> some View {
+        frame(maxWidth: width).frame(maxWidth: .infinity)
+    }
+
     /// A chart's height, about two thirds of it in dense mode.
     func chartHeight(_ height: CGFloat) -> some View {
         modifier(ChartHeight(height: height))

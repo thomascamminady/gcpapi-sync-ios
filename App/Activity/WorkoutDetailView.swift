@@ -32,22 +32,10 @@ struct WorkoutDetailView: View {
                 if workout.aerobicEffect != nil || workout.trainingLoad != nil {
                     effect
                 }
-                if !workout.heartRateZones.isEmpty {
-                    ZoneCard(
-                        title: "Heart Rate Zones", symbol: "heart.fill",
-                        seconds: workout.heartRateZones, names: Self.heartRateZoneNames
-                    ) { zones?.label(zone: $0) }
-                }
-                if !workout.powerZones.isEmpty {
-                    ZoneCard(
-                        title: "Power Zones", symbol: "bolt.fill",
-                        seconds: Array(
-                            workout.powerZones.prefix(
-                                max(5, (workout.powerZones.lastIndex { $0 > 0 } ?? 0) + 1))),
-                        tint: TrackMeasure.power.color)
-                }
+                zoneCards
             }
             .padding()
+            .readableWidth()
         }
         .background(Color(uiColor: .systemGroupedBackground))
         .navigationTitle(workout.name)
@@ -72,6 +60,24 @@ struct WorkoutDetailView: View {
                     }
                 }
             }
+        }
+    }
+
+    /// Time in heart rate and power zones.
+    @ViewBuilder private var zoneCards: some View {
+        if !workout.heartRateZones.isEmpty {
+            ZoneCard(
+                title: "Heart Rate Zones", symbol: "heart.fill",
+                seconds: workout.heartRateZones, names: Self.heartRateZoneNames
+            ) { zones?.label(zone: $0) }
+        }
+        if !workout.powerZones.isEmpty {
+            ZoneCard(
+                title: "Power Zones", symbol: "bolt.fill",
+                seconds: Array(
+                    workout.powerZones.prefix(
+                        max(5, (workout.powerZones.lastIndex { $0 > 0 } ?? 0) + 1))),
+                tint: TrackMeasure.power.color)
         }
     }
 
