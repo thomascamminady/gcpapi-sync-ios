@@ -16,10 +16,20 @@ struct GCPAPISyncApp: App {
 
     @Environment(\.scenePhase) private var scenePhase
 
+    /// On the Mac, windows no smaller than the dashboard's tables need.
+    private static func limitWindowSize() {
+        #if targetEnvironment(macCatalyst)
+            for case let scene as UIWindowScene in UIApplication.shared.connectedScenes {
+                scene.sizeRestrictions?.minimumSize = CGSize(width: 900, height: 600)
+            }
+        #endif
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(session)
+                .task { Self.limitWindowSize() }
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background, session.isSignedIn, !session.isDemo {
