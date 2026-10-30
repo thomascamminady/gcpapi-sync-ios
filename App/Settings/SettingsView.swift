@@ -16,6 +16,7 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 accountSection
+                regionSection
                 displaySection
                 summarySection
                 activitySection
@@ -27,7 +28,7 @@ struct SettingsView: View {
                 } header: {
                     Text("Your Data")
                 } footer: {
-                    Text("Your data stays on this iPhone and with Garmin. Nothing is collected.")
+                    Text("Your data stays on your device and with Garmin. Nothing is collected.")
                 }
                 aboutSection
             }
@@ -37,7 +38,9 @@ struct SettingsView: View {
 
     private var accountSection: some View {
         Section("Garmin") {
-            LabeledContent("Account", value: session.isDemo ? "Sample data" : "Connected")
+            LabeledContent("Account") {
+                Text(session.isDemo ? "Sample data" : "Connected")
+            }
             if let lastUpdated {
                 LabeledContent("Updated") {
                     Text(lastUpdated, format: .relative(presentation: .named))
@@ -56,14 +59,15 @@ struct SettingsView: View {
                 }
             } message: {
                 Text(
-                    "Your API key is removed from this iPhone. Your data on Garmin is not affected."
+                    "Your API key is removed from this device. Your data on Garmin is not affected."
                 )
             }
         }
     }
 
-    private var displaySection: some View {
+    private var regionSection: some View {
         Section {
+            LanguageRow()
             Picker("Units", selection: $preferences.settings.units) {
                 Text("Automatic").tag(Settings.Units.automatic)
                 Text("Metric").tag(Settings.Units.metric)
@@ -74,6 +78,15 @@ struct SettingsView: View {
                 Text("Monday").tag(Settings.WeekStart.monday)
                 Text("Sunday").tag(Settings.WeekStart.sunday)
             }
+        } header: {
+            Text("Language and Region")
+        } footer: {
+            Text(LanguageRow.footer)
+        }
+    }
+
+    private var displaySection: some View {
+        Section {
             Toggle("Dense Mode", isOn: denseMode)
             NavigationLink("Colors") {
                 ColorSettingsView()
@@ -319,4 +332,52 @@ private struct ThemePreview: View {
             fetchActivities: { _, _ in [] })
     )
     .environment(Session.preview)
+}
+
+/// The app's language, which the system keeps per app: in the Settings app on iPhone and iPad,
+/// in System Settings on the Mac.
+private struct LanguageRow: View {
+    @Environment(\.openURL) private var openURL
+
+    static var footer: String {
+        ProcessInfo.processInfo.isMacCatalystApp
+            ? String(
+                localized: """
+                    Choose the language in System Settings › General › Language & Region › \
+                    Applications.
+                    """)
+            : String(
+                localized:
+                    "Language opens the Settings app, where you choose it for this app alone.")
+    }
+
+    /// The language the app shows, in that language: `English`, `Deutsch`.
+    static var current: String {
+        let code = Bundle.main.preferredLocalizations.first ?? "en"
+        let locale = Locale(identifier: code)
+        return locale.localizedString(forLanguageCode: code)?.capitalized(with: locale) ?? code
+    }
+
+    var body: some View {
+        if ProcessInfo.processInfo.isMacCatalystApp {
+            LabeledContent("Language", value: Self.current)
+        } else {
+            Button {
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    openURL(url)
+                }
+            } label: {
+                LabeledContent("Language") {
+                    HStack(spacing: 6) {
+                        Text(Self.current)
+                        Image(systemName: "arrow.up.forward.app")
+                            .imageScale(.small)
+                            .accessibilityHidden(true)
+                    }
+                }
+            }
+            .foregroundStyle(.primary)
+            .accessibilityHint("Opens the Settings app")
+        }
+    }
 }

@@ -6,7 +6,7 @@
 ![iOS](https://img.shields.io/badge/iOS-26-blue)
 ![Swift](https://img.shields.io/badge/Swift-6-orange)
 
-An open-source iPhone app for your Garmin health data, built on Garmin's official
+An open-source app for iPhone, iPad and Mac for your Garmin health data, built on Garmin's official
 [Personal API](https://developer.garmin.com/gc-developer-program/personal/personal-faq/) and
 [gcpapi-sync-swift](https://github.com/thomascamminady/gcpapi-sync-swift).
 
@@ -23,7 +23,7 @@ An open-source iPhone app for your Garmin health data, built on Garmin's officia
 ## What it does today
 
 - **Connect** with a Personal API key (Garmin Connect → Settings → Personal API). The key is
-  checked with Garmin, then kept in this iPhone's Keychain: never synced to iCloud, never in
+  checked with Garmin, then kept in the device's Keychain: never synced to iCloud, never in
   backups, only ever sent to Garmin. Access tokens are cached in the Keychain too.
 - **Summary**: a tile per metric in the style of the Health app (steps, sleep, resting heart
   rate, HRV, VO2max, Body Battery, stress and intensity minutes), each with its latest value

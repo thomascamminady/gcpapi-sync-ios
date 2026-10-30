@@ -18,7 +18,7 @@ struct RecoveryCard: View {
         .cardStyle()
         .contentShape(.rect(cornerRadius: 26))
         .accessibilityElement(children: .combine)
-        .accessibilityHint(isNavigable ? Text("Shows details") : Text(""))
+        .accessibilityHint(isNavigable ? Text("Shows details") : Text(verbatim: ""))
     }
 
     private var isNavigable: Bool {

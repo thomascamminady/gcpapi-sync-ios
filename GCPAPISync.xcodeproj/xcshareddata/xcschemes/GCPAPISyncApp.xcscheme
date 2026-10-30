@@ -35,6 +35,20 @@
                ReferencedContainer = "container:GCPAPISync.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "37F087535AA3B04894207962"
+               BuildableName = "GCPAPISyncAppUITests.xctest"
+               BlueprintName = "GCPAPISyncAppUITests"
+               ReferencedContainer = "container:GCPAPISync.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -62,6 +76,17 @@
                BlueprintIdentifier = "0720FC7C76B213363686097A"
                BuildableName = "GCPAPISyncAppTests.xctest"
                BlueprintName = "GCPAPISyncAppTests"
+               ReferencedContainer = "container:GCPAPISync.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "37F087535AA3B04894207962"
+               BuildableName = "GCPAPISyncAppUITests.xctest"
+               BlueprintName = "GCPAPISyncAppUITests"
                ReferencedContainer = "container:GCPAPISync.xcodeproj">
             </BuildableReference>
          </TestableReference>

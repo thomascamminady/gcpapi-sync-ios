@@ -57,7 +57,7 @@ struct RouteMap: View {
             .annotationTitles(.hidden)
         }
         if let last = track.route.last {
-            Annotation("Finish", coordinate: last.coordinate, anchor: .center) {
+            Annotation(String(localized: "Finish"), coordinate: last.coordinate, anchor: .center) {
                 Image(systemName: "flag.checkered.circle.fill")
                     .font(.title3)
                     .foregroundStyle(.white, .black)

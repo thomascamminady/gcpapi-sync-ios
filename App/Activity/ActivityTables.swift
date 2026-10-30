@@ -73,7 +73,7 @@ struct LapsCard: View {
                     if let speed = lap.averageSpeed, speed > 0 {
                         Text(Format.pace(metresPerSecond: speed, sport: sport))
                     }
-                    Text(lap.averageHeartRate.map { "\($0) bpm" } ?? "")
+                    Text(lap.averageHeartRate.map { String(localized: "\($0) bpm") } ?? "")
                         .frame(width: 72, alignment: .trailing)
                         .foregroundStyle(.secondary)
                 }

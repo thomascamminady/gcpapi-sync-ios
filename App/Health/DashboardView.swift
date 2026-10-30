@@ -38,6 +38,7 @@ struct DashboardView: View {
                     SummaryTile(metric: metric, history: history)
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("tile.\(metric.rawValue)")
                 .matchedTransitionSource(id: Route.metric(metric), in: transition)
             }
         }

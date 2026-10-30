@@ -11,6 +11,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		408AF2D07BEFD263E112D016 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 41F152DD9642349FE7494682 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4C5580209136C5D2F86BC9B4;
+			remoteInfo = GCPAPISyncApp;
+		};
 		541F282A83A2CFD8CF15C0C3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 41F152DD9642349FE7494682 /* Project object */;
@@ -21,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9FF49EA5D90987E81005506B /* GCPAPISyncAppUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GCPAPISyncAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8CD5EE9CF52A4BDF935B809 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
 		ADF380AD5423BB33BEDA5EAB /* GCPAPISyncAppTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = GCPAPISyncAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9AD00AB665882253A316720 /* GCPAPISyncApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = GCPAPISyncApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -45,6 +53,15 @@
 			path = App;
 			sourceTree = "<group>";
 		};
+		E45F6FDB20B89C3F34714795 /* AppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = AppUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +81,7 @@
 			children = (
 				D33EAF289DB49DE563919095 /* App */,
 				BE247F617721FB8895B138C5 /* AppTests */,
+				E45F6FDB20B89C3F34714795 /* AppUITests */,
 				415EA8FFF001F7A3DD1CAA1F /* Config */,
 				C6F9F51FC0C5AE60037DE454 /* Products */,
 			);
@@ -82,6 +100,7 @@
 			children = (
 				E9AD00AB665882253A316720 /* GCPAPISyncApp.app */,
 				ADF380AD5423BB33BEDA5EAB /* GCPAPISyncAppTests.xctest */,
+				9FF49EA5D90987E81005506B /* GCPAPISyncAppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -110,6 +129,28 @@
 			productName = GCPAPISyncAppTests;
 			productReference = ADF380AD5423BB33BEDA5EAB /* GCPAPISyncAppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		37F087535AA3B04894207962 /* GCPAPISyncAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 34B8B8CA1E5C2608032FBAAE /* Build configuration list for PBXNativeTarget "GCPAPISyncAppUITests" */;
+			buildPhases = (
+				3CAFE4F1522C511AD90C748C /* Sources */,
+				905EE7C5E695BD18399DD62F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E715567BAD059D1B7B61F072 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				E45F6FDB20B89C3F34714795 /* AppUITests */,
+			);
+			name = GCPAPISyncAppUITests;
+			packageProductDependencies = (
+			);
+			productName = GCPAPISyncAppUITests;
+			productReference = 9FF49EA5D90987E81005506B /* GCPAPISyncAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 		4C5580209136C5D2F86BC9B4 /* GCPAPISyncApp */ = {
 			isa = PBXNativeTarget;
@@ -147,6 +188,11 @@
 						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
+					37F087535AA3B04894207962 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+						TestTargetID = 4C5580209136C5D2F86BC9B4;
+					};
 					4C5580209136C5D2F86BC9B4 = {
 						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
@@ -172,11 +218,19 @@
 			targets = (
 				4C5580209136C5D2F86BC9B4 /* GCPAPISyncApp */,
 				0720FC7C76B213363686097A /* GCPAPISyncAppTests */,
+				37F087535AA3B04894207962 /* GCPAPISyncAppUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		905EE7C5E695BD18399DD62F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CBF70657D29049C03DEDF4F3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -201,6 +255,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3CAFE4F1522C511AD90C748C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D76DFAD59A3D941654A7C114 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -215,6 +276,11 @@
 			isa = PBXTargetDependency;
 			target = 4C5580209136C5D2F86BC9B4 /* GCPAPISyncApp */;
 			targetProxy = 541F282A83A2CFD8CF15C0C3 /* PBXContainerItemProxy */;
+		};
+		E715567BAD059D1B7B61F072 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4C5580209136C5D2F86BC9B4 /* GCPAPISyncApp */;
+			targetProxy = 408AF2D07BEFD263E112D016 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -300,6 +366,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
@@ -358,6 +425,24 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
+		};
+		A8B35D93F8818F793B908983 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.camminady.gcpapi-sync.uitests";
+				SDKROOT = iphoneos;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = GCPAPISyncApp;
+			};
+			name = Debug;
 		};
 		C7C966A2A586781101C2E237 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -430,6 +515,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
@@ -440,6 +526,24 @@
 				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Debug;
+		};
+		F0402D9C55F7A18DBF806133 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.camminady.gcpapi-sync.uitests";
+				SDKROOT = iphoneos;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = GCPAPISyncApp;
+			};
+			name = Release;
 		};
 		F48A9E159685E3B1BC45431C /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -480,6 +584,15 @@
 			buildConfigurations = (
 				C7C966A2A586781101C2E237 /* Debug */,
 				180494503F774AB23862D9C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		34B8B8CA1E5C2608032FBAAE /* Build configuration list for PBXNativeTarget "GCPAPISyncAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A8B35D93F8818F793B908983 /* Debug */,
+				F0402D9C55F7A18DBF806133 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

@@ -124,7 +124,7 @@ struct ConnectView: View {
         Label {
             Text(
                 """
-                Your key stays in this iPhone's Keychain and is only ever sent to Garmin. \
+                Your key stays in this device's Keychain and is only ever sent to Garmin. \
                 This app is not affiliated with Garmin.
                 """
             )
