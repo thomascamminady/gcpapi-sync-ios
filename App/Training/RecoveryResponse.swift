@@ -15,8 +15,8 @@ nonisolated struct RecoveryResponse: Hashable, Sendable {
     static let baselineDays = 28
     /// The fewest values a usual level is computed from.
     static let minimumBaseline = 10
-    /// Training days with more load than this share of all training days are hard.
-    static let hardQuantile = 0.8
+    /// The share of training days, by load, that count as hard.
+    static let hardShare = 0.2
     /// The fewest events a conclusion is drawn from.
     static let minimumEvents = 6
     static let metrics: [OverviewMetric] = [.hrv, .restingHeartRate, .sleepScore, .stress]
@@ -90,6 +90,9 @@ nonisolated struct RecoveryResponse: Hashable, Sendable {
     }
 
     let curves: [Curve]
+    /// The share of training days that counted as hard, and the days of the usual level.
+    let hardShare: Double
+    let baselineDays: Int
     let hardDays: Int
     let restDays: Int
     /// The training load from which a day counts as hard.
@@ -110,14 +113,19 @@ nonisolated struct RecoveryResponse: Hashable, Sendable {
         return abs(peak.mean) / peak.margin
     }
 
-    init(history: HealthHistory, loads: [TrainingLoad.Day]) {
+    init(
+        history: HealthHistory, loads: [TrainingLoad.Day], hardShare: Double = hardShare,
+        baselineDays: Int = baselineDays
+    ) {
+        self.hardShare = hardShare
+        self.baselineDays = baselineDays
         let loadByDate = Dictionary(loads.map { ($0.date, $0.load) }) { first, _ in first }
         let trainingLoads = loads.map(\.load).filter { $0 > 0 }.sorted()
         let threshold =
             trainingLoads.isEmpty
             ? nil
             : trainingLoads[
-                max(0, Int((Self.hardQuantile * Double(trainingLoads.count)).rounded(.up)) - 1)]
+                max(0, Int(((1 - hardShare) * Double(trainingLoads.count)).rounded(.up)) - 1)]
         func isHard(_ date: GarminDate) -> Bool {
             guard let threshold, let load = loadByDate[date] else { return false }
             return load >= threshold
@@ -129,8 +137,8 @@ nonisolated struct RecoveryResponse: Hashable, Sendable {
         curves = Self.metrics.map { metric in
             Curve(
                 metric: metric,
-                hard: Self.points(metric, around: hard, in: byDate),
-                rest: Self.points(metric, around: rest, in: byDate))
+                hard: Self.points(metric, around: hard, in: byDate, baselineDays: baselineDays),
+                rest: Self.points(metric, around: rest, in: byDate, baselineDays: baselineDays))
         }
         hardDays = hard.count
         restDays = rest.count
@@ -138,7 +146,8 @@ nonisolated struct RecoveryResponse: Hashable, Sendable {
     }
 
     private static func points(
-        _ metric: OverviewMetric, around events: [GarminDate], in days: [GarminDate: DayHealth]
+        _ metric: OverviewMetric, around events: [GarminDate], in days: [GarminDate: DayHealth],
+        baselineDays: Int
     ) -> [Point] {
         let changes: [Int: [Double]] = events.reduce(into: [:]) { result, event in
             let before = (1...baselineDays).compactMap { offset in

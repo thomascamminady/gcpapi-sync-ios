@@ -31,12 +31,12 @@ nonisolated enum TrainingLoad {
         }
     }
 
-    /// One `Day` for each day from `first` through `last`, starting from zero fitness.
+    /// One `Day` for each day from `first` through `last`, starting from zero fitness, with
+    /// fitness and fatigue averaged over `fitnessDays` and `fatigueDays`.
     static func days(
-        _ workouts: [Workout], from first: GarminDate, through last: GarminDate
-    )
-        -> [Day]
-    {
+        _ workouts: [Workout], from first: GarminDate, through last: GarminDate,
+        fitnessDays: Double = fitnessDays, fatigueDays: Double = fatigueDays
+    ) -> [Day] {
         var loads: [GarminDate: Double] = [:]
         for workout in workouts {
             loads[workout.date, default: 0] += workout.trainingLoad ?? 0
@@ -54,7 +54,7 @@ nonisolated enum TrainingLoad {
 }
 
 /// What form says about training, by form as a share of fitness (intervals.icu's zones).
-nonisolated enum FormZone: CaseIterable, Sendable {
+nonisolated enum FormZone: String, CaseIterable, Sendable {
     case detraining
     case fresh
     case neutral
@@ -92,13 +92,17 @@ nonisolated enum FormZone: CaseIterable, Sendable {
         }
     }
 
-    var color: Color {
+    /// The zone's color, as the user chose it.
+    @MainActor var color: Color { ColorRole.form(self).color }
+
+    /// Like statuses: amber, blue, gray, green and red.
+    var hue: Hue {
         switch self {
-        case .detraining: Color(light: 0xB07D00, dark: 0xFAB219)
-        case .fresh: Color(light: 0x2A78D6, dark: 0x3987E5)
+        case .detraining: .amber
+        case .fresh: .blue
         case .neutral: .gray
-        case .productive: Color(light: 0x0A8A0A, dark: 0x0CA30C)
-        case .overreaching: Color(light: 0xD03B3B, dark: 0xE66767)
+        case .productive: .green
+        case .overreaching: .red
         }
     }
 

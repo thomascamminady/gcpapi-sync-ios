@@ -20,11 +20,6 @@ struct WeekView: View {
                     }
                     .navigationTransition(.zoom(sourceID: route, in: cardTransition))
                 }
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        SettingsButton(lastUpdated: model.lastUpdated)
-                    }
-                }
                 .task { await model.loadIfNeeded() }
                 .refreshable { await model.load() }
         }

@@ -52,6 +52,10 @@ An open-source iPhone app for your Garmin health data, built on Garmin's officia
   averaged, with 95% confidence intervals and rest days as the control. The result is a
   sentence such as *"HRV is 15% lower the day after hard training and back to usual within
   2 days"*, or an honest *"No clear change"* when the data does not show one.
+- **Settings for everything**: units, week start, a dense mode that fits more on the screen,
+  which tiles and charts show, route colors and map style, the parameters of the analyses,
+  and every color: three themes (Balanced, checked for color-vision deficiencies; Vivid;
+  Soft) with each color changeable on its own. The same thing has the same color everywhere.
 - **Explore with sample data** without an account, also used for previews, screenshots and
   App Review.
 

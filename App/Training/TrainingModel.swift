@@ -35,7 +35,11 @@ final class TrainingModel {
     private(set) var refreshProblem: Problem?
     private(set) var lastUpdated: Date?
 
-    private let fetch: @Sendable (_ end: GarminDate) async throws -> TrainingData
+    /// The parameters of the analyses; changing them takes a reload.
+    var analysis = AnalysisSettings()
+
+    private let fetch:
+        @Sendable (_ end: GarminDate, _ analysis: AnalysisSettings) async throws -> TrainingData
     private let fetchHealth:
         @Sendable (_ end: GarminDate, _ days: Int) async throws -> HealthHistory
     private let fetchRecording: @Sendable (_ id: Int) async throws -> Data?
@@ -45,7 +49,9 @@ final class TrainingModel {
     init(
         today: @escaping () -> GarminDate = { GarminDate.today() },
         now: @escaping () -> Date = { .now },
-        fetch: @escaping @Sendable (_ end: GarminDate) async throws -> TrainingData,
+        fetch:
+            @escaping @Sendable (_ end: GarminDate, _ analysis: AnalysisSettings) async throws
+            -> TrainingData,
         fetchHealth:
             @escaping @Sendable (_ end: GarminDate, _ days: Int) async throws
             -> HealthHistory,
@@ -61,7 +67,9 @@ final class TrainingModel {
     /// A model loading from Garmin through `client`.
     convenience init(client: GarminClient) {
         self.init(
-            fetch: { end in try await TrainingLoader.load(from: client, endingOn: end) },
+            fetch: { end, analysis in
+                try await TrainingLoader.load(from: client, endingOn: end, analysis: analysis)
+            },
             fetchHealth: { end, days in
                 try await HealthLoader.load(
                     from: client, endingOn: end, days: days, estimatingVO2max: false)
@@ -70,6 +78,11 @@ final class TrainingModel {
                 let file = try await client.downloadActivity(id)
                 return file.fileExtension == "fit" ? file.content : nil
             })
+    }
+
+    /// Forget the analyzed recordings, as after changing units.
+    func resetTracks() {
+        tracks = [:]
     }
 
     /// Download and analyze `workout`'s recording, unless it is loaded already.
@@ -112,7 +125,7 @@ final class TrainingModel {
     func load() async {
         let data: TrainingData
         do {
-            data = try await fetch(today())
+            data = try await fetch(today(), analysis)
             phase = .loaded(data)
             refreshProblem = nil
             lastUpdated = now()
@@ -133,7 +146,10 @@ final class TrainingModel {
         guard let end = data.loadHistory.last?.date else { return }
         do {
             let history = try await fetchHealth(end, data.loadHistory.count)
-            recovery = .loaded(RecoveryResponse(history: history, loads: data.loadHistory))
+            recovery = .loaded(
+                RecoveryResponse(
+                    history: history, loads: data.loadHistory, hardShare: analysis.hardShare,
+                    baselineDays: analysis.baselineDays))
         } catch {
             guard !Task.isCancelled, !(error is CancellationError) else { return }
             if case .loaded = recovery {

@@ -29,7 +29,8 @@ enum HistoryRange: Int, CaseIterable, Identifiable {
 struct MetricDetailView: View {
     let metric: Metric
     let model: HealthModel
-    @State private var range = HistoryRange.week
+    @State private var range =
+        HistoryRange(rawValue: Preferences.shared.settings.detailDays) ?? .week
     @State private var selectedDate: Date?
 
     var body: some View {
@@ -115,7 +116,7 @@ struct MetricDetailView: View {
     private func chart(_ history: HealthHistory) -> some View {
         MetricChart(metric: metric, days: history.days, selected: selectedDay?.start)
             .chartXSelection(value: $selectedDate)
-            .frame(height: 260)
+            .chartHeight(260)
             .padding(20)
             .background(
                 Color(uiColor: .secondarySystemGroupedBackground), in: .rect(cornerRadius: 26))

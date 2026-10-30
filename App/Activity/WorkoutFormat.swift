@@ -2,9 +2,19 @@ import Foundation
 
 /// Text for workouts, in the units of the user's region.
 extension Format {
-    /// Whether distances are in miles rather than kilometres.
+    /// Whether distances are in miles rather than kilometres: the user's choice, or the
+    /// region's.
     nonisolated static var usesMiles: Bool {
-        Locale.current.measurementSystem != .metric
+        usesMiles(units: UserDefaults.standard.string(forKey: Preferences.unitsKey))
+    }
+
+    /// Whether `units`, a ``Settings/Units`` raw value, mean miles in `locale`.
+    nonisolated static func usesMiles(units: String?, locale: Locale = .current) -> Bool {
+        switch units {
+        case Settings.Units.metric.rawValue: false
+        case Settings.Units.imperial.rawValue: true
+        default: locale.measurementSystem != .metric
+        }
     }
 
     /// `52:10`, or `1:05:30` from an hour on.

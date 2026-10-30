@@ -24,14 +24,17 @@ nonisolated enum OverviewMetric: String, CaseIterable, Identifiable, Sendable {
         }
     }
 
-    /// Colors checked in this order for color-vision deficiencies, in light and dark mode.
-    var color: Color {
+    /// The color of the metric the line shows.
+    @MainActor var color: Color { metric.tint }
+
+    /// The metric this line shows, whose color it has.
+    var metric: Metric {
         switch self {
-        case .hrv: Color(light: 0x6250D6, dark: 0x9085E9)
-        case .restingHeartRate: Color(light: 0xE34948, dark: 0xE66767)
-        case .sleepScore: Color(light: 0x2A78D6, dark: 0x3987E5)
-        case .stress: Color(light: 0xEDA100, dark: 0xC98500)
-        case .vo2max: Color(light: 0x1BAF7A, dark: 0x199E70)
+        case .hrv: .hrv
+        case .restingHeartRate: .restingHeartRate
+        case .sleepScore: .sleep
+        case .stress: .stress
+        case .vo2max: .vo2max
         }
     }
 
@@ -214,7 +217,7 @@ struct OverviewCard: View {
                 .font(.footnote)
                 .foregroundStyle(.secondary)
             OverviewChart(days: history.days)
-                .frame(height: 170)
+                .chartHeight(170)
                 .allowsHitTesting(false)
             ViewThatFits {
                 HStack(spacing: 12) {

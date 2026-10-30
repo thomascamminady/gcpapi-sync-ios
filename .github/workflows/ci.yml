@@ -50,8 +50,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   test:
-    name: Build and test on the iOS simulator
+    name: Build and test on the iOS simulator (${{ matrix.region }})
     runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Units, number and date formats differ: kilometres and decimal commas in Germany,
+        # miles and decimal points in the United States.
+        region: [DE, US]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -63,4 +69,11 @@ jobs:
           xcodegen generate --quiet
           git diff --exit-code -- GCPAPISync.xcodeproj
       - name: Build (warnings are errors) and test
-        run: Scripts/test.sh
+        run: Scripts/test.sh -testLanguage en -testRegion "${{ matrix.region }}" -resultBundlePath "results-${{ matrix.region }}.xcresult"
+      - name: Keep the test results of a failure
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: test-results-${{ matrix.region }}
+          path: results-${{ matrix.region }}.xcresult
+          retention-days: 7

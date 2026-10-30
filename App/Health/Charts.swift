@@ -94,7 +94,10 @@ struct StepsChart: View {
                         y: .value("Steps", steps),
                         width: barWidth(days.count)
                     )
-                    .foregroundStyle(steps >= (day.stepGoal ?? .max) ? Color.green : Color.teal)
+                    .foregroundStyle(
+                        steps >= (day.stepGoal ?? .max)
+                            ? ColorRole.status(.good).color : Metric.steps.tint
+                    )
                     .clipShape(.capsule)
                 }
                 // Garmin's goal adapts every day, so each day gets its own goal mark.
@@ -131,12 +134,15 @@ enum SleepStage: String, CaseIterable, Identifiable {
         }
     }
 
-    var color: Color {
+    var color: Color { ColorRole.sleepStage(self).color }
+
+    /// Shades of the sleep color, and the awake time apart.
+    var hue: Hue {
         switch self {
-        case .deep: .indigo
+        case .deep: .deepBlue
         case .light: .blue
-        case .rem: .cyan
-        case .awake: .pink
+        case .rem: .lightBlue
+        case .awake: .magenta
         }
     }
 
@@ -248,7 +254,10 @@ struct BodyBatteryChart: View {
                     )
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.mint, .green], startPoint: .bottom, endPoint: .top)
+                            colors: [
+                                Metric.bodyBattery.tint.opacity(0.55), Metric.bodyBattery.tint,
+                            ],
+                            startPoint: .bottom, endPoint: .top)
                     )
                     .clipShape(.capsule)
                 }
@@ -301,7 +310,7 @@ struct IntensityChart: View {
                         y: .value("Minutes", minutes),
                         width: barWidth(days.count)
                     )
-                    .foregroundStyle(Color.orange)
+                    .foregroundStyle(Metric.intensityMinutes.tint)
                     .clipShape(.capsule)
                 }
             }

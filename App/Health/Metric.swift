@@ -40,15 +40,20 @@ enum Metric: String, CaseIterable, Identifiable, Hashable {
         }
     }
 
-    var tint: Color {
+    /// The metric's color, as the user chose it.
+    var tint: Color { ColorRole.metric(self).color }
+
+    /// The metric's hue in every color theme.
+    var hue: Hue {
         switch self {
-        case .steps: .teal
-        case .sleep: .indigo
+        case .steps: .green
+        case .sleep: .blue
         case .restingHeartRate: .red
-        case .hrv: .purple
-        case .vo2max: .mint
-        case .bodyBattery: .green
-        case .stress, .intensityMinutes: .orange
+        case .hrv: .violet
+        case .vo2max: .aqua
+        case .bodyBattery: .magenta
+        case .stress: .amber
+        case .intensityMinutes: .orange
         }
     }
 

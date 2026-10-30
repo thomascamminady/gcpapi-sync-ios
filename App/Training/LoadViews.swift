@@ -3,9 +3,9 @@ import GCPAPISync
 import SwiftUI
 import UIKit
 
-/// The colors of the fitness and fatigue lines, the first two checked categorical slots.
-private let fitnessColor = Color(light: 0x2A78D6, dark: 0x3987E5)
-private let fatigueColor = Color(light: 0xEB6834, dark: 0xD95926)
+/// The colors of the fitness and fatigue lines.
+private var fitnessColor: Color { ColorRole.fitness.color }
+private var fatigueColor: Color { ColorRole.fatigue.color }
 
 /// The training tab's first card: fitness, fatigue and form over the last 90 days.
 struct LoadCard: View {
@@ -20,9 +20,9 @@ struct LoadCard: View {
                 LoadSummary(day: today)
             }
             LoadChart(days: days)
-                .frame(height: 140)
+                .chartHeight(140)
             FormChart(days: days)
-                .frame(height: 90)
+                .chartHeight(90)
         }
         .allowsHitTesting(false)
         .cardStyle()
@@ -280,15 +280,15 @@ struct TrainingLoadDetailView: View {
             Text("Fitness and Fatigue").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
             LoadChart(days: shown, selected: selectedDay?.date.startOfDay(in: .current))
                 .chartXSelection(value: $selectedDate)
-                .frame(height: 200)
+                .chartHeight(200)
             Text("Form").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
             FormChart(days: shown, selected: selectedDay?.date.startOfDay(in: .current))
                 .chartXSelection(value: $selectedDate)
-                .frame(height: 120)
+                .chartHeight(120)
             Text("Daily Load").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
             DailyLoadChart(days: shown, selected: selectedDay?.date.startOfDay(in: .current))
                 .chartXSelection(value: $selectedDate)
-                .frame(height: 80)
+                .chartHeight(80)
         }
         .cardStyle()
     }

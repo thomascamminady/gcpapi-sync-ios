@@ -62,6 +62,7 @@ extension Metric {
 struct SummaryTile: View {
     let metric: Metric
     let history: HealthHistory
+    @Environment(\.isDense) private var isDense
 
     var body: some View {
         let tile = metric.tile(of: history)
@@ -70,7 +71,7 @@ struct SummaryTile: View {
             Spacer(minLength: 0)
             HStack(alignment: .firstTextBaseline, spacing: 3) {
                 Text(tile?.value ?? "–")
-                    .font(.system(.title2, design: .rounded, weight: .bold))
+                    .font(.system(isDense ? .headline : .title2, design: .rounded, weight: .bold))
                     .minimumScaleFactor(0.7)
                     .lineLimit(1)
                     .contentTransition(.numericText())
@@ -85,14 +86,14 @@ struct SummaryTile: View {
                 Text(tile?.detail ?? String(localized: "No data"))
                     .font(.caption2)
                     .foregroundStyle(.secondary)
-                    .lineLimit(2)
+                    .lineLimit(isDense ? 1 : 2)
                 Spacer(minLength: 4)
                 Sparkline(metric: metric, days: history.days)
-                    .frame(width: 58, height: 26)
+                    .frame(width: isDense ? 36 : 58, height: isDense ? 18 : 26)
             }
         }
-        .padding(14)
-        .frame(maxWidth: .infinity, minHeight: 126, alignment: .leading)
+        .padding(isDense ? 9 : 14)
+        .frame(maxWidth: .infinity, minHeight: isDense ? 92 : 126, alignment: .leading)
         .background(Color(uiColor: .secondarySystemGroupedBackground), in: .rect(cornerRadius: 20))
         .contentShape(.rect(cornerRadius: 20))
         .accessibilityElement(children: .combine)

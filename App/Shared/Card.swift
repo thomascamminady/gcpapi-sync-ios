@@ -2,12 +2,36 @@ import SwiftUI
 import UIKit
 
 extension View {
-    /// The rounded, grouped background of dashboard cards.
+    /// The rounded, grouped background of dashboard cards; tighter in dense mode.
     func cardStyle() -> some View {
-        padding(20)
+        modifier(CardStyle())
+    }
+
+    /// A chart's height, about two thirds of it in dense mode.
+    func chartHeight(_ height: CGFloat) -> some View {
+        modifier(ChartHeight(height: height))
+    }
+}
+
+private struct CardStyle: ViewModifier {
+    @Environment(\.isDense) private var isDense
+
+    func body(content: Content) -> some View {
+        content
+            .padding(isDense ? 12 : 20)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                Color(uiColor: .secondarySystemGroupedBackground), in: .rect(cornerRadius: 26))
+                Color(uiColor: .secondarySystemGroupedBackground),
+                in: .rect(cornerRadius: isDense ? 18 : 26))
+    }
+}
+
+private struct ChartHeight: ViewModifier {
+    let height: CGFloat
+    @Environment(\.isDense) private var isDense
+
+    func body(content: Content) -> some View {
+        content.frame(height: isDense ? (height * 0.65).rounded() : height)
     }
 }
 

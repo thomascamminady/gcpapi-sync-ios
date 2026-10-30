@@ -86,7 +86,7 @@ struct OverviewDetailView: View {
                 higherIsBetter: higherIsBetter, selected: selectedDay?.start
             )
             .chartXSelection(value: $selectedDate)
-            .frame(height: 280)
+            .chartHeight(280)
             .animation(.snappy, value: shown)
             .animation(.snappy, value: higherIsBetter)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 104), spacing: 8)], spacing: 8) {

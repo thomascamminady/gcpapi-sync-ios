@@ -14,29 +14,44 @@ struct DashboardView: View {
     var refreshProblem: Problem?
     let transition: Namespace.ID
 
+    @Environment(\.isDense) private var isDense
+
+    /// The metrics the user shows tiles for.
+    private var tiles: [Metric] {
+        Metric.allCases.filter { !Preferences.shared.settings.hiddenTiles.contains($0.rawValue) }
+    }
+
+    private var tileGrid: some View {
+        LazyVGrid(
+            columns: Array(
+                repeating: GridItem(.flexible(), spacing: isDense ? 8 : 12),
+                count: isDense ? 3 : 2),
+            spacing: isDense ? 8 : 12
+        ) {
+            ForEach(tiles) { metric in
+                NavigationLink(value: Route.metric(metric)) {
+                    SummaryTile(metric: metric, history: history)
+                }
+                .buttonStyle(.plain)
+                .matchedTransitionSource(id: Route.metric(metric), in: transition)
+            }
+        }
+    }
+
     var body: some View {
         ScrollView {
-            LazyVStack(spacing: 16) {
+            LazyVStack(spacing: isDense ? 10 : 16) {
                 if let refreshProblem {
                     ProblemBanner(problem: refreshProblem)
                 }
-                LazyVGrid(
-                    columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())],
-                    spacing: 12
-                ) {
-                    ForEach(Metric.allCases) { metric in
-                        NavigationLink(value: Route.metric(metric)) {
-                            SummaryTile(metric: metric, history: history)
-                        }
-                        .buttonStyle(.plain)
-                        .matchedTransitionSource(id: Route.metric(metric), in: transition)
+                tileGrid
+                if Preferences.shared.settings.showsTrends {
+                    NavigationLink(value: Route.overview) {
+                        OverviewCard(history: history)
                     }
+                    .buttonStyle(.plain)
+                    .matchedTransitionSource(id: Route.overview, in: transition)
                 }
-                NavigationLink(value: Route.overview) {
-                    OverviewCard(history: history)
-                }
-                .buttonStyle(.plain)
-                .matchedTransitionSource(id: Route.overview, in: transition)
                 Text("Data from Garmin Connect. Not affiliated with Garmin.")
                     .font(.caption)
                     .foregroundStyle(.tertiary)

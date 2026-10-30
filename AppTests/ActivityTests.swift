@@ -227,7 +227,7 @@ nonisolated private func demoRunActivity() -> SummarizedActivity? {
         _ recording: @escaping @Sendable (Int) async throws -> Data?
     ) -> TrainingModel {
         TrainingModel(
-            fetch: { end in .sample(endingOn: end) },
+            fetch: { end, _ in .sample(endingOn: end) },
             fetchHealth: { end, days in .sample(endingOn: end, days: days) },
             fetchRecording: recording)
     }
@@ -305,7 +305,9 @@ private actor Attempts {
             power: nil)
         #expect(TrackMeasure.pace.value(slow, sport: .running) == nil)
         #expect(TrackMeasure.pace.value(slow, sport: .swimming) != nil)
-        #expect(TrackMeasure.pace.value(sample, sport: .cycling) ?? 0 > 10)
+        // 3.33 m/s is 12 km/h, or 7.46 mph.
+        let speed = TrackMeasure.pace.value(sample, sport: .cycling) ?? 0
+        #expect(abs(speed - (Format.usesMiles ? 7.4565 : 12)) < 1e-3)
         #expect(TrackMeasure.heartRate.format(151.6, sport: .running) == "152 bpm")
         #expect(TrackMeasure.power.format(250, sport: .cycling) == "250 W")
         #expect(TrackMeasure.cadence.format(86, sport: .cycling) == "86 rpm")
@@ -338,7 +340,7 @@ private actor Attempts {
         #expect(ExerciseCategory.name(nil) == nil)
         #expect(ExerciseCategory.name(9999) == nil)
         #expect(ZoneStyle.color(zone: nil, fallback: .mint) == .mint)
-        #expect(ZoneStyle.color(zone: 99, fallback: .mint) == ZoneStyle.colors.last)
+        #expect(ZoneStyle.color(zone: 99, fallback: .mint).hex == ZoneStyle.colors.last?.hex)
     }
 
     @Test func tilesShowTheLatestDay() throws {

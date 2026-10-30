@@ -16,7 +16,7 @@ struct VolumeCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            CardHeader(title: "Weekly Volume", symbol: "clock.fill", tint: .teal)
+            CardHeader(title: "Weekly Volume", symbol: "clock.fill", tint: Sport.running.color)
             if let week = weeks.last {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(alignment: .firstTextBaseline, spacing: 4) {
@@ -32,7 +32,7 @@ struct VolumeCard: View {
                 }
             }
             chart
-                .frame(height: 160)
+                .chartHeight(160)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), alignment: .leading)]) {
                 ForEach(sports, id: \.sport) { item in
                     HStack(spacing: 6) {
