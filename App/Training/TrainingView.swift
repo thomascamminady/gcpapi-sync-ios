@@ -22,6 +22,7 @@ struct TrainingView: View {
                         destination(route, data: data)
                     }
                 }
+                .navigationSubtitle(SyncStatus.text(model.lastUpdated))
                 .task { await model.loadIfNeeded() }
                 .refreshable { await model.load() }
         }

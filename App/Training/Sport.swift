@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Groups of Garmin activity types, for icons, colors and weekly volume.
-nonisolated enum Sport: String, CaseIterable, Identifiable, Sendable {
+nonisolated enum Sport: String, CaseIterable, Identifiable, Codable, Sendable {
     case running
     case cycling
     case swimming

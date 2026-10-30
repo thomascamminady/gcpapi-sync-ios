@@ -11,8 +11,12 @@ struct RootView: View {
                 ConnectView()
                     .transition(.opacity)
             case .signedIn(let client):
-                MainView(client: client)
-                    .transition(.opacity)
+                MainView(
+                    client: client,
+                    snapshots: session.isDemo ? nil : session.snapshots,
+                    recordings: session.isDemo ? nil : session.recordings
+                )
+                .transition(.opacity)
             }
         }
         .animation(.smooth, value: session.isSignedIn)

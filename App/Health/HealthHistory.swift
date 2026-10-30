@@ -2,7 +2,7 @@ import Foundation
 import GCPAPISync
 
 /// One night of sleep, in seconds per stage.
-nonisolated struct SleepNight: Hashable, Sendable {
+nonisolated struct SleepNight: Hashable, Codable, Sendable {
     var total: Int
     var deep: Int
     var light: Int
@@ -12,7 +12,7 @@ nonisolated struct SleepNight: Hashable, Sendable {
 }
 
 /// The health metrics of one calendar day; `nil` where Garmin has no data.
-nonisolated struct DayHealth: Identifiable, Hashable, Sendable {
+nonisolated struct DayHealth: Identifiable, Hashable, Codable, Sendable {
     let date: GarminDate
     var steps: Int?
     var stepGoal: Int?
@@ -40,7 +40,7 @@ nonisolated struct DayHealth: Identifiable, Hashable, Sendable {
 }
 
 /// A run of consecutive days, oldest first.
-nonisolated struct HealthHistory: Hashable, Sendable {
+nonisolated struct HealthHistory: Hashable, Codable, Sendable {
     let days: [DayHealth]
 
     /// The mean of a metric over the days that have it.

@@ -27,21 +27,33 @@ final class HealthModel {
     private let fetch: @Sendable (_ end: GarminDate, _ days: Int) async throws -> HealthHistory
     private let today: () -> GarminDate
     private let now: () -> Date
+    private let store: SnapshotStore?
+
+    /// The snapshot name of the dashboard's week.
+    nonisolated static let snapshot = "health-week"
 
     /// A model loading the `days` days ending on a date with `fetch`.
     init(
         today: @escaping () -> GarminDate = { GarminDate.today() },
         now: @escaping () -> Date = { .now },
+        store: SnapshotStore? = nil,
         fetch: @escaping @Sendable (_ end: GarminDate, _ days: Int) async throws -> HealthHistory
     ) {
         self.today = today
         self.now = now
+        self.store = store
         self.fetch = fetch
+        // Open with the last week loaded, until it is refreshed.
+        if let saved = store?.load(HealthHistory.self, named: Self.snapshot) {
+            phase = .loaded(saved.value)
+            histories = [Self.dashboardDays: saved.value]
+            lastUpdated = saved.saved
+        }
     }
 
-    /// A model loading from Garmin through `client`.
-    convenience init(client: GarminClient) {
-        self.init { end, days in
+    /// A model loading from Garmin through `client`, saving what it loads to `store`.
+    convenience init(client: GarminClient, store: SnapshotStore? = nil) {
+        self.init(store: store) { end, days in
             try await HealthLoader.load(from: client, endingOn: end, days: days)
         }
     }
@@ -64,6 +76,7 @@ final class HealthModel {
             historyProblems = [:]
             refreshProblem = nil
             lastUpdated = now()
+            try? store?.save(week, as: Self.snapshot, at: lastUpdated ?? .now)
         } catch {
             // Pull to refresh cancels its task when the gesture ends; that is no failure.
             guard !Task.isCancelled, !(error is CancellationError) else { return }

@@ -20,6 +20,7 @@ struct WeekView: View {
                     }
                     .navigationTransition(.zoom(sourceID: route, in: cardTransition))
                 }
+                .navigationSubtitle(SyncStatus.text(model.lastUpdated))
                 .task { await model.loadIfNeeded() }
                 .refreshable { await model.load() }
         }

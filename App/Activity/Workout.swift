@@ -2,7 +2,7 @@ import Foundation
 import GCPAPISync
 
 /// One activity, with what the training screens show.
-nonisolated struct Workout: Identifiable, Hashable, Sendable {
+nonisolated struct Workout: Identifiable, Hashable, Codable, Sendable {
     let id: Int
     let name: String
     let typeKey: String

@@ -8,7 +8,7 @@ import GCPAPISync
 /// event, and every metric on the days around it is compared with its usual level, the median
 /// of the 28 days before the event. Averaging over many events cancels out what happens by
 /// chance and leaves the typical response. Rest days, averaged the same way, are the control.
-nonisolated struct RecoveryResponse: Hashable, Sendable {
+nonisolated struct RecoveryResponse: Hashable, Codable, Sendable {
     /// Days relative to the training day: the day before, the day itself and three after.
     static let lags = Array(-1...3)
     /// Days before an event whose median is the usual level.
@@ -23,7 +23,7 @@ nonisolated struct RecoveryResponse: Hashable, Sendable {
 
     /// The mean change from the usual level `lag` days after the events, in percent, and the
     /// half-width of its 95% confidence interval.
-    struct Point: Hashable, Sendable {
+    struct Point: Hashable, Codable, Sendable {
         let lag: Int
         let mean: Double
         let margin: Double
@@ -37,7 +37,7 @@ nonisolated struct RecoveryResponse: Hashable, Sendable {
     }
 
     /// A metric's response to hard days and to rest days.
-    struct Curve: Hashable, Sendable, Identifiable {
+    struct Curve: Hashable, Codable, Sendable, Identifiable {
         let metric: OverviewMetric
         let hard: [Point]
         let rest: [Point]

@@ -2,7 +2,7 @@ import Foundation
 import GCPAPISync
 
 /// One week of training.
-nonisolated struct TrainingWeek: Identifiable, Hashable, Sendable {
+nonisolated struct TrainingWeek: Identifiable, Hashable, Codable, Sendable {
     /// The week's first day, by the user's calendar.
     let start: GarminDate
     /// Seconds per sport.
@@ -38,7 +38,7 @@ nonisolated struct TrainingWeek: Identifiable, Hashable, Sendable {
 }
 
 /// Garmin's heart rate zones for one sport: the lowest heart rate of zones 1 to 5.
-nonisolated struct HeartRateZoneSet: Hashable, Sendable {
+nonisolated struct HeartRateZoneSet: Hashable, Codable, Sendable {
     let floors: [Int]
     let maximum: Int?
 
@@ -63,7 +63,7 @@ nonisolated struct HeartRateZoneSet: Hashable, Sendable {
 }
 
 /// What the training screens show.
-nonisolated struct TrainingData: Hashable, Sendable {
+nonisolated struct TrainingData: Hashable, Codable, Sendable {
     /// Newest first.
     let workouts: [Workout]
     /// One day each, oldest first, including the days before those shown.

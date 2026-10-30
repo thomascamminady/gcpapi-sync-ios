@@ -51,6 +51,7 @@ nonisolated struct Settings: Codable, Equatable, Sendable {
     /// Colors chosen instead of the theme's, as `RRGGBBAA` by color role.
     var colors: [String: String] = [:]
     var exportsToCalendar = false
+    var refreshesInBackground = true
 
     init() {}
 
@@ -73,6 +74,7 @@ nonisolated struct Settings: Codable, Equatable, Sendable {
         theme = value(.theme, defaults.theme)
         colors = value(.colors, defaults.colors)
         exportsToCalendar = value(.exportsToCalendar, defaults.exportsToCalendar)
+        refreshesInBackground = value(.refreshesInBackground, defaults.refreshesInBackground)
     }
 }
 

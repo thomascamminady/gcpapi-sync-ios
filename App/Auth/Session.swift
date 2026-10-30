@@ -18,15 +18,25 @@ final class Session {
     private(set) var isDemo = false
     private let keychain: KeychainStore
     private let transport: (any HTTPTransport)?
+    /// Where data loaded from Garmin is saved; `nil` keeps nothing.
+    let snapshots: SnapshotStore?
+    let recordings: RecordingCache?
 
     /// A session that restores a previously stored key.
     ///
     /// - Parameters:
     ///   - keychain: Where the key and the access token are kept.
     ///   - transport: How requests are sent; `nil` for the network.
-    init(keychain: KeychainStore = .standard, transport: (any HTTPTransport)? = nil) {
+    ///   - snapshots: Where data loaded from Garmin is saved; `nil` keeps nothing.
+    ///   - recordings: Where activity recordings are cached; `nil` keeps nothing.
+    init(
+        keychain: KeychainStore = .standard, transport: (any HTTPTransport)? = nil,
+        snapshots: SnapshotStore? = nil, recordings: RecordingCache? = nil
+    ) {
         self.keychain = keychain
         self.transport = transport
+        self.snapshots = snapshots
+        self.recordings = recordings
         if let data = try? keychain.data(for: Self.keyAccount),
             let key = String(data: data, encoding: .utf8),
             let client = try? makeClient(key)
@@ -40,6 +50,13 @@ final class Session {
     }
 
     private func makeClient(_ apiKey: String) throws -> GarminClient {
+        try Self.client(apiKey: apiKey, keychain: keychain, transport: transport)
+    }
+
+    /// A client for `apiKey` whose access tokens are kept in `keychain`.
+    nonisolated static func client(
+        apiKey: String, keychain: KeychainStore, transport: (any HTTPTransport)? = nil
+    ) throws -> GarminClient {
         try GarminClient(
             apiKey: apiKey,
             tokenCache: KeychainTokenCache(store: keychain),
@@ -47,6 +64,14 @@ final class Session {
             // Configuration comes from this app, never from the process environment.
             environment: ProcessEnvironment(variables: [:], homeDirectory: .temporaryDirectory)
         )
+    }
+
+    /// A client for the key stored in `keychain`, if there is one; for background refresh.
+    nonisolated static func storedClient(keychain: KeychainStore = .standard) -> GarminClient? {
+        guard let data = try? keychain.data(for: keyAccount),
+            let key = String(data: data, encoding: .utf8)
+        else { return nil }
+        return try? client(apiKey: key, keychain: keychain)
     }
 
     /// Check `apiKey` with Garmin and, if it works, remember it.
@@ -75,11 +100,13 @@ final class Session {
         }
     }
 
-    /// Forget the key and the cached token.
+    /// Forget the key, the cached token and everything saved from Garmin.
     func signOut() {
         if !isDemo {
             try? keychain.remove(Self.keyAccount)
             try? keychain.remove(KeychainTokenCache.account)
+            snapshots?.removeAll()
+            recordings?.removeAll()
         }
         isDemo = false
         state = .signedOut

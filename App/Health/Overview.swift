@@ -5,10 +5,10 @@ import UIKit
 
 /// The metrics the overview draws on one chart. Their units differ, so each is scaled to
 /// 0...1 over the days shown: 0 is its lowest value in the range and 1 its highest.
-nonisolated enum OverviewMetric: String, CaseIterable, Identifiable, Sendable {
+nonisolated enum OverviewMetric: String, CaseIterable, Identifiable, Codable, Sendable {
     case hrv
-    case restingHeartRate
-    case sleepScore
+    case restingHeartRate = "resting_heart_rate"
+    case sleepScore = "sleep_score"
     case stress
     case vo2max
 
