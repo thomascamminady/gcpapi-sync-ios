@@ -66,6 +66,10 @@ An open-source iPhone app for your Garmin health data, built on Garmin's officia
   it comes to the foreground and when you pull down, and refreshes in the background about
   once an hour (can be turned off). Saved data stays on the device, out of backups, and is
   deleted when you disconnect.
+- **Route planning**: tap the map to place points; the route follows roads and paths between
+  them (or straight lines, which ask nobody for directions), with its distance and the time at
+  your usual pace. Undo, back to start, reverse; save routes on the device or export them as
+  GPX, for example as a course in Garmin Connect.
 - **Your data, your way**: export daily health and activities as CSV, everything as JSON, or
   activities as a calendar (ICS) through the share sheet (Mail, AirDrop, Files: iCloud Drive,
   Dropbox, the device); keep a folder of CSV files up to date after every sync; share an

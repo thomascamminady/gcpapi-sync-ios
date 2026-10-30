@@ -21,6 +21,9 @@ only where you send it yourself.**
 - It contains no analytics, no advertising, no tracking and no third-party SDKs.
 - It does not use your location. Maps show the routes recorded by your Garmin device; the map
   tiles come from Apple Maps.
+- **Planning routes** along roads and paths asks Apple Maps for walking directions between the
+  points you place. Turn off path-following to keep a route entirely on the device. Planned
+  routes are stored on the device.
 
 ## Data you choose to send elsewhere
 
