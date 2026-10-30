@@ -25,6 +25,7 @@ struct OverviewDetailView: View {
                 content
             }
             .padding()
+            .readableWidth()
         }
         .background(Color(uiColor: .systemGroupedBackground))
         .navigationTitle("Trends")

@@ -45,6 +45,7 @@ struct MetricDetailView: View {
                 content
             }
             .padding()
+            .readableWidth()
         }
         .background(Color(uiColor: .systemGroupedBackground))
         .navigationTitle(metric.title)

@@ -15,6 +15,16 @@ struct DashboardView: View {
     let transition: Namespace.ID
 
     @Environment(\.isDense) private var isDense
+    @Environment(\.horizontalSizeClass) private var sizeClass
+
+    /// Two tiles a row on the iPhone (three when dense), as many as fit on wider screens.
+    private var tileColumns: [GridItem] {
+        let spacing: CGFloat = isDense ? 8 : 12
+        if sizeClass == .regular {
+            return [GridItem(.adaptive(minimum: isDense ? 140 : 180), spacing: spacing)]
+        }
+        return Array(repeating: GridItem(.flexible(), spacing: spacing), count: isDense ? 3 : 2)
+    }
 
     /// The metrics the user shows tiles for.
     private var tiles: [Metric] {
@@ -22,12 +32,7 @@ struct DashboardView: View {
     }
 
     private var tileGrid: some View {
-        LazyVGrid(
-            columns: Array(
-                repeating: GridItem(.flexible(), spacing: isDense ? 8 : 12),
-                count: isDense ? 3 : 2),
-            spacing: isDense ? 8 : 12
-        ) {
+        LazyVGrid(columns: tileColumns, spacing: isDense ? 8 : 12) {
             ForEach(tiles) { metric in
                 NavigationLink(value: Route.metric(metric)) {
                     SummaryTile(metric: metric, history: history)
@@ -58,6 +63,7 @@ struct DashboardView: View {
                     .padding(.vertical)
             }
             .padding(.horizontal)
+            .readableWidth()
         }
         .background(Color(uiColor: .systemGroupedBackground))
     }

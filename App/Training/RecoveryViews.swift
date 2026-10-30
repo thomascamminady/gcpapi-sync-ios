@@ -193,6 +193,7 @@ struct RecoveryDetailView: View {
                 method
             }
             .padding()
+            .readableWidth()
         }
         .background(Color(uiColor: .systemGroupedBackground))
         .navigationTitle("Recovery Response")

@@ -97,7 +97,7 @@ AppTests/     Swift Testing tests (Keychain, session, loading, mapping, formatti
 
 ## Building
 
-Requirements: Xcode 26 or newer, an iOS 26 simulator or device.
+Requirements: Xcode 26 or newer; runs on iPhone and iPad with iOS 26, and on the Mac with macOS 26 (Mac Catalyst).
 
 ```text
 git clone https://github.com/thomascamminady/gcpapi-sync-ios.git && cd gcpapi-sync-ios

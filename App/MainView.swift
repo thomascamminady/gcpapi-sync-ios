@@ -51,6 +51,8 @@ struct MainView: View {
                 SettingsView(lastUpdated: health.lastUpdated, export: export)
             }
         }
+        // A tab bar on the iPhone, a sidebar on the iPad and the Mac.
+        .tabViewStyle(.sidebarAdaptable)
         // Units change every number; drawing everything again picks them up.
         .id(preferences.settings.units)
         .tabBarMinimizeBehavior(.onScrollDown)

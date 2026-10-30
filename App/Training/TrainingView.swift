@@ -97,6 +97,7 @@ struct TrainingDashboard: View {
                     .padding(.vertical)
             }
             .padding(.horizontal)
+            .readableWidth()
         }
         .background(Color(uiColor: .systemGroupedBackground))
     }

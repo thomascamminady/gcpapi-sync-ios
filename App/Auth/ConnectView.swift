@@ -21,6 +21,7 @@ struct ConnectView: View {
                     privacyNote
                 }
                 .padding(24)
+                .readableWidth(560)
             }
             .scrollDismissesKeyboard(.interactively)
             .background(Color(uiColor: .systemGroupedBackground))
