@@ -105,15 +105,15 @@ nonisolated enum TrainingLoader {
     static let concurrentWindows = 4
 
     static func load(
-        from client: GarminClient, endingOn end: GarminDate
-    ) async throws
-        -> TrainingData
-    {
+        from client: GarminClient, endingOn end: GarminDate,
+        analysis: AnalysisSettings = AnalysisSettings()
+    ) async throws -> TrainingData {
         let first = end.adding(days: 1 - shownDays - warmUpDays)
         async let zones = client.getHeartRateZones()
         let activities = try await activities(from: client, first: first, last: end)
         return assemble(
-            activities: activities, zones: try await zones, endingOn: end, calendar: .current)
+            activities: activities, zones: try await zones, endingOn: end, calendar: .app,
+            analysis: analysis)
     }
 
     /// Every activity from `first` through `last`.
@@ -149,7 +149,7 @@ nonisolated enum TrainingLoader {
 
     static func assemble(
         activities: [SummarizedActivity], zones: [HeartRateZones], endingOn end: GarminDate,
-        calendar: Calendar
+        calendar: Calendar, analysis: AnalysisSettings = AnalysisSettings()
     ) -> TrainingData {
         // Windows do not overlap, but a changed activity could appear twice while paging.
         let unique = Dictionary(activities.map { ($0.activityId, $0) }) { first, _ in first }
@@ -160,7 +160,9 @@ nonisolated enum TrainingLoader {
         let shownFrom = end.adding(days: 1 - shownDays)
         return TrainingData(
             workouts: workouts.filter { $0.date >= shownFrom && $0.date <= end },
-            loadHistory: TrainingLoad.days(workouts, from: first, through: end),
+            loadHistory: TrainingLoad.days(
+                workouts, from: first, through: end, fitnessDays: analysis.fitnessDays,
+                fatigueDays: analysis.fatigueDays),
             weeks: TrainingWeek.weeks(
                 workouts, through: end, count: shownWeeks, calendar: calendar),
             zones: zones.reduce(into: [:]) { result, zones in

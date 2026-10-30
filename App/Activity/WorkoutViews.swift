@@ -4,16 +4,17 @@ import SwiftUI
 /// An activity in a list: its sport, name, time, and headline numbers.
 struct WorkoutRow: View {
     let workout: Workout
+    @Environment(\.isDense) private var isDense
 
     var body: some View {
-        HStack(spacing: 12) {
-            SportIcon(sport: workout.sport)
+        HStack(spacing: isDense ? 8 : 12) {
+            SportIcon(sport: workout.sport, size: isDense ? 28 : 40)
             VStack(alignment: .leading, spacing: 2) {
                 Text(workout.name)
-                    .font(.body.weight(.semibold))
+                    .font((isDense ? Font.subheadline : .body).weight(.semibold))
                     .lineLimit(1)
                 Text(when)
-                    .font(.subheadline)
+                    .font(isDense ? .caption : .subheadline)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
             }
@@ -73,6 +74,7 @@ struct SportIcon: View {
 /// Every activity of the last 90 days by week, searchable and filtered by sport.
 struct ActivityListView: View {
     let data: TrainingData
+    @Environment(\.isDense) private var isDense
     @State private var query = ""
     @State private var sport: Sport?
 
@@ -84,7 +86,7 @@ struct ActivityListView: View {
     }
 
     private var weeks: [(start: GarminDate, workouts: [Workout])] {
-        Dictionary(grouping: filtered) { TrainingWeek.weekStart(of: $0.date, calendar: .current) }
+        Dictionary(grouping: filtered) { TrainingWeek.weekStart(of: $0.date, calendar: .app) }
             .map { (start: $0.key, workouts: $0.value) }
             .sorted { $0.start > $1.start }
     }
@@ -125,6 +127,7 @@ struct ActivityListView: View {
                 }
             }
         }
+        .environment(\.defaultMinListRowHeight, isDense ? 34 : 44)
         .searchable(text: $query, prompt: "Activity name")
         .navigationTitle("Activities")
         .toolbar {
@@ -171,7 +174,7 @@ private struct WeekHeader: View {
     }
 
     private var title: String {
-        let current = TrainingWeek.weekStart(of: .today(), calendar: .current)
+        let current = TrainingWeek.weekStart(of: .today(), calendar: .app)
         if start == current {
             return String(localized: "This Week")
         }

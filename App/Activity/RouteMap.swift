@@ -4,7 +4,10 @@ import SwiftUI
 
 /// The colors of heart rate (and power) zones, from easy to all-out.
 enum ZoneStyle {
-    static let colors: [Color] = [.gray, .blue, .green, .orange, .red, .purple, .pink]
+    /// The zones' colors, as the user chose them.
+    static var colors: [Color] {
+        (0..<7).map { ColorRole.zone($0).color }
+    }
 
     static func color(zone: Int?, fallback: Color) -> Color {
         zone.map { colors[min($0, colors.count - 1)] } ?? fallback
@@ -20,7 +23,8 @@ struct RouteMap: View {
     var interactive = false
 
     var body: some View {
-        let segments = track.segments(zones: zones)
+        let settings = Preferences.shared.settings
+        let segments = track.segments(zones: settings.routeColoring == .heartRateZone ? zones : nil)
         Map(initialPosition: .automatic, interactionModes: interactive ? .all : []) {
             ForEach(segments) { segment in
                 MapPolyline(coordinates: segment.points.map(\.coordinate))
@@ -30,7 +34,15 @@ struct RouteMap: View {
             }
             markers
         }
-        .mapStyle(.standard(elevation: .realistic, pointsOfInterest: .excludingAll))
+        .mapStyle(Self.style(settings.mapStyle))
+    }
+
+    static func style(_ style: Settings.MapStyle) -> MapStyle {
+        switch style {
+        case .standard: .standard(elevation: .realistic, pointsOfInterest: .excludingAll)
+        case .hybrid: .hybrid(elevation: .realistic, pointsOfInterest: .excludingAll)
+        case .satellite: .imagery(elevation: .realistic)
+        }
     }
 
     /// Start, finish and the scrubbed position.
@@ -77,7 +89,7 @@ struct RouteMapCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             RouteMap(track: track, sport: sport, zones: zones, selection: selection)
-                .frame(height: 260)
+                .chartHeight(260)
                 .clipShape(.rect(cornerRadius: 20))
                 .overlay(alignment: .topTrailing) {
                     Button("Expand Map", systemImage: "arrow.up.left.and.arrow.down.right") {
@@ -88,7 +100,7 @@ struct RouteMapCard: View {
                     .padding(10)
                 }
                 .accessibilityLabel("Route map")
-            if zones != nil {
+            if zones != nil, Preferences.shared.settings.routeColoring == .heartRateZone {
                 ZoneLegend()
             }
         }

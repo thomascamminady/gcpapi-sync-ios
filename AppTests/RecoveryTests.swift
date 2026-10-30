@@ -152,7 +152,7 @@ private func scenario(hrv: (Int) -> Int?) -> (HealthHistory, [TrainingLoad.Day])
     @Test func recoveryFollowsTheTrainingData() async {
         let sample = TrainingData.sample(endingOn: end)
         let model = TrainingModel(
-            today: { end }, fetch: { _ in sample },
+            today: { end }, fetch: { _, _ in sample },
             fetchHealth: { end, days in .sample(endingOn: end, days: days) })
         #expect(model.recovery == .loading)
         await model.load()
@@ -169,7 +169,7 @@ private func scenario(hrv: (Int) -> Int?) -> (HealthHistory, [TrainingLoad.Day])
             .success(.sample(endingOn: end, days: 210)), .failure(.offline),
         ])
         let model = TrainingModel(
-            today: { end }, fetch: { _ in sample },
+            today: { end }, fetch: { _, _ in sample },
             fetchHealth: { _, _ in try await health.next() })
         await model.load()
         await model.load()
@@ -178,11 +178,12 @@ private func scenario(hrv: (Int) -> Int?) -> (HealthHistory, [TrainingLoad.Day])
             return
         }
         let failing = TrainingModel(
-            today: { end }, fetch: { _ in sample }, fetchHealth: { _, _ in throw Problem.offline })
+            today: { end }, fetch: { _, _ in sample },
+            fetchHealth: { _, _ in throw Problem.offline })
         await failing.load()
         #expect(failing.recovery == .failed(.offline))
         let cancelled = TrainingModel(
-            today: { end }, fetch: { _ in sample },
+            today: { end }, fetch: { _, _ in sample },
             fetchHealth: { _, _ in throw CancellationError() })
         await cancelled.load()
         #expect(cancelled.recovery == .loading)

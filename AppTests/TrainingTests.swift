@@ -269,7 +269,7 @@ private final class Clock {
         let sample = TrainingData.sample(endingOn: end)
         let results = TrainingResults([.success(sample), .failure(.offline), .success(sample)])
         let model = TrainingModel(
-            today: { end }, fetch: { _ in try await results.next() }, fetchHealth: sampleHealth)
+            today: { end }, fetch: { _, _ in try await results.next() }, fetchHealth: sampleHealth)
         #expect(model.phase == .loading)
         await model.load()
         #expect(model.phase == .loaded(sample))
@@ -283,11 +283,11 @@ private final class Clock {
 
     @Test func aFirstFailureIsShownInPlace() async {
         let model = TrainingModel(
-            fetch: { _ in throw Problem.rateLimited }, fetchHealth: sampleHealth)
+            fetch: { _, _ in throw Problem.rateLimited }, fetchHealth: sampleHealth)
         await model.load()
         #expect(model.phase == .failed(.rateLimited))
         let cancelled = TrainingModel(
-            fetch: { _ in throw CancellationError() }, fetchHealth: sampleHealth)
+            fetch: { _, _ in throw CancellationError() }, fetchHealth: sampleHealth)
         await cancelled.load()
         #expect(cancelled.phase == .loading)
     }
@@ -298,7 +298,7 @@ private final class Clock {
             .success(.sample(endingOn: end)), .success(.sample(endingOn: end)),
         ])
         let model = TrainingModel(
-            today: { end }, now: { clock.now }, fetch: { _ in try await results.next() },
+            today: { end }, now: { clock.now }, fetch: { _, _ in try await results.next() },
             fetchHealth: sampleHealth)
         await model.loadIfNeeded()
         await model.loadIfNeeded()

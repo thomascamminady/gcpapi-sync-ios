@@ -2,7 +2,7 @@ import Charts
 import SwiftUI
 
 /// A measurement the activity charts show, in the user's units.
-enum TrackMeasure: CaseIterable, Identifiable {
+enum TrackMeasure: String, CaseIterable, Identifiable {
     case heartRate
     case pace
     case elevation
@@ -26,12 +26,16 @@ enum TrackMeasure: CaseIterable, Identifiable {
         }
     }
 
-    var color: Color {
+    /// The measure's color, as the user chose it.
+    var color: Color { ColorRole.measure(self).color }
+
+    /// Heart rate in the resting heart rate's red; elevation in a neutral brown.
+    var hue: Hue {
         switch self {
         case .heartRate: .red
         case .pace: .blue
         case .elevation: .brown
-        case .cadence: .purple
+        case .cadence: .violet
         case .power: .orange
         }
     }
@@ -101,13 +105,15 @@ struct TrackChartsCard: View {
 
     private var measures: [TrackMeasure] {
         TrackMeasure.allCases.filter { measure in
-            track.samples.contains { measure.value($0, sport: sport) != nil }
+            !Preferences.shared.settings.hiddenCharts.contains(measure.rawValue)
+                && track.samples.contains { measure.value($0, sport: sport) != nil }
         }
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            CardHeader(title: "Analysis", symbol: "waveform.path.ecg", tint: .red)
+            CardHeader(
+                title: "Analysis", symbol: "waveform.path.ecg", tint: TrackMeasure.heartRate.color)
             readout
             ForEach(measures) { measure in
                 VStack(alignment: .leading, spacing: 6) {
@@ -125,7 +131,7 @@ struct TrackChartsCard: View {
                         track: track, measure: measure, sport: sport,
                         zones: measure == .heartRate ? zones : nil, selection: $selection
                     )
-                    .frame(height: 110)
+                    .chartHeight(110)
                 }
             }
         }

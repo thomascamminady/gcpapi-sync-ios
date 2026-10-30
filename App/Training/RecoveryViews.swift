@@ -11,7 +11,7 @@ struct RecoveryCard: View {
         VStack(alignment: .leading, spacing: 14) {
             CardHeader(
                 title: "Recovery Response", symbol: "arrow.uturn.backward.circle.fill",
-                tint: .purple, opensDetail: isNavigable)
+                tint: OverviewMetric.hrv.color, opensDetail: isNavigable)
             content
         }
         .allowsHitTesting(false)
@@ -44,7 +44,7 @@ struct RecoveryCard: View {
                     .font(.headline)
                     .fixedSize(horizontal: false, vertical: true)
                 RecoveryChart(curve: curve)
-                    .frame(height: 150)
+                    .chartHeight(150)
                 RecoveryLegend(metric: curve.metric)
                 Text(RecoveryDetailView.basis(of: response))
                     .font(.footnote)
@@ -184,7 +184,7 @@ struct RecoveryDetailView: View {
                             .font(.headline)
                             .fixedSize(horizontal: false, vertical: true)
                         RecoveryChart(curve: curve)
-                            .frame(height: 170)
+                            .chartHeight(170)
                         RecoveryLegend(metric: curve.metric)
                     }
                     .cardStyle()
@@ -212,26 +212,32 @@ struct RecoveryDetailView: View {
         return String(sentence.characters)
     }
 
-    private var method: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Label("How It Works", systemImage: "info.circle")
-                .font(.headline)
-            Text(
-                """
-                A day is hard when its training load is in the top fifth of your training days. \
-                Around each hard day, every value is compared with your usual level: the median \
-                of the 28 days before it. Averaging over all hard days cancels out what happens \
-                by chance and leaves your typical response; the band is its 95% confidence \
-                interval, and a change counts as clear only when the band excludes zero. Rest \
-                days, averaged the same way, show what happens without training.
+    /// How the response is computed, with the user's parameters.
+    static func method(of response: RecoveryResponse) -> String {
+        let share = response.hardShare.formatted(.percent.precision(.fractionLength(0)))
+        return String(
+            localized: """
+                A day is hard when its training load is in the top \(share) of your training \
+                days. Around each hard day, every value is compared with your usual level: the \
+                median of the \(response.baselineDays) days before it. Averaging over all hard \
+                days cancels out what happens by chance and leaves your typical response; the \
+                band is its 95% confidence interval, and a change counts as clear only when the \
+                band excludes zero. Rest days, averaged the same way, show what happens without \
+                training.
 
                 HRV and sleep belong to the night ending on a day, so they show a hard day's \
                 effect from the day after. This shows what tends to follow hard training, not \
                 what causes it: travel, illness or stress around hard days count too.
-                """
-            )
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
+                """)
+    }
+
+    private var method: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("How It Works", systemImage: "info.circle")
+                .font(.headline)
+            Text(Self.method(of: response))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
         }
         .padding(.top, 8)
     }

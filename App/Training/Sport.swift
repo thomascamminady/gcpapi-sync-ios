@@ -53,14 +53,18 @@ nonisolated enum Sport: String, CaseIterable, Identifiable, Sendable {
     }
 
     /// Colors checked in this order for color-vision deficiencies, in light and dark mode.
-    var color: Color {
+    /// The sport's color, as the user chose it.
+    @MainActor var color: Color { ColorRole.sport(self).color }
+
+    /// The sport's hue in every color theme, in the order checked for stacked bars.
+    var hue: Hue {
         switch self {
-        case .running: Color(light: 0x2A78D6, dark: 0x3987E5)
-        case .cycling: Color(light: 0xEB6834, dark: 0xD95926)
-        case .swimming: Color(light: 0x1BAF7A, dark: 0x199E70)
-        case .strength: Color(light: 0xEDA100, dark: 0xC98500)
-        case .walking: Color(light: 0xE87BA4, dark: 0xD55181)
-        case .other: Color(light: 0x008300, dark: 0x008300)
+        case .running: .blue
+        case .cycling: .orange
+        case .swimming: .aqua
+        case .strength: .amber
+        case .walking: .magenta
+        case .other: .green
         }
     }
 }

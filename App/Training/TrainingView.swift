@@ -22,11 +22,6 @@ struct TrainingView: View {
                         destination(route, data: data)
                     }
                 }
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        SettingsButton(lastUpdated: model.lastUpdated)
-                    }
-                }
                 .task { await model.loadIfNeeded() }
                 .refreshable { await model.load() }
         }
@@ -80,10 +75,11 @@ struct TrainingDashboard: View {
     let recovery: TrainingModel.RecoveryPhase
     var refreshProblem: Problem?
     let transition: Namespace.ID
+    @Environment(\.isDense) private var isDense
 
     var body: some View {
         ScrollView {
-            LazyVStack(spacing: 16) {
+            LazyVStack(spacing: isDense ? 10 : 16) {
                 if let refreshProblem {
                     ProblemBanner(problem: refreshProblem)
                 }
@@ -120,7 +116,7 @@ struct TrainingDashboard: View {
 #Preview {
     TrainingView(
         model: TrainingModel(
-            fetch: { end in .sample(endingOn: end) },
+            fetch: { end, _ in .sample(endingOn: end) },
             fetchHealth: { end, days in .sample(endingOn: end, days: days) })
     )
     .environment(Session.preview)

@@ -31,24 +31,19 @@ nonisolated enum Format {
     }
 
     /// Garmin's HRV status as a label and a color.
-    static func hrvStatus(_ status: String?) -> (label: String, color: Color)? {
+    @MainActor static func hrvStatus(_ status: String?) -> (label: String, color: Color)? {
         switch status {
-        case "BALANCED": (String(localized: "Balanced"), .green)
-        case "UNBALANCED": (String(localized: "Unbalanced"), .orange)
-        case "LOW": (String(localized: "Low"), .orange)
-        case "POOR": (String(localized: "Poor"), .red)
+        case "BALANCED": (String(localized: "Balanced"), ColorRole.status(.good).color)
+        case "UNBALANCED": (String(localized: "Unbalanced"), ColorRole.status(.fair).color)
+        case "LOW": (String(localized: "Low"), ColorRole.status(.fair).color)
+        case "POOR": (String(localized: "Poor"), ColorRole.status(.poor).color)
         default: nil
         }
     }
 
     /// The color of a stress level, following Garmin's bands.
-    static func stressColor(_ level: Int) -> Color {
-        switch level {
-        case ..<26: .blue
-        case 26..<51: .yellow
-        case 51..<76: .orange
-        default: .red
-        }
+    @MainActor static func stressColor(_ level: Int) -> Color {
+        ColorRole.stress(.init(level: level)).color
     }
 
     /// The stress band's name.

@@ -64,6 +64,19 @@ nonisolated struct ActivityTrack: Hashable, Sendable {
     /// Seconds of timer time from the first record to the last.
     let duration: Double
 
+    /// Whether the watch's laps are the same as the splits, as with automatic laps of a
+    /// kilometre or mile, so that showing both would repeat them.
+    var lapsRepeatSplits: Bool {
+        laps.count == splits.count
+            && zip(laps, splits).allSatisfy { lap, split in
+                guard let distance = lap.distance, let time = lap.moving ?? lap.elapsed else {
+                    return false
+                }
+                return abs(distance - split.distance) <= max(15, split.distance * 0.02)
+                    && abs(time - split.duration) <= 5
+            }
+    }
+
     func has(_ value: KeyPath<Sample, Double?>) -> Bool {
         samples.contains { $0[keyPath: value] != nil }
     }

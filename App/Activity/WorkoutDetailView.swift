@@ -10,6 +10,7 @@ struct WorkoutDetailView: View {
     let model: TrainingModel
     /// The scrubbed moment, in seconds of timer time, shared by the charts and the map.
     @State private var selection: Double?
+    @Environment(\.isDense) private var isDense
 
     private var track: ActivityTrack? {
         if case .loaded(let track) = model.tracks[workout.id] { track } else { nil }
@@ -39,7 +40,8 @@ struct WorkoutDetailView: View {
                         title: "Power Zones", symbol: "bolt.fill",
                         seconds: Array(
                             workout.powerZones.prefix(
-                                max(5, (workout.powerZones.lastIndex { $0 > 0 } ?? 0) + 1))))
+                                max(5, (workout.powerZones.lastIndex { $0 > 0 } ?? 0) + 1))),
+                        tint: TrackMeasure.power.color)
                 }
             }
             .padding()
@@ -61,7 +63,7 @@ struct WorkoutDetailView: View {
             if track.splits.count > 1 {
                 SplitsCard(splits: track.splits, sport: workout.sport)
             }
-            if track.laps.count > 1 {
+            if track.laps.count > 1, !track.lapsRepeatSplits {
                 LapsCard(laps: track.laps, sport: workout.sport)
             }
             if !SetsCard.logged(track.sets).isEmpty {
@@ -152,7 +154,8 @@ struct WorkoutDetailView: View {
             ),
         ]
         return LazyVGrid(
-            columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible())], spacing: 12
+            columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: isDense ? 3 : 2),
+            spacing: 8
         ) {
             ForEach(
                 items.compactMap { label, value in value.map { Stat(label: label, value: $0) } }
@@ -169,7 +172,8 @@ struct WorkoutDetailView: View {
     /// Garmin's training effect and training load.
     private var effect: some View {
         VStack(alignment: .leading, spacing: 14) {
-            CardHeader(title: "Training Effect", symbol: "flame.fill", tint: .orange)
+            CardHeader(
+                title: "Training Effect", symbol: "flame.fill", tint: ColorRole.zone(3).color)
             if let aerobic = workout.aerobicEffect {
                 EffectGauge(
                     title: "Aerobic", value: aerobic,
@@ -219,20 +223,7 @@ private struct EffectGauge: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
-            Capsule()
-                .fill(Color.secondary.opacity(0.2))
-                .frame(height: 8)
-                .overlay(alignment: .leading) {
-                    GeometryReader { proxy in
-                        Capsule()
-                            .fill(
-                                LinearGradient(
-                                    colors: [.blue, .green, .orange], startPoint: .leading,
-                                    endPoint: .trailing)
-                            )
-                            .frame(width: proxy.size.width * min(1, max(0, value / 5)))
-                    }
-                }
+            EffectBar(share: min(1, max(0, value / 5)))
             if let message {
                 Text(message)
                     .font(.footnote)
@@ -240,6 +231,30 @@ private struct EffectGauge: View {
             }
         }
         .accessibilityElement(children: .combine)
+    }
+}
+
+/// A training effect's share of the scale, on a bar shaded from easy to hard.
+private struct EffectBar: View {
+    let share: Double
+
+    var body: some View {
+        Capsule()
+            .fill(Color.secondary.opacity(0.2))
+            .frame(height: 8)
+            .overlay(alignment: .leading) {
+                GeometryReader { proxy in
+                    Capsule()
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    ZoneStyle.colors[1], ZoneStyle.colors[2], ZoneStyle.colors[3],
+                                ],
+                                startPoint: .leading, endPoint: .trailing)
+                        )
+                        .frame(width: proxy.size.width * share)
+                }
+            }
     }
 }
 
@@ -262,10 +277,11 @@ private struct ZoneCard: View {
     let title: LocalizedStringKey
     let symbol: String
     let seconds: [Double]
+    var tint = TrackMeasure.heartRate.color
     var names: [String] = []
     var detail: (Int) -> String? = { _ in nil }
 
-    private static let colors = ZoneStyle.colors
+    private static var colors: [Color] { ZoneStyle.colors }
 
     /// `7:30 · 15%`.
     private static func time(_ seconds: Double, of total: Double) -> String {
@@ -276,7 +292,7 @@ private struct ZoneCard: View {
     var body: some View {
         let total = max(1, seconds.reduce(0, +))
         VStack(alignment: .leading, spacing: 12) {
-            CardHeader(title: title, symbol: symbol, tint: .red)
+            CardHeader(title: title, symbol: symbol, tint: tint)
             ForEach(Array(seconds.indices.reversed()), id: \.self) { index in
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(alignment: .firstTextBaseline) {
