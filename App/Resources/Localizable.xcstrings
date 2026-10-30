@@ -220,6 +220,32 @@
         }
       }
     },
+    "%lld×" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld×"
+          }
+        }
+      }
+    },
+    "%lld× %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld× %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld× %2$@"
+          }
+        }
+      }
+    },
     "+%lld" : {
       "shouldTranslate" : false
     },
@@ -419,6 +445,16 @@
         }
       }
     },
+    "Activity" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktivität"
+          }
+        }
+      }
+    },
     "Activity Charts" : {
       "localizations" : {
         "de" : {
@@ -455,6 +491,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aerob"
+          }
+        }
+      }
+    },
+    "Aerobic training effect" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aerober Trainingseffekt"
           }
         }
       }
@@ -555,6 +601,16 @@
         }
       }
     },
+    "Ascent" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anstieg"
+          }
+        }
+      }
+    },
     "Automatic" : {
       "localizations" : {
         "de" : {
@@ -617,6 +673,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Durchschnittliches Stresslevel (0–100), geschätzt aus deinem Herzschlag, während du nicht aktiv bist: 0–25 ist Ruhe, 26–50 niedrig, 51–75 mittel und 76–100 hoch."
+          }
+        }
+      }
+    },
+    "Avg HR" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ø HF"
           }
         }
       }
@@ -1027,6 +1093,16 @@
         }
       }
     },
+    "Dashboard" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dashboard"
+          }
+        }
+      }
+    },
     "Data from Garmin Connect. Not affiliated with Garmin." : {
       "localizations" : {
         "de" : {
@@ -1263,6 +1339,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ende"
+          }
+        }
+      }
+    },
+    "Energy" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Energie"
           }
         }
       }
@@ -1553,6 +1639,16 @@
         }
       }
     },
+    "From the VO2max estimated from your runs, by Daniels' formulas." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aus der VO2max, die aus deinen Läufen geschätzt wird, nach den Formeln von Daniels."
+          }
+        }
+      }
+    },
     "GCPAPISync" : {
       "shouldTranslate" : false
     },
@@ -1719,12 +1815,32 @@
         }
       }
     },
+    "Half Marathon" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Halbmarathon"
+          }
+        }
+      }
+    },
     "Hard Days" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Harte Tage"
+          }
+        }
+      }
+    },
+    "Health" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesundheit"
           }
         }
       }
@@ -1969,6 +2085,16 @@
         }
       }
     },
+    "Interval" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intervall"
+          }
+        }
+      }
+    },
     "It may have expired or been deleted. Create a new key in Garmin Connect under Settings › Personal API." : {
       "localizations" : {
         "de" : {
@@ -2170,7 +2296,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Belastung"
+            "value" : "Last"
           }
         }
       }
@@ -2265,6 +2391,16 @@
         }
       }
     },
+    "Marathon" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marathon"
+          }
+        }
+      }
+    },
     "Max Heart Rate" : {
       "localizations" : {
         "de" : {
@@ -2345,6 +2481,36 @@
         }
       }
     },
+    "Monotony" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monotonie"
+          }
+        }
+      }
+    },
+    "Month" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monat"
+          }
+        }
+      }
+    },
+    "Months" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monate"
+          }
+        }
+      }
+    },
     "Much more rested than fit: fitness is fading." : {
       "localizations" : {
         "de" : {
@@ -2397,6 +2563,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nächster Monat"
+          }
+        }
+      }
+    },
+    "Next Week" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nächste Woche"
           }
         }
       }
@@ -2731,6 +2907,16 @@
         }
       }
     },
+    "Previous Week" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorherige Woche"
+          }
+        }
+      }
+    },
     "Primary Benefit" : {
       "localizations" : {
         "de" : {
@@ -2791,6 +2977,16 @@
         }
       }
     },
+    "Race Predictions" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wettkampfprognosen"
+          }
+        }
+      }
+    },
     "Range" : {
       "localizations" : {
         "de" : {
@@ -2837,6 +3033,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Im Hintergrund aktualisieren"
+          }
+        }
+      }
+    },
+    "Repetition" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wiederholung"
           }
         }
       }
@@ -3411,6 +3617,16 @@
         }
       }
     },
+    "Strain" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beanspruchung"
+          }
+        }
+      }
+    },
     "Strength" : {
       "localizations" : {
         "de" : {
@@ -3491,6 +3707,16 @@
         }
       }
     },
+    "TE" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TE"
+          }
+        }
+      }
+    },
     "Tap the map to place points; the route follows roads and paths between them. Save it, or export it to Garmin Connect as a course." : {
       "localizations" : {
         "de" : {
@@ -3547,6 +3773,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Thema"
+          }
+        }
+      }
+    },
+    "This Month" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dieser Monat"
           }
         }
       }
@@ -3697,6 +3933,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Trainingsbelastung und Form"
+          }
+        }
+      }
+    },
+    "Training Paces" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trainingstempi"
           }
         }
       }
@@ -3891,6 +4137,16 @@
         }
       }
     },
+    "Volume" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Umfang"
+          }
+        }
+      }
+    },
     "Walking & Hiking" : {
       "localizations" : {
         "de" : {
@@ -3947,6 +4203,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wochenumfang"
+          }
+        }
+      }
+    },
+    "Workload Ratio" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belastungsverhältnis"
+          }
+        }
+      }
+    },
+    "Workload ratio: fatigue over fitness. Monotony and strain: the last 7 days." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belastungsverhältnis: Ermüdung durch Fitness. Monotonie und Beanspruchung: die letzten 7 Tage."
           }
         }
       }

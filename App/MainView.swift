@@ -46,7 +46,7 @@ struct MainView: View {
         TabView(selection: selection) {
             if isWide {
                 Tab("Dashboard", systemImage: "rectangle.split.3x1", value: .dashboard) {
-                    DeskView(training: training, health: health)
+                    DeskView(training: training, health: health) { tab = .settings }
                 }
             }
             // A wide window's dashboard shows the summary's metrics too.
@@ -67,6 +67,9 @@ struct MainView: View {
             Tab("Settings", systemImage: "gearshape", value: .settings) {
                 SettingsView(lastUpdated: health.lastUpdated, export: export)
             }
+            // A wide window's top tab bar has no room for it in every language: the sidebar and
+            // the dashboard's toolbar open it there.
+            .defaultVisibility(isWide ? .hidden : .automatic, for: .tabBar)
         }
         // A tab bar on the iPhone, a sidebar on the iPad and the Mac.
         .tabViewStyle(.sidebarAdaptable)

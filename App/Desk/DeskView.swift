@@ -6,35 +6,32 @@ import SwiftUI
 struct DeskView: View {
     let training: TrainingModel
     let health: HealthModel
+    /// Switches to the settings, which a wide window's tab bar leaves out.
+    let openSettings: () -> Void
     /// How many weeks before this one the table shows.
     @State private var weeksBack = 0
     /// The sport of the monthly statistics, by raw value; empty for all sports.
     @SceneStorage("deskSport") private var sportName = Sport.running.rawValue
     @State private var width: CGFloat = 1200
 
-    /// From this width on, the figures stand beside the tables instead of below them.
-    private static let sideBySide: CGFloat = 1100
+    /// From this width on, the figures stand beside the tables instead of below them: an
+    /// iPad in landscape with its sidebar, or a Mac window.
+    private static let sideBySide: CGFloat = 1000
     /// The width of the column of figures.
-    private static let panelWidth: CGFloat = 330
+    private static let panelWidth: CGFloat = 300
 
     var body: some View {
         NavigationStack {
             content
                 .navigationTitle("Dashboard")
                 .navigationSubtitle(SyncStatus.text(training.lastUpdated))
-                .navigationDestination(for: ActivityRoute.self) { route in
-                    if case .workout(let workout) = route, case .loaded(let data) = training.phase {
-                        WorkoutDetailView(
-                            workout: workout, zones: data.heartRateZones(for: workout.sport),
-                            model: training)
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button("Settings", systemImage: "gearshape", action: openSettings)
                     }
                 }
-                .navigationDestination(for: Route.self) { route in
-                    switch route {
-                    case .overview: OverviewDetailView(model: health)
-                    case .metric(let metric): MetricDetailView(metric: metric, model: health)
-                    }
-                }
+                .navigationDestination(for: ActivityRoute.self, destination: activity)
+                .navigationDestination(for: Route.self, destination: metric)
                 .task {
                     async let trained: Void = training.loadIfNeeded()
                     async let checked: Void = health.loadIfNeeded()
@@ -50,6 +47,22 @@ struct DeskView: View {
             $0.size.width
         } action: {
             width = $0
+        }
+    }
+
+    @ViewBuilder
+    private func activity(_ route: ActivityRoute) -> some View {
+        if case .workout(let workout) = route, case .loaded(let data) = training.phase {
+            WorkoutDetailView(
+                workout: workout, zones: data.heartRateZones(for: workout.sport), model: training)
+        }
+    }
+
+    @ViewBuilder
+    private func metric(_ route: Route) -> some View {
+        switch route {
+        case .overview: OverviewDetailView(model: health)
+        case .metric(let metric): MetricDetailView(metric: metric, model: health)
         }
     }
 
@@ -86,7 +99,7 @@ struct DeskView: View {
         if width >= Self.sideBySide {
             HStack(alignment: .top, spacing: 0) {
                 ScrollView {
-                    tables(data, isNarrow: width - Self.panelWidth < 960)
+                    tables(data, isNarrow: width - Self.panelWidth < 900)
                         .padding(20)
                 }
                 Divider()

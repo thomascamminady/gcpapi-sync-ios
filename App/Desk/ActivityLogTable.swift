@@ -156,7 +156,7 @@ struct MonthlyStatisticsTable: View {
                 Text(verbatim: "").cell(unit * 4)
                 Text("Distance").cell(unit * 9.5)
                 Text(verbatim: "").cell(unit * 5.5)
-                Text("Time").cell(unit * 9)
+                Text("Time").cell(unit * 10.5)
                 if hasPace {
                     Text("Pace").cell(unit * 8.5)
                 }
@@ -194,11 +194,12 @@ struct MonthlyStatisticsTable: View {
         let totals = month.totals
         let largest = months.map { volume($0.totals) }.max() ?? 0
         Text(Self.title(month.first)).cell(unit * 11.5, alignment: .leading)
-        Text(totals.activityCount > 0 ? "\(totals.activityCount)×" : "").foregroundStyle(.secondary)
+        Text(totals.activityCount > 0 ? String(localized: "\(totals.activityCount)×") : "")
+            .foregroundStyle(.secondary)
             .cell(unit * 4)
         Text(totals.distance > 0 ? Format.distance(metres: totals.distance) : "").cell(unit * 9.5)
         change(of: totals.distance, from: before?.totals.distance).cell(unit * 5.5)
-        Text(totals.duration > 0 ? Format.hours(seconds: totals.duration) : "").cell(unit * 9)
+        Text(totals.duration > 0 ? Format.hours(seconds: totals.duration) : "").cell(unit * 10.5)
         if hasPace, let sport {
             Text(totals.averageSpeed.map { Format.pace(metresPerSecond: $0, sport: sport) } ?? "")
                 .cell(unit * 8.5)
