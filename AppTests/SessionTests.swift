@@ -1,10 +1,18 @@
 import Foundation
 import GCPAPISync
+import Security
 import Testing
 
 @testable import GCPAPISyncApp
 
 @Suite struct KeychainTests {
+    @Test func onlyAMissingEntitlementFallsBackToTheLoginKeychain() {
+        #expect(KeychainStore.fallsBack(after: errSecMissingEntitlement))
+        #expect(!KeychainStore.fallsBack(after: errSecSuccess))
+        #expect(!KeychainStore.fallsBack(after: errSecItemNotFound))
+        #expect(!KeychainStore.fallsBack(after: errSecInteractionNotAllowed))
+    }
+
     @Test func storeRoundTrip() throws {
         let keychain = ScratchKeychain()
         let store = keychain.store
