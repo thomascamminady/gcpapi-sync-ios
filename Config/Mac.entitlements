@@ -10,5 +10,10 @@
 	<true/>
 	<key>com.apple.security.personal-information.calendars</key>
 	<true/>
+	<!-- The Keychain needs the app's identifier, which comes with a provisioning profile. -->
+	<key>keychain-access-groups</key>
+	<array>
+		<string>$(AppIdentifierPrefix)dev.camminady.gcpapi-sync</string>
+	</array>
 </dict>
 </plist>

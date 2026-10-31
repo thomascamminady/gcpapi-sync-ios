@@ -119,6 +119,10 @@ pick the phone as the run destination:
 echo 'DEVELOPMENT_TEAM = ABCDE12345' > Config/Signing.local.xcconfig
 ```
 
+The Mac app keeps the API key in the Keychain, which needs the app's identifier from a
+provisioning profile: add your Apple ID in Xcode (Settings › Accounts) once, and Xcode creates
+the profile when it builds for My Mac (or `xcodebuild … -allowProvisioningUpdates`).
+
 Debug builds connect on their own when started with `GARMIN_PERSONAL_API_KEY` set (in the
 scheme's environment, or `open --env` on the Mac), and keep the key in the Keychain from then on.
 Release builds ignore it.
