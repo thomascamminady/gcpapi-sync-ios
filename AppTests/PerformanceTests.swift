@@ -1,5 +1,6 @@
 import Foundation
 import GCPAPISync
+import SwiftUI
 import Testing
 
 @testable import GCPAPISyncApp
@@ -173,5 +174,50 @@ import Testing
         #expect(LoadBalance.workloadRatio(day) == 1.25)
         let fresh = TrainingLoad.Day(date: .day("2026-10-30"), load: 0, fitness: 0, fatigue: 5)
         #expect(LoadBalance.workloadRatio(fresh) == nil)
+    }
+}
+
+@Suite struct ValueScaleTests {
+    @Test func sumsFromZero() {
+        #expect(ValueScale.fromZero(50, among: [50, 100, 25]) == 0.5)
+        #expect(ValueScale.fromZero(100, among: [50, 100]) == 1)
+        #expect(ValueScale.fromZero(0, among: [50, 100]) == nil)
+        #expect(ValueScale.fromZero(nil, among: [50]) == nil)
+        #expect(ValueScale.fromZero(10, among: []) == nil)
+    }
+
+    @Test func averagesBetweenTheExtremes() {
+        #expect(ValueScale.between(150, among: [140, 160]) == 0.5)
+        #expect(ValueScale.between(140, among: [140, 160]) == 0)
+        #expect(ValueScale.between(170, among: [140, 160]) == 1)
+        #expect(ValueScale.between(150, among: [150, 150]) == 1)
+        #expect(ValueScale.between(nil, among: [140]) == nil)
+        #expect(ValueScale.between(150, among: []) == nil)
+    }
+}
+
+@Suite struct ColormapTests {
+    @Test(arguments: Colormap.allCases)
+    func lightnessRisesAlongTheMap(map: Colormap) {
+        let luminances = (0...20).map { map.luminance(at: Double($0) / 20) }
+        #expect(zip(luminances, luminances.dropFirst()).allSatisfy { $0 < $1 })
+        #expect(map.luminance(at: 0, isReversed: true) == map.luminance(at: 1))
+    }
+
+    @Test(arguments: Colormap.allCases)
+    func theEndsAreTheStops(map: Colormap) throws {
+        let first = try #require(map.stops.first)
+        let (red, green, blue) = map.components(at: 0)
+        #expect(abs(red * 255 - Double(first >> 16 & 0xFF)) < 0.5)
+        #expect(abs(green * 255 - Double(first >> 8 & 0xFF)) < 0.5)
+        #expect(abs(blue * 255 - Double(first & 0xFF)) < 0.5)
+        #expect(map.components(at: -1) == map.components(at: 0))
+        #expect(map.components(at: 2) == map.components(at: 1))
+        #expect(map.components(at: .nan) == map.components(at: 0))
+    }
+
+    @Test func textReadsOnTheMap() {
+        #expect(Colormap.viridis.textColor(at: 0) == .white)
+        #expect(Colormap.viridis.textColor(at: 1) == .black)
     }
 }

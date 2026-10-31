@@ -129,6 +129,29 @@ nonisolated private func demoRunActivity() -> SummarizedActivity? {
         #expect(clock.seconds(at: start + 60) == 30)
     }
 
+    @Test func heartRateLevelsSpanTheRoute() {
+        // Heart rate climbs from 120 to 180 over ten minutes.
+        let track = ActivityTrack(
+            FITActivity(records: records(seconds: 600) { 120 + Int($0 / 10) }), sport: .running,
+            splitLength: 1000)
+        #expect(track.heartRateRange == 120...180)
+        let segments = track.segments(heartRateLevels: 6)
+        #expect(segments.first?.zone == 0)
+        #expect(segments.last?.zone == 5)
+        #expect(segments.map(\.zone) == (0..<6).map(Optional.some))
+        // Each stretch starts where the one before ends.
+        for (before, after) in zip(segments, segments.dropFirst()) {
+            #expect(before.points.last == after.points.first)
+        }
+    }
+
+    @Test func aSteadyHeartRateHasNoLevels() {
+        let track = ActivityTrack(
+            FITActivity(records: records(seconds: 60)), sport: .running, splitLength: 1000)
+        #expect(track.heartRateRange == nil)
+        #expect(track.segments(heartRateLevels: 6).map(\.zone) == [nil])
+    }
+
     @Test func splitsAreTimedAtEachBoundary() throws {
         var recorded = records(seconds: 625)
         // Climb 5 m over the first kilometre, with sub-metre noise that must not count.
@@ -362,5 +385,35 @@ private actor Attempts {
             #expect(!metric.shortTitle.isEmpty)
             #expect(metric.number(of: DayHealth.sample(for: today)) != nil)
         }
+    }
+}
+
+@Suite struct ActivityLogTests {
+    private func workout(_ id: Int, on date: String) throws -> Workout {
+        try #require(
+            Workout(
+                SummarizedActivity(
+                    activityId: id,
+                    startTimeLocal: (try? GarminTime(hour: 7)).map {
+                        LocalDateTime(date: .day(date), time: $0)
+                    },
+                    activityType: ActivityType(typeKey: "running"), duration: 1800)))
+    }
+
+    @Test func emptyDaysHaveADash() throws {
+        let days = ["2026-10-30", "2026-10-29", "2026-10-28"].map(GarminDate.day)
+        let table = ActivityLogTable(
+            workouts: [
+                try workout(1, on: "2026-10-30"), try workout(2, on: "2026-10-30"),
+                try workout(3, on: "2026-10-28"),
+            ],
+            days: days)
+        let rows = table.rows.map { row in
+            switch row {
+            case .activity(let workout, let showsDay): "\(workout.id) \(showsDay)"
+            case .rest(let date): "\(date)"
+            }
+        }
+        #expect(rows == ["1 true", "2 false", "2026-10-29", "3 true"])
     }
 }

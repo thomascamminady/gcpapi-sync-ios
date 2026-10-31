@@ -136,6 +136,7 @@ struct SettingsView: View {
         Section("Activities") {
             Picker("Route Colors", selection: $preferences.settings.routeColoring) {
                 Text("Heart Rate Zone").tag(Settings.RouteColoring.heartRateZone)
+                Text("Heart Rate").tag(Settings.RouteColoring.heartRate)
                 Text("Sport").tag(Settings.RouteColoring.sport)
             }
             Picker("Map", selection: $preferences.settings.mapStyle) {
@@ -253,6 +254,7 @@ struct ColorSettingsView: View {
     var body: some View {
         List {
             themeSection
+            colormapSection
             ForEach(ColorRole.Group.allCases) { group in
                 Section(group.title) {
                     ForEach(group.roles) { role in
@@ -294,8 +296,39 @@ struct ColorSettingsView: View {
         } footer: {
             Text(
                 """
-                Balanced is checked for color-vision deficiencies. Colors changed below \
-                stay as they are when the theme changes.
+                Okabe–Ito and Balanced can be told apart with every common color-vision \
+                deficiency. Colors changed below stay as they are when the theme changes.
+                """)
+        }
+    }
+
+    /// The color map for coloring by value, each shown as its gradient.
+    private var colormapSection: some View {
+        Section {
+            Picker("Color Map", selection: $preferences.settings.colormap) {
+                ForEach(Colormap.allCases) { map in
+                    HStack {
+                        Text(map.title)
+                        Spacer()
+                        Capsule()
+                            .fill(map.gradient(isReversed: preferences.settings.reversesColormap))
+                            .frame(width: 120, height: 10)
+                            .accessibilityHidden(true)
+                    }
+                    .tag(map)
+                }
+            }
+            .pickerStyle(.inline)
+            .labelsHidden()
+            Toggle("Reverse", isOn: $preferences.settings.reversesColormap)
+        } header: {
+            Text("Coloring by Value")
+        } footer: {
+            Text(
+                """
+                For the dashboard's months and routes by heart rate. These maps are perceptually \
+                uniform: equal steps of value look like equal steps of color, and they read in \
+                grayscale and with color-vision deficiencies. Cividis is made for them.
                 """)
         }
     }

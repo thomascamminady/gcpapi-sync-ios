@@ -206,27 +206,50 @@ nonisolated struct ActivityTrack: Hashable, Sendable {
 
     /// The route in stretches of one heart rate zone each, joined end to start.
     func segments(zones: HeartRateZoneSet?) -> [Segment] {
-        func zone(_ point: Point) -> Int? {
+        segments { point in
             guard let zones, let heartRate = point.heartRate else { return nil }
             return zones.floors.lastIndex { heartRate >= $0 }
         }
+    }
+
+    /// The route's lowest and highest heart rate, if it has two that differ.
+    var heartRateRange: ClosedRange<Double>? {
+        let rates = route.compactMap(\.heartRate).map(Double.init)
+        guard let low = rates.min(), let high = rates.max(), high > low else { return nil }
+        return low...high
+    }
+
+    /// The route in stretches of one of `levels` equal steps of heart rate each, from the
+    /// lowest (0) to the highest (`levels` − 1), joined end to start.
+    func segments(heartRateLevels levels: Int) -> [Segment] {
+        guard let range = heartRateRange, levels > 0 else { return segments(zones: nil) }
+        let width = (range.upperBound - range.lowerBound) / Double(levels)
+        return segments { point in
+            point.heartRate.map { rate in
+                min(Int((Double(rate) - range.lowerBound) / width), levels - 1)
+            }
+        }
+    }
+
+    /// The route in stretches of points with the same `level`, joined end to start.
+    func segments(by level: (Point) -> Int?) -> [Segment] {
         var segments: [Segment] = []
         var current: [Point] = []
-        var currentZone: Int?
+        var currentLevel: Int?
         for point in route {
-            let pointZone = zone(point)
+            let pointLevel = level(point)
             if current.isEmpty {
-                currentZone = pointZone
-            } else if pointZone != currentZone {
+                currentLevel = pointLevel
+            } else if pointLevel != currentLevel {
                 current.append(point)
-                segments.append(Segment(id: segments.count, zone: currentZone, points: current))
+                segments.append(Segment(id: segments.count, zone: currentLevel, points: current))
                 current = []
-                currentZone = pointZone
+                currentLevel = pointLevel
             }
             current.append(point)
         }
         if current.count > 1 || (segments.isEmpty && !current.isEmpty) {
-            segments.append(Segment(id: segments.count, zone: currentZone, points: current))
+            segments.append(Segment(id: segments.count, zone: currentLevel, points: current))
         }
         return segments
     }

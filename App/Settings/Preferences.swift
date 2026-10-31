@@ -25,6 +25,8 @@ nonisolated struct Settings: Codable, Equatable, Sendable {
 
     enum RouteColoring: String, Codable, CaseIterable, Sendable {
         case heartRateZone = "heart_rate_zone"
+        /// Heart rate on the color map, from the activity's lowest to its highest.
+        case heartRate = "heart_rate"
         case sport
     }
 
@@ -47,7 +49,12 @@ nonisolated struct Settings: Codable, Equatable, Sendable {
     /// Activity charts not shown, by measure.
     var hiddenCharts: Set<String> = []
     var analysis = AnalysisSettings()
-    var theme = ColorTheme.balanced
+    var theme = ColorTheme.okabeIto
+    /// The color map for coloring by value.
+    var colormap = Colormap.viridis
+    var reversesColormap = false
+    /// Whether the dashboard's months shade their figures by value.
+    var shadesMonths = true
     /// Colors chosen instead of the theme's, as `RRGGBBAA` by color role.
     var colors: [String: String] = [:]
     var exportsToCalendar = false
@@ -75,6 +82,9 @@ nonisolated struct Settings: Codable, Equatable, Sendable {
         hiddenCharts = value(.hiddenCharts, defaults.hiddenCharts)
         analysis = value(.analysis, defaults.analysis)
         theme = value(.theme, defaults.theme)
+        colormap = value(.colormap, defaults.colormap)
+        reversesColormap = value(.reversesColormap, defaults.reversesColormap)
+        shadesMonths = value(.shadesMonths, defaults.shadesMonths)
         colors = value(.colors, defaults.colors)
         exportsToCalendar = value(.exportsToCalendar, defaults.exportsToCalendar)
         refreshesInBackground = value(.refreshesInBackground, defaults.refreshesInBackground)

@@ -9,6 +9,11 @@ enum DeskStyle {
         UIDevice.current.userInterfaceIdiom == .mac ? .body : .subheadline
     }
 
+    /// The size of the dashboard's controls: small on the Mac, as its own apps have them.
+    static var controlSize: ControlSize {
+        UIDevice.current.userInterfaceIdiom == .mac ? .small : .regular
+    }
+
     /// A section title of the dashboard.
     static var title: Font {
         UIDevice.current.userInterfaceIdiom == .mac ? .title3.weight(.semibold) : .title3.bold()

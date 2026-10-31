@@ -738,6 +738,7 @@
       }
     },
     "Balanced is checked for color-vision deficiencies. Colors changed below stay as they are when the theme changes." : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -959,6 +960,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Anstieg"
+          }
+        }
+      }
+    },
+    "Color Map" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Farbskala"
+          }
+        }
+      }
+    },
+    "Coloring by Value" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Färbung nach Wert"
           }
         }
       }
@@ -1239,6 +1260,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Distanz"
+          }
+        }
+      }
+    },
+    "Distance, time and load from zero to the largest month; pace and heart rate from the lowest to the highest." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Distanz, Zeit und Last von null bis zum größten Monat; Pace und Herzfrequenz vom niedrigsten bis zum höchsten."
           }
         }
       }
@@ -1599,6 +1630,16 @@
         }
       }
     },
+    "For the dashboard's months and routes by heart rate. These maps are perceptually uniform: equal steps of value look like equal steps of color, and they read in grayscale and with color-vision deficiencies. Cividis is made for them." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für die Monate im Dashboard und Strecken nach Herzfrequenz. Diese Skalen sind wahrnehmungsgleichmäßig: Gleiche Schritte im Wert wirken wie gleiche Schritte in der Farbe, und sie lassen sich in Graustufen und mit Farbsehschwächen lesen. Cividis ist eigens dafür gemacht."
+          }
+        }
+      }
+    },
     "Form" : {
       "localizations" : {
         "de" : {
@@ -1901,6 +1942,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Herzfrequenz- und Leistungszonen"
+          }
+        }
+      }
+    },
+    "Heart rate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herzfrequenz"
           }
         }
       }
@@ -2787,6 +2838,16 @@
         }
       }
     },
+    "Okabe–Ito and Balanced can be told apart with every common color-vision deficiency. Colors changed below stay as they are when the theme changes." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Okabe–Ito und „Ausgeglichen“ lassen sich mit allen häufigen Farbsehschwächen unterscheiden. Unten geänderte Farben bleiben beim Wechsel des Themas erhalten."
+          }
+        }
+      }
+    },
     "Olympic Lift" : {
       "localizations" : {
         "de" : {
@@ -3423,6 +3484,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Einstellungen"
+          }
+        }
+      }
+    },
+    "Shade by Value" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nach Wert einfärben"
           }
         }
       }

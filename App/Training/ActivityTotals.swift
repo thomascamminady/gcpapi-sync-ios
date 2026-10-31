@@ -97,3 +97,21 @@ nonisolated enum LoadBalance {
         day.fitness > 0 ? day.fatigue / day.fitness : nil
     }
 }
+
+/// Where a figure lies among others, from 0 to 1, for coloring it by value.
+nonisolated enum ValueScale {
+    /// `value` over the largest of `values`: for sums, whose natural bottom is zero. `nil` for
+    /// no value, or no positive largest.
+    static func fromZero(_ value: Double?, among values: [Double]) -> Double? {
+        guard let value, value > 0, let largest = values.max(), largest > 0 else { return nil }
+        return min(value / largest, 1)
+    }
+
+    /// Where `value` lies between the smallest and the largest of `values`: for averages, which
+    /// vary around a usual level. 1 when they are all the same; `nil` for no value.
+    static func between(_ value: Double?, among values: [Double]) -> Double? {
+        guard let value, let low = values.min(), let high = values.max() else { return nil }
+        guard high > low else { return 1 }
+        return min(max((value - low) / (high - low), 0), 1)
+    }
+}

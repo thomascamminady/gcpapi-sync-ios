@@ -11,7 +11,7 @@ import Testing
         "units", "weekStart", "density", "hiddenTiles", "showsTrends", "detailDays",
         "routeColoring", "mapStyle", "hiddenCharts", "analysis", "theme", "colors",
         "exportsToCalendar",
-        "refreshesInBackground",
+        "refreshesInBackground", "colormap", "reversesColormap", "shadesMonths",
     ]
 
     private func decode(_ json: String) throws -> Settings {
@@ -102,7 +102,7 @@ import Testing
         #expect(Set(Settings.Units.allCases.map(\.rawValue)).count == 3)
         #expect(Set(Settings.WeekStart.allCases.map(\.rawValue)).count == 3)
         #expect(Set(Settings.Density.allCases.map(\.rawValue)).count == 2)
-        #expect(Set(Settings.RouteColoring.allCases.map(\.rawValue)).count == 2)
+        #expect(Set(Settings.RouteColoring.allCases.map(\.rawValue)).count == 3)
         #expect(Set(Settings.MapStyle.allCases.map(\.rawValue)).count == 3)
     }
 
@@ -148,6 +148,9 @@ import Testing
         case "exportsToCalendar": settings.exportsToCalendar = defaults.exportsToCalendar
         case "refreshesInBackground":
             settings.refreshesInBackground = defaults.refreshesInBackground
+        case "colormap": settings.colormap = defaults.colormap
+        case "reversesColormap": settings.reversesColormap = defaults.reversesColormap
+        case "shadesMonths": settings.shadesMonths = defaults.shadesMonths
         default: Issue.record("unknown key \(key)")
         }
     }

@@ -22,19 +22,45 @@ struct RouteMap: View {
     var selection: Double?
     var interactive = false
 
+    /// Steps of heart rate on the color map: enough to look continuous.
+    static let levels = 24
+
     var body: some View {
         let settings = Preferences.shared.settings
-        let segments = track.segments(zones: settings.routeColoring == .heartRateZone ? zones : nil)
         Map(initialPosition: .automatic, interactionModes: interactive ? .all : []) {
-            ForEach(segments) { segment in
+            ForEach(segments(settings.routeColoring)) { segment in
                 MapPolyline(coordinates: segment.points.map(\.coordinate))
                     .stroke(
-                        ZoneStyle.color(zone: segment.zone, fallback: sport.color),
+                        color(segment, settings.routeColoring),
                         style: StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round))
             }
             markers
         }
         .mapStyle(Self.style(settings.mapStyle))
+    }
+
+    private func segments(_ coloring: Settings.RouteColoring) -> [ActivityTrack.Segment] {
+        switch coloring {
+        case .heartRateZone: track.segments(zones: zones)
+        case .heartRate: track.segments(heartRateLevels: Self.levels)
+        case .sport: track.segments(zones: nil)
+        }
+    }
+
+    private func color(
+        _ segment: ActivityTrack.Segment, _ coloring: Settings.RouteColoring
+    )
+        -> Color
+    {
+        switch coloring {
+        case .heartRateZone:
+            return ZoneStyle.color(zone: segment.zone, fallback: sport.color)
+        case .heartRate:
+            guard let level = segment.zone else { return sport.color }
+            return Preferences.shared.valueColor((Double(level) + 0.5) / Double(Self.levels))
+        case .sport:
+            return sport.color
+        }
     }
 
     static func style(_ style: Settings.MapStyle) -> MapStyle {
@@ -100,8 +126,18 @@ struct RouteMapCard: View {
                     .padding(10)
                 }
                 .accessibilityLabel("Route map")
-            if zones != nil, Preferences.shared.settings.routeColoring == .heartRateZone {
+            switch Preferences.shared.settings.routeColoring {
+            case .heartRateZone where zones != nil:
                 ZoneLegend()
+            case .heartRate:
+                if let range = track.heartRateRange {
+                    ValueLegend(
+                        title: String(localized: "Heart rate"),
+                        low: Format.heartRate(range.lowerBound),
+                        high: Format.heartRate(range.upperBound))
+                }
+            default:
+                EmptyView()
             }
         }
         .fullScreenCover(isPresented: $showsFullMap) {
@@ -141,5 +177,28 @@ struct ZoneLegend: View {
 extension ActivityTrack.Point {
     var coordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+}
+
+/// What colors on the color map mean: a gradient from the lowest value to the highest.
+struct ValueLegend: View {
+    let title: String
+    let low: String
+    let high: String
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Text(title)
+            Text(low)
+                .monospacedDigit()
+            Capsule()
+                .fill(Preferences.shared.valueGradient)
+                .frame(width: 80, height: 6)
+            Text(high)
+                .monospacedDigit()
+        }
+        .font(.caption)
+        .foregroundStyle(.secondary)
+        .accessibilityElement(children: .combine)
     }
 }

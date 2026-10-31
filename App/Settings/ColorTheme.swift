@@ -19,6 +19,9 @@ enum Hue: CaseIterable {
 
 /// A set of colors for every hue. Individual colors can still be changed in the settings.
 nonisolated enum ColorTheme: String, Codable, CaseIterable, Sendable {
+    /// Masataka Okabe and Kei Ito's palette, designed to be told apart with every common
+    /// color-vision deficiency.
+    case okabeIto = "okabe_ito"
     /// Checked for color-vision deficiencies in light and dark mode.
     case balanced
     /// Apple's system colors.
@@ -28,6 +31,7 @@ nonisolated enum ColorTheme: String, Codable, CaseIterable, Sendable {
 
     var title: String {
         switch self {
+        case .okabeIto: "Okabe–Ito"
         case .balanced: String(localized: "Balanced")
         case .vivid: String(localized: "Vivid")
         case .soft: String(localized: "Soft")
@@ -36,9 +40,31 @@ nonisolated enum ColorTheme: String, Codable, CaseIterable, Sendable {
 
     @MainActor func color(_ hue: Hue) -> Color {
         switch self {
+        case .okabeIto: Self.okabeIto(hue)
         case .balanced: Self.balanced(hue)
         case .vivid: Self.vivid(hue)
         case .soft: Self.soft(hue)
+        }
+    }
+
+    /// Okabe and Ito's seven colors and black, one per hue the summary's metrics use side by
+    /// side; the yellow darker in light mode and black light gray in dark mode, so that lines
+    /// stand out from the background. Brown, a light sky blue and a deep blue are added for
+    /// elevation and sleep stages.
+    @MainActor private static func okabeIto(_ hue: Hue) -> Color {
+        switch hue {
+        case .blue: Color(light: 0x0072B2, dark: 0x3A93CF)
+        case .lightBlue: Color(light: 0x9BD2F2, dark: 0x9BD2F2)
+        case .deepBlue: Color(light: 0x004B78, dark: 0x1B5F8F)
+        case .aqua: Color(light: 0x56B4E9, dark: 0x56B4E9)
+        case .green: Color(light: 0x009E73, dark: 0x009E73)
+        case .amber: Color(light: 0xC9B200, dark: 0xF0E442)
+        case .orange: Color(light: 0xE69F00, dark: 0xE69F00)
+        case .red: Color(light: 0xD55E00, dark: 0xE16A10)
+        case .magenta: Color(light: 0xCC79A7, dark: 0xCC79A7)
+        case .violet: Color(light: 0x000000, dark: 0xE5E5EA)
+        case .gray: Color(light: 0x999999, dark: 0x8E8E93)
+        case .brown: Color(light: 0x8C6D46, dark: 0xA88A63)
         }
     }
 
