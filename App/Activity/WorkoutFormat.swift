@@ -96,14 +96,63 @@ extension Format {
     }
 
     /// Garmin's training effect message, such as `IMPROVING_VO2_MAX_15`, as a sentence:
-    /// `Improving VO2 max`.
+    /// `Improving VO2 max`. Known messages are translated; others are Garmin's words.
     nonisolated static func trainingMessage(_ message: String?) -> String? {
         guard let message else { return nil }
-        let words = message.split(separator: "_").filter { Int($0) == nil }.map { word in
-            word == "VO2" ? "VO2" : word.lowercased()
+        let words = message.split(separator: "_").filter { Int($0) == nil }.map(String.init)
+        guard !words.isEmpty else { return nil }
+        return knownMessage(words) ?? sentence(words)
+    }
+
+    /// A message Garmin uses: a whole phrase, or a verb and what it acts on.
+    nonisolated private static func knownMessage(_ words: [String]) -> String? {
+        switch words.joined(separator: "_") {
+        case "NO_AEROBIC_BENEFIT": return String(localized: "No aerobic benefit")
+        case "MINOR_AEROBIC_BENEFIT": return String(localized: "Minor aerobic benefit")
+        case "NO_ANAEROBIC_BENEFIT": return String(localized: "No anaerobic benefit")
+        case "MINOR_ANAEROBIC_BENEFIT": return String(localized: "Minor anaerobic benefit")
+        case "RECOVERY": return String(localized: "Recovery")
+        case "OVERREACHING": return String(localized: "Overreaching")
+        default: break
         }
-        guard let first = words.first else { return nil }
-        return ([first.prefix(1).uppercased() + first.dropFirst()] + words.dropFirst())
+        let verbs: [(words: [String], phrase: (String) -> String)] = [
+            (["HIGHLY", "IMPROVING"], { String(localized: "Highly improving \($0)") }),
+            (["IMPROVING"], { String(localized: "Improving \($0)") }),
+            (["MAINTAINING"], { String(localized: "Maintaining \($0)") }),
+            (["IMPACTING"], { String(localized: "Impacting \($0)") }),
+            (["OVERREACHING"], { String(localized: "Overreaching \($0)") }),
+        ]
+        for verb in verbs where words.starts(with: verb.words) {
+            return trainingAspect(words.dropFirst(verb.words.count).joined(separator: "_"))
+                .map(verb.phrase)
+        }
+        return nil
+    }
+
+    /// What a training effect message says is improved or maintained.
+    nonisolated private static func trainingAspect(_ name: String) -> String? {
+        switch name {
+        case "AEROBIC_BASE": String(localized: "aerobic base")
+        case "AEROBIC_FITNESS": String(localized: "aerobic fitness")
+        case "AEROBIC_ENDURANCE": String(localized: "aerobic endurance")
+        case "LACTATE_THRESHOLD": String(localized: "lactate threshold")
+        case "VO2_MAX": String(localized: "VO2 max")
+        case "TEMPO": String(localized: "tempo")
+        case "SPEED": String(localized: "speed")
+        case "ANAEROBIC_BASE": String(localized: "anaerobic base")
+        case "ANAEROBIC_FITNESS": String(localized: "anaerobic fitness")
+        case "ANAEROBIC_CAPACITY": String(localized: "anaerobic capacity")
+        case "ANAEROBIC_POWER": String(localized: "anaerobic power")
+        case "ANAEROBIC_CAPACITY_AND_POWER": String(localized: "anaerobic capacity and power")
+        default: nil
+        }
+    }
+
+    /// Garmin's words as a sentence: `IMPROVING_SOMETHING` as `Improving something`.
+    nonisolated private static func sentence(_ words: [String]) -> String {
+        let lowered = words.map { $0 == "VO2" ? $0 : $0.lowercased() }
+        let first = lowered[0]
+        return ([first.prefix(1).uppercased() + first.dropFirst()] + lowered.dropFirst())
             .joined(separator: " ")
     }
 }

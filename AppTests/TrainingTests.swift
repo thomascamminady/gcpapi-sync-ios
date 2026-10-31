@@ -366,6 +366,13 @@ private final class Clock {
         }
         #expect(Format.trainingMessage("IMPROVING_VO2_MAX_15") == "Improving VO2 max")
         #expect(Format.trainingMessage("MAINTAINING_AEROBIC_BASE_1") == "Maintaining aerobic base")
+        #expect(
+            Format.trainingMessage("HIGHLY_IMPROVING_LACTATE_THRESHOLD_45")
+                == "Highly improving lactate threshold")
+        #expect(Format.trainingMessage("NO_ANAEROBIC_BENEFIT_0") == "No anaerobic benefit")
+        #expect(Format.trainingMessage("RECOVERY_2") == "Recovery")
+        // Messages Garmin adds later are its own words.
+        #expect(Format.trainingMessage("IMPROVING_SOMETHING_NEW_3") == "Improving something new")
         #expect(Format.trainingMessage("_1") == nil)
         #expect(Format.trainingMessage(nil) == nil)
     }

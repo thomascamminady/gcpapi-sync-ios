@@ -92,9 +92,13 @@ struct LapsCard: View {
 struct SetsCard: View {
     let sets: [FITActivity.ExerciseSet]
 
-    /// The active sets with something to show.
+    /// The active sets with something to show: an exercise, repetitions, a weight or a duration.
     static func logged(_ sets: [FITActivity.ExerciseSet]) -> [FITActivity.ExerciseSet] {
-        sets.filter { $0.isActive && ($0.repetitions != nil || $0.category != nil) }
+        sets.filter { set in
+            set.isActive
+                && (set.repetitions != nil || set.category != nil || set.weight != nil
+                    || set.duration != nil)
+        }
     }
 
     var body: some View {
