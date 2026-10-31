@@ -96,12 +96,18 @@ extension FITActivity {
         var records: [Record] = []
         var distance = 0.0
         var heartRate = 95.0
-        for second in stride(from: 0.0, through: duration, by: 5) {
-            // Ten minutes of warm-up, then three hard minutes and two easy ones on hard days.
-            let effort =
-                intervals && second > 600 && second < duration - 600
+        // Ten minutes of warm-up, then three hard minutes and two easy ones on hard days.
+        func effort(at second: Double) -> Double {
+            intervals && second > 600 && second < duration - 600
                 ? (second.truncatingRemainder(dividingBy: 300) < 180 ? 1.18 : 0.8)
                 : 0.97 + 0.04 * sin(second / 300 * 2 * .pi)
+        }
+        let seconds = Array(stride(from: 0.0, through: duration, by: 5))
+        // Relative to its mean, so that the recording covers the activity's distance and its
+        // loops close.
+        let meanEffort = seconds.map { effort(at: $0) }.reduce(0, +) / Double(max(seconds.count, 1))
+        for second in seconds {
+            let effort = effort(at: second) / meanEffort
             let speed = average * effort
             distance += speed * 5
             // The heart follows the effort with a lag of about a minute.

@@ -1965,6 +1965,16 @@
         }
       }
     },
+    "Highly improving %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbessert %@ deutlich"
+          }
+        }
+      }
+    },
     "Hip Raise" : {
       "localizations" : {
         "de" : {
@@ -2045,6 +2055,16 @@
         }
       }
     },
+    "Impacting %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beansprucht %@"
+          }
+        }
+      }
+    },
     "Imperial" : {
       "localizations" : {
         "de" : {
@@ -2061,6 +2081,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verbessernd"
+          }
+        }
+      }
+    },
+    "Improving %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbessert %@"
           }
         }
       }
@@ -2381,6 +2411,16 @@
         }
       }
     },
+    "Maintaining %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erhält %@"
+          }
+        }
+      }
+    },
     "Map" : {
       "localizations" : {
         "de" : {
@@ -2437,6 +2477,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Metrisch"
+          }
+        }
+      }
+    },
+    "Minor aerobic benefit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geringer aerober Nutzen"
+          }
+        }
+      }
+    },
+    "Minor anaerobic benefit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geringer anaerober Nutzen"
           }
         }
       }
@@ -2617,6 +2677,26 @@
         }
       }
     },
+    "No aerobic benefit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein aerober Nutzen"
+          }
+        }
+      }
+    },
+    "No anaerobic benefit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein anaerober Nutzen"
+          }
+        }
+      }
+    },
     "No benefit" : {
       "localizations" : {
         "de" : {
@@ -2773,6 +2853,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Überlastung"
+          }
+        }
+      }
+    },
+    "Overreaching %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überlastet %@"
           }
         }
       }
@@ -4097,6 +4187,16 @@
         }
       }
     },
+    "VO2 max" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "die VO2max"
+          }
+        }
+      }
+    },
     "VO2max" : {
       "localizations" : {
         "de" : {
@@ -4347,6 +4447,86 @@
         }
       }
     },
+    "aerobic base" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "die aerobe Grundlage"
+          }
+        }
+      }
+    },
+    "aerobic endurance" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "die aerobe Ausdauer"
+          }
+        }
+      }
+    },
+    "aerobic fitness" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "die aerobe Fitness"
+          }
+        }
+      }
+    },
+    "anaerobic base" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "die anaerobe Grundlage"
+          }
+        }
+      }
+    },
+    "anaerobic capacity" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "die anaerobe Kapazität"
+          }
+        }
+      }
+    },
+    "anaerobic capacity and power" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "die anaerobe Kapazität und Leistung"
+          }
+        }
+      }
+    },
+    "anaerobic fitness" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "die anaerobe Fitness"
+          }
+        }
+      }
+    },
+    "anaerobic power" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "die anaerobe Leistung"
+          }
+        }
+      }
+    },
     "average" : {
       "localizations" : {
         "de" : {
@@ -4369,6 +4549,16 @@
     },
     "km" : {
       "shouldTranslate" : false
+    },
+    "lactate threshold" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "die Laktatschwelle"
+          }
+        }
+      }
     },
     "latest high" : {
       "localizations" : {
@@ -4423,12 +4613,32 @@
         }
       }
     },
+    "speed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "die Schnelligkeit"
+          }
+        }
+      }
+    },
     "steps" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schritte"
+          }
+        }
+      }
+    },
+    "tempo" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "das Tempo"
           }
         }
       }

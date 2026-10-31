@@ -298,7 +298,8 @@ struct TrackChart: View {
         let sorted = values.sorted()
         guard let first = sorted.first, let last = sorted.last else { return 0...1 }
         let low = sorted[Int(Double(sorted.count - 1) * 0.02)]
-        let high = sorted[Int(Double(sorted.count - 1) * 0.98)]
+        // Rounded up, so that the highest of a few values is not left out.
+        let high = sorted[Int((Double(sorted.count - 1) * 0.98).rounded(.up))]
         let padding = max((high - low) * 0.1, abs(high) * 0.02, 0.5)
         return max(first, low - padding)...min(last + padding, high + padding)
     }

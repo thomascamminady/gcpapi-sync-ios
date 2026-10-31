@@ -101,12 +101,11 @@ nonisolated struct ActivityTrack: Hashable, Sendable {
                 latitude: latitude, longitude: longitude,
                 elapsed: clock.seconds(at: record.time), heartRate: record.heartRate)
         }
-        let stride = max(1, Int((Double(located.count) / Double(Self.maxPoints)).rounded(.up)))
-        var route = located.enumerated().filter { $0.offset.isMultiple(of: stride) }.map(\.element)
-        if let last = located.last, route.last != last {
-            route.append(last)
-        }
-        self.route = route
+        // At most `maxPoints`, evenly spread, always with the first and the last.
+        route =
+            located.count <= Self.maxPoints
+            ? located
+            : (0..<Self.maxPoints).map { located[$0 * (located.count - 1) / (Self.maxPoints - 1)] }
         splits = Self.splits(records, clock: clock, length: splitLength)
         laps = fit.laps
         sets = fit.sets
@@ -127,8 +126,10 @@ nonisolated struct ActivityTrack: Hashable, Sendable {
         }
         return buckets.keys.sorted().compactMap { index in
             guard let bucket = buckets[index] else { return nil }
+            // The moment of a slice is the mean of its records', so that it lies among them.
+            let times = bucket.map { clock.seconds(at: $0.time) }
             return Sample(
-                elapsed: (Double(index) + 0.5) * width,
+                elapsed: times.reduce(0, +) / Double(times.count),
                 distance: bucket.compactMap(\.distance).max(),
                 heartRate: mean(bucket.compactMap { $0.heartRate.map(Double.init) }),
                 speed: mean(bucket.compactMap(\.speed)),
@@ -277,7 +278,7 @@ nonisolated struct TimerClock {
 /// Garmin's exercise categories of strength sets, from the FIT profile.
 nonisolated enum ExerciseCategory {
     static func name(_ category: Int?) -> String? {
-        guard let category, category < names.count else { return nil }
+        guard let category, names.indices.contains(category) else { return nil }
         return names[category]
     }
 
