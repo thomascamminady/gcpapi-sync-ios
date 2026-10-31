@@ -1,6 +1,14 @@
 import GCPAPISync
 import SwiftUI
 
+/// A screen the dashboard opens, besides activities and health metrics.
+enum DeskRoute: Hashable {
+    /// Fitness, fatigue and form in depth.
+    case trainingLoad
+    /// The activities of the month starting on a day, of one sport or all.
+    case month(GarminDate, Sport?)
+}
+
 /// The dashboard of a wide window, on the iPad and the Mac: a week of activities as a table,
 /// the months before it below, and a column of figures beside them.
 struct DeskView: View {
@@ -34,6 +42,7 @@ struct DeskView: View {
                 }
                 .navigationDestination(for: ActivityRoute.self, destination: activity)
                 .navigationDestination(for: Route.self, destination: metric)
+                .navigationDestination(for: DeskRoute.self, destination: desk)
                 .task {
                     async let trained: Void = training.loadIfNeeded()
                     async let checked: Void = health.loadIfNeeded()
@@ -65,6 +74,18 @@ struct DeskView: View {
         switch route {
         case .overview: OverviewDetailView(model: health)
         case .metric(let metric): MetricDetailView(metric: metric, model: health)
+        }
+    }
+
+    @ViewBuilder
+    private func desk(_ route: DeskRoute) -> some View {
+        if case .loaded(let data) = training.phase {
+            switch route {
+            case .trainingLoad:
+                TrainingLoadDetailView(days: data.load)
+            case .month(let first, let sport):
+                MonthActivities(first: first, sport: sport, workouts: data.history)
+            }
         }
     }
 

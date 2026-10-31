@@ -28,6 +28,20 @@ private final class DetourRouter: Router {
     }
 }
 
+/// A router whose paths run along east–west roads at every thousandth of a degree plus half,
+/// from the nearest to each point: points on a road stay where they are.
+private struct RoadRouter: Router {
+    static func road(_ point: GeoPoint) -> GeoPoint {
+        GeoPoint(
+            latitude: (point.latitude * 1000).rounded(.down) / 1000 + 0.0005,
+            longitude: point.longitude)
+    }
+
+    func path(from start: GeoPoint, to end: GeoPoint) -> [GeoPoint] {
+        [Self.road(start), Self.road(end)]
+    }
+}
+
 /// A router that cannot find a path.
 private struct FailingRouter: Router {
     func path(from _: GeoPoint, to _: GeoPoint) throws -> [GeoPoint] {
@@ -145,6 +159,44 @@ private struct FailingRouter: Router {
         planner.clear()
         #expect(planner.waypoints.isEmpty)
         planner.undo()
+        #expect(planner.waypoints.isEmpty)
+    }
+
+    @Test func pointsMoveOntoTheRoad() async {
+        let planner = RoutePlanner(router: RoadRouter())
+        await planner.add(start)
+        await planner.add(east)
+        await planner.add(north)
+        let road = RoadRouter.road
+        // Every point lies where its legs begin and end: no spurs off the road.
+        #expect(planner.waypoints == [road(start), road(east), road(north)])
+        #expect(planner.route.legs.map(\.first) == [road(start), road(east)])
+        #expect(planner.route.legs.map(\.last) == [road(east), road(north)])
+    }
+
+    @Test func pointsMoveAndGo() async {
+        let router = DetourRouter()
+        let planner = RoutePlanner(router: router)
+        let west = GeoPoint(latitude: 47.36, longitude: 8.53)
+        for point in [start, east, north] {
+            await planner.add(point)
+        }
+        await planner.move(at: 1, to: west)
+        #expect(planner.waypoints == [start, west, north])
+        #expect(planner.route.legs.map(\.first) == [start, west])
+        #expect(planner.route.legs.map(\.last) == [west, north])
+        // Both legs of the moved point are found again.
+        #expect(await router.requests == 4)
+        await planner.remove(at: 1)
+        #expect(planner.waypoints == [start, north])
+        #expect(planner.route.legs.count == 1)
+        #expect(planner.route.path.first == start)
+        #expect(planner.route.path.last == north)
+        await planner.remove(at: 0)
+        #expect(planner.waypoints == [north])
+        #expect(planner.route.legs.isEmpty)
+        await planner.remove(at: 5)
+        await planner.remove(at: 0)
         #expect(planner.waypoints.isEmpty)
     }
 

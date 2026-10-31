@@ -14,6 +14,9 @@ enum DeskStyle {
         UIDevice.current.userInterfaceIdiom == .mac ? .small : .regular
     }
 
+    /// The space between table columns.
+    static let columnSpacing: CGFloat = 16
+
     /// A section title of the dashboard.
     static var title: Font {
         UIDevice.current.userInterfaceIdiom == .mac ? .title3.weight(.semibold) : .title3.bold()
@@ -39,7 +42,7 @@ struct DeskRow<Content: View>: View {
     @State private var isHovered = false
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: DeskStyle.columnSpacing) {
             content
         }
         .padding(.horizontal, 8)
@@ -62,7 +65,7 @@ struct DeskHeader<Content: View>: View {
     @ViewBuilder let content: Content
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: DeskStyle.columnSpacing) {
             content
         }
         .font(DeskStyle.font.weight(.semibold))
@@ -96,6 +99,23 @@ struct MeterBar: View {
         }
         .frame(height: 8)
         .accessibilityHidden(true)
+    }
+}
+
+extension View {
+    /// The view as a link to the screen of `value`, with a chevron.
+    func linked(to value: some Hashable) -> some View {
+        NavigationLink(value: value) {
+            HStack(spacing: 6) {
+                self
+                Image(systemName: "chevron.forward")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+            }
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
     }
 }
 

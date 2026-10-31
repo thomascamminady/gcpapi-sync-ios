@@ -2,8 +2,9 @@ import CoreLocation
 import Foundation
 import MapKit
 
-/// Paths along roads and footpaths from Apple Maps' walking directions. Only the two points
-/// of a leg are sent to Apple.
+/// Paths along roads and footpaths from Apple Maps' walking directions, from the nearest road
+/// or path to the start to the nearest to the end. Only the two points of a leg are sent to
+/// Apple.
 nonisolated struct MapsRouter: Router {
     func path(from start: GeoPoint, to end: GeoPoint) async throws -> [GeoPoint] {
         let request = MKDirections.Request()
@@ -21,8 +22,7 @@ nonisolated struct MapsRouter: Router {
             repeating: kCLLocationCoordinate2DInvalid, count: polyline.pointCount)
         polyline.getCoordinates(
             &coordinates, range: NSRange(location: 0, length: polyline.pointCount))
-        let points = coordinates.map { GeoPoint(latitude: $0.latitude, longitude: $0.longitude) }
-        // The path begins and ends exactly where the user placed the points.
-        return [start] + points + [end]
+        // On the road: the planner moves the points there, so that no leg ends in a spur.
+        return coordinates.map { GeoPoint(latitude: $0.latitude, longitude: $0.longitude) }
     }
 }

@@ -31,6 +31,39 @@ final class RoutePlanner {
         await findLeg(route.legs.count - 1)
     }
 
+    /// Move the point at `index` to `point`, and find the paths to and from it again.
+    func move(at index: Int, to point: GeoPoint) async {
+        guard route.waypoints.indices.contains(index) else { return }
+        route.waypoints[index] = point
+        if index > 0 {
+            route.legs[index - 1] = [route.waypoints[index - 1], point]
+        }
+        if index < route.legs.count {
+            route.legs[index] = [point, route.waypoints[index + 1]]
+        }
+        if index > 0 {
+            await findLeg(index - 1)
+        }
+        await findLeg(index)
+    }
+
+    /// Remove the point at `index`, joining its neighbours by a path of their own.
+    func remove(at index: Int) async {
+        guard route.waypoints.indices.contains(index) else { return }
+        route.waypoints.remove(at: index)
+        guard !route.legs.isEmpty else { return }
+        if index == 0 {
+            route.legs.removeFirst()
+        } else if index >= route.legs.count {
+            route.legs.removeLast()
+        } else {
+            route.legs.replaceSubrange(
+                (index - 1)...index,
+                with: [[route.waypoints[index - 1], route.waypoints[index]]])
+            await findLeg(index - 1)
+        }
+    }
+
     /// Take back the last point.
     func undo() {
         guard !route.waypoints.isEmpty else { return }
@@ -77,6 +110,22 @@ final class RoutePlanner {
         }
     }
 
+    /// Moves the points at the ends of leg `index` to where its path begins and ends (on a road,
+    /// with directions), and the neighbouring legs' ends with them.
+    private func snap(leg index: Int) {
+        guard let first = route.legs[index].first, let last = route.legs[index].last else {
+            return
+        }
+        route.waypoints[index] = first
+        route.waypoints[index + 1] = last
+        if index > 0, !route.legs[index - 1].isEmpty {
+            route.legs[index - 1][route.legs[index - 1].count - 1] = first
+        }
+        if index + 1 < route.legs.count, !route.legs[index + 1].isEmpty {
+            route.legs[index + 1][0] = last
+        }
+    }
+
     private func findLeg(_ index: Int) async {
         guard route.legs.indices.contains(index), let start = route.legs[index].first,
             let end = route.legs[index].last
@@ -93,6 +142,7 @@ final class RoutePlanner {
                 route.legs[index].last == end
             else { return }
             route.legs[index] = path
+            snap(leg: index)
             problem = nil
         } catch {
             guard !(error is CancellationError) else { return }

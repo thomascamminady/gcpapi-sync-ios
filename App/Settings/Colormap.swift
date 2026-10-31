@@ -77,6 +77,21 @@ nonisolated enum Colormap: String, Codable, CaseIterable, Identifiable, Sendable
         return 0.2126 * Self.linear(red) + 0.7152 * Self.linear(green) + 0.0722 * Self.linear(blue)
     }
 
+    /// The part of the map whose colors read as text, at a contrast of at least 3:1 (WCAG's
+    /// for large and bold text) against a background of `luminance`: the dark end on light
+    /// backgrounds, the light end on dark ones.
+    func textRange(onLuminance background: Double, isReversed: Bool = false) -> ClosedRange<Double>
+    {
+        let samples = (0...100).map { Double($0) / 100 }
+        let readable = samples.filter { value in
+            let foreground = luminance(at: value, isReversed: isReversed)
+            let (lighter, darker) = (max(foreground, background), min(foreground, background))
+            return (lighter + 0.05) / (darker + 0.05) >= 3
+        }
+        guard let first = readable.first, let last = readable.last else { return 0...1 }
+        return first...last
+    }
+
     static func linear(_ channel: Double) -> Double {
         channel <= 0.04045 ? channel / 12.92 : pow((channel + 0.055) / 1.055, 2.4)
     }
@@ -118,6 +133,35 @@ extension Preferences {
     /// The text color that reads on ``valueColor(_:)``.
     func valueTextColor(_ value: Double) -> Color {
         settings.colormap.textColor(at: value, isReversed: settings.reversesColormap)
+    }
+
+    /// A color of the map for text showing `value`, on the light or the dark background: from
+    /// the part of the map that reads there.
+    func valueInk(_ value: Double, isDark: Bool) -> Color {
+        let range = inkRange(isDark: isDark)
+        return valueColor(
+            range.lowerBound + min(max(value, 0), 1) * (range.upperBound - range.lowerBound))
+    }
+
+    /// The gradient of the colors ``valueInk(_:isDark:)`` uses.
+    func inkGradient(isDark: Bool) -> LinearGradient {
+        let range = inkRange(isDark: isDark)
+        return LinearGradient(
+            stops: (0...10).map { step in
+                let value = Double(step) / 10
+                return .init(
+                    color: valueColor(
+                        range.lowerBound + value * (range.upperBound - range.lowerBound)),
+                    location: value)
+            },
+            startPoint: .leading, endPoint: .trailing)
+    }
+
+    /// The readable part of the map: against white in light mode, against the dark grouped
+    /// background (#1C1C1E) in dark mode.
+    private func inkRange(isDark: Bool) -> ClosedRange<Double> {
+        settings.colormap.textRange(
+            onLuminance: isDark ? 0.0116 : 1.0, isReversed: settings.reversesColormap)
     }
 
     /// The chosen color map as a gradient.

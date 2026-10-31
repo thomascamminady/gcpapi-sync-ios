@@ -1,7 +1,8 @@
 import MapKit
 import SwiftUI
 
-/// Planning a route on the map: tap to place points; the route follows roads and paths.
+/// Planning a route on the map: tap to place points, drag them to move them; the route follows
+/// roads and paths.
 struct RouteEditorView: View {
     let library: RouteLibrary
     let usualSpeed: Double?
@@ -12,7 +13,15 @@ struct RouteEditorView: View {
     @State private var planner: RoutePlanner
     @State private var position: MapCameraPosition
     @State private var name: String
+    /// The point being dragged, and how far.
+    @State private var drag: (index: Int, offset: CGSize)?
     @Environment(\.dismiss) private var dismiss
+
+    /// Where the drags of points are measured, to find the map coordinate they end on.
+    private static let mapSpace = "routeMap"
+    /// The color of past routes: Okabe and Ito's reddish purple, faint, apart from the route
+    /// being planned.
+    private static let myRoutesColor = Color(red: 0.8, green: 0.475, blue: 0.655)
 
     init(
         route: PlannedRoute, library: RouteLibrary, home: GeoPoint?, usualSpeed: Double?,
@@ -47,14 +56,12 @@ struct RouteEditorView: View {
                 ForEach(Array(planner.waypoints.enumerated()), id: \.offset) { index, point in
                     Annotation("Point \(index + 1)", coordinate: point.coordinate, anchor: .center)
                     {
-                        Circle()
-                            .fill(index == 0 ? Color.green : Color.white)
-                            .stroke(Color.primary.opacity(0.7), lineWidth: 2)
-                            .frame(width: 14, height: 14)
+                        waypoint(index, proxy: proxy)
                     }
                     .annotationTitles(.hidden)
                 }
             }
+            .coordinateSpace(.named(Self.mapSpace))
             .mapStyle(RouteMap.style(Preferences.shared.settings.mapStyle))
             .accessibilityAddTraits(.isButton)
             .accessibilityHint("Places a point of the route")
@@ -94,13 +101,56 @@ struct RouteEditorView: View {
         }
     }
 
+    /// A point of the route: the start flagged, the others white; drag it to move it, and remove
+    /// it from its menu.
+    private func waypoint(_ index: Int, proxy: MapProxy) -> some View {
+        let isStart = index == 0
+        return ZStack {
+            Circle()
+                .fill(isStart ? Color.green : Color.white)
+                .stroke(Color.black.opacity(0.6), lineWidth: 2)
+                .frame(width: isStart ? 22 : 16, height: isStart ? 22 : 16)
+            if isStart {
+                Image(systemName: "flag.fill")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(.white)
+            }
+        }
+        .offset(drag?.index == index ? drag?.offset ?? .zero : .zero)
+        .highPriorityGesture(
+            DragGesture(coordinateSpace: .named(Self.mapSpace))
+                .onChanged { value in drag = (index, value.translation) }
+                .onEnded { value in
+                    drag = nil
+                    guard
+                        let coordinate = proxy.convert(value.location, from: .named(Self.mapSpace))
+                    else { return }
+                    Task {
+                        await planner.move(
+                            at: index,
+                            to: GeoPoint(
+                                latitude: coordinate.latitude, longitude: coordinate.longitude))
+                    }
+                }
+        )
+        .contextMenu {
+            Button("Remove Point", systemImage: "trash", role: .destructive) {
+                Task { await planner.remove(at: index) }
+            }
+        }
+        .accessibilityLabel(isStart ? Text("Start") : Text("Point \(index + 1)"))
+        .accessibilityAction(named: Text("Remove Point")) {
+            Task { await planner.remove(at: index) }
+        }
+    }
+
     /// Recent activities' routes, faint, under the route being planned.
     @MapContentBuilder private var myRoutesLayer: some MapContent {
         if showsMyRoutes {
             ForEach(Array(myRoutes.enumerated()), id: \.offset) { _, route in
                 MapPolyline(coordinates: route.map(\.coordinate))
                     .stroke(
-                        Color.secondary.opacity(0.55),
+                        Self.myRoutesColor.opacity(0.5),
                         style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
             }
         }
@@ -133,6 +183,8 @@ private struct RoutePanel: View {
             }
             Text(summary)
                 .font(.subheadline.monospacedDigit())
+            Text(Self.hint)
+                .font(.footnote)
                 .foregroundStyle(.secondary)
             Toggle("Follow Roads and Paths", isOn: followsPaths)
                 .font(.subheadline)
@@ -151,8 +203,23 @@ private struct RoutePanel: View {
 
     private var summary: String {
         planner.waypoints.isEmpty
-            ? String(localized: "Tap the map to place the start.")
+            ? String(localized: "No points yet.")
             : RouteEditorView.summary(of: planner.route, usualSpeed: usualSpeed)
+    }
+
+    /// How planning works, with the Mac's pointer or a finger.
+    static var hint: String {
+        ProcessInfo.processInfo.isMacCatalystApp
+            ? String(
+                localized: """
+                    Click the map to add a point; the route follows roads and paths to it. Drag a \
+                    point to move it, right-click it to remove it.
+                    """)
+            : String(
+                localized: """
+                    Tap the map to add a point; the route follows roads and paths to it. Drag a \
+                    point to move it, touch and hold it to remove it.
+                    """)
     }
 
     private var followsPaths: Binding<Bool> {
@@ -164,12 +231,21 @@ private struct RoutePanel: View {
     }
 }
 
-/// Undo, back to start, reverse and export.
+/// Undo, back to start, reverse, clear and export, with their names where there is room.
 private struct RouteControls: View {
     let planner: RoutePlanner
     let usualSpeed: Double?
 
     var body: some View {
+        ViewThatFits(in: .horizontal) {
+            buttons.labelStyle(.titleAndIcon)
+            buttons.labelStyle(.iconOnly)
+        }
+        .buttonStyle(.glass)
+        .controlSize(DeskStyle.controlSize)
+    }
+
+    private var buttons: some View {
         HStack {
             Button("Undo", systemImage: "arrow.uturn.backward") { planner.undo() }
                 .disabled(planner.waypoints.isEmpty)
@@ -179,7 +255,9 @@ private struct RouteControls: View {
             .disabled(planner.waypoints.count < 2 || planner.route.isLoop)
             Button("Reverse", systemImage: "arrow.left.arrow.right") { planner.reverse() }
                 .disabled(planner.waypoints.count < 2)
-            Spacer()
+            Button("Clear", systemImage: "xmark", role: .destructive) { planner.clear() }
+                .disabled(planner.waypoints.isEmpty)
+            Spacer(minLength: 8)
             Menu("Export", systemImage: "square.and.arrow.up") {
                 ShareLink(
                     item: RouteCourseFile(route: planner.route, speed: usualSpeed ?? 3),
@@ -196,8 +274,6 @@ private struct RouteControls: View {
             }
             .disabled(planner.waypoints.count < 2)
         }
-        .labelStyle(.iconOnly)
-        .buttonStyle(.glass)
     }
 }
 

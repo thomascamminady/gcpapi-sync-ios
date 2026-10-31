@@ -66,6 +66,22 @@
         }
       }
     },
+    "%@ · %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@"
+          }
+        }
+      }
+    },
     "%@ · %lld" : {
       "localizations" : {
         "en" : {
@@ -964,6 +980,26 @@
         }
       }
     },
+    "Clear" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leeren"
+          }
+        }
+      }
+    },
+    "Click the map to add a point; the route follows roads and paths to it. Drag a point to move it, right-click it to remove it." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klicke auf die Karte, um einen Punkt hinzuzufügen; die Route folgt Straßen und Wegen dorthin. Ziehe einen Punkt, um ihn zu verschieben, und klicke mit der rechten Maustaste, um ihn zu entfernen."
+          }
+        }
+      }
+    },
     "Climb" : {
       "localizations" : {
         "de" : {
@@ -1310,16 +1346,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Distanz"
-          }
-        }
-      }
-    },
-    "Distance, time and load from zero to the largest month; pace and heart rate from the lowest to the highest." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Distanz, Zeit und Last von null bis zum größten Monat; Pace und Herzfrequenz vom niedrigsten bis zum höchsten."
           }
         }
       }
@@ -2838,6 +2864,16 @@
         }
       }
     },
+    "No points yet." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch keine Punkte."
+          }
+        }
+      }
+    },
     "No recording to analyze for this activity." : {
       "localizations" : {
         "de" : {
@@ -3058,6 +3094,16 @@
         }
       }
     },
+    "Point %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkt %lld"
+          }
+        }
+      }
+    },
     "Poor" : {
       "localizations" : {
         "de" : {
@@ -3234,6 +3280,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Im Hintergrund aktualisieren"
+          }
+        }
+      }
+    },
+    "Remove Point" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkt entfernen"
           }
         }
       }
@@ -3888,6 +3944,16 @@
         }
       }
     },
+    "Sums from zero to the largest month; pace and heart rate from the lowest to the highest." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Summen von null bis zum größten Monat; Pace und Herzfrequenz vom niedrigsten bis zum höchsten."
+          }
+        }
+      }
+    },
     "Sunday" : {
       "localizations" : {
         "de" : {
@@ -3938,22 +4004,22 @@
         }
       }
     },
+    "Tap the map to add a point; the route follows roads and paths to it. Drag a point to move it, touch and hold it to remove it." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tippe auf die Karte, um einen Punkt hinzuzufügen; die Route folgt Straßen und Wegen dorthin. Ziehe einen Punkt, um ihn zu verschieben, und halte ihn gedrückt, um ihn zu entfernen."
+          }
+        }
+      }
+    },
     "Tap the map to place points; the route follows roads and paths between them. Save it, or export it to Garmin Connect as a course." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tippe auf die Karte, um Punkte zu setzen; die Route folgt dazwischen Straßen und Wegen. Sichere sie oder exportiere sie als Strecke nach Garmin Connect."
-          }
-        }
-      }
-    },
-    "Tap the map to place the start." : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tippe auf die Karte, um den Start zu setzen."
           }
         }
       }
