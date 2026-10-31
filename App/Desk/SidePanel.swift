@@ -287,7 +287,7 @@ private struct HealthFigures: View {
                 .foregroundStyle(ColorRole.metric(metric).color)
                 .frame(width: 20)
                 .accessibilityHidden(true)
-            Text(metric.title)
+            Text(metric.shortTitle)
                 .lineLimit(1)
             Spacer(minLength: 8)
             HStack(alignment: .firstTextBaseline, spacing: 3) {

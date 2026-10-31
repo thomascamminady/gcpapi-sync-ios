@@ -13,6 +13,7 @@ struct DeskView: View {
     /// The sport of the monthly statistics, by raw value; empty for all sports.
     @SceneStorage("deskSport") private var sportName = Sport.running.rawValue
     @State private var width: CGFloat = 1200
+    @Bindable private var preferences = Preferences.shared
 
     /// From this width on, the figures stand beside the tables instead of below them: an
     /// iPad in landscape with its sidebar, or a Mac window.
@@ -24,6 +25,7 @@ struct DeskView: View {
         NavigationStack {
             content
                 .navigationTitle("Dashboard")
+                .toolbarTitleDisplayMode(.inline)
                 .navigationSubtitle(SyncStatus.text(training.lastUpdated))
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
@@ -138,25 +140,48 @@ struct DeskView: View {
             VStack(alignment: .leading, spacing: 8) {
                 WeekNavigator(
                     start: start, end: end, weeksBack: $weeksBack, canGoBack: start > earliest)
-                ActivityLogTable(workouts: week, isNarrow: isNarrow)
+                ActivityLogTable(
+                    workouts: week,
+                    days: (0..<7).map { start.adding(days: $0) }.filter { $0 <= today }.reversed(),
+                    isNarrow: isNarrow)
             }
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text("Months")
-                        .font(DeskStyle.title)
-                        .accessibilityAddTraits(.isHeader)
-                    Spacer()
-                    Picker("Sport", selection: $sportName) {
-                        Text("All Sports").tag("")
-                        ForEach(Sport.allCases) { sport in
-                            Label(sport.title, systemImage: sport.symbol).tag(sport.rawValue)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    .fixedSize()
+            monthsSection(months, sport: sport, isNarrow: isNarrow)
+        }
+    }
+
+    /// The months of one sport or all, with the choice of sport and shading.
+    private func monthsSection(
+        _ months: [ActivityTotals.Month], sport: Sport?, isNarrow: Bool
+    )
+        -> some View
+    {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Months")
+                    .font(DeskStyle.title)
+                    .accessibilityAddTraits(.isHeader)
+                Spacer()
+                Toggle(isOn: $preferences.settings.shadesMonths) {
+                    Label("Shade by Value", systemImage: "paintpalette")
                 }
-                MonthlyStatisticsTable(months: months, sport: sport, isNarrow: isNarrow)
+                .toggleStyle(.button)
+                .labelStyle(.iconOnly)
+                .buttonStyle(.glass)
+                .help(Text("Shade by Value"))
+                Picker("Sport", selection: $sportName) {
+                    Text("All Sports").tag("")
+                    ForEach(Sport.allCases) { sport in
+                        Label(sport.title, systemImage: sport.symbol).tag(sport.rawValue)
+                    }
+                }
+                .pickerStyle(.menu)
+                .buttonStyle(.glass)
+                .fixedSize()
             }
+            .controlSize(DeskStyle.controlSize)
+            MonthlyStatisticsTable(
+                months: months, sport: sport, isNarrow: isNarrow,
+                isShaded: preferences.settings.shadesMonths)
         }
     }
 
@@ -187,16 +212,20 @@ private struct WeekNavigator: View {
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
             Spacer()
-            ControlGroup {
+            HStack(spacing: 6) {
                 Button("Previous Week", systemImage: "chevron.left") { weeksBack += 1 }
+                    .labelStyle(.iconOnly)
                     .disabled(!canGoBack)
                     .keyboardShortcut(.leftArrow, modifiers: .command)
                 Button("This Week") { weeksBack = 0 }
                     .disabled(weeksBack == 0)
                 Button("Next Week", systemImage: "chevron.right") { weeksBack -= 1 }
+                    .labelStyle(.iconOnly)
                     .disabled(weeksBack == 0)
                     .keyboardShortcut(.rightArrow, modifiers: .command)
             }
+            .buttonStyle(.glass)
+            .controlSize(DeskStyle.controlSize)
             .fixedSize()
         }
     }

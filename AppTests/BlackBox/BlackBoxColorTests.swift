@@ -147,10 +147,10 @@ import Testing
     ]
 
     @Test func themesArePresentable() {
-        #expect(ColorTheme.allCases == [.balanced, .vivid, .soft])
+        #expect(ColorTheme.allCases == [.okabeIto, .balanced, .vivid, .soft])
         let titles = ColorTheme.allCases.map(\.title)
         #expect(titles.allSatisfy { !$0.isEmpty })
-        #expect(Set(titles).count == 3)
+        #expect(Set(titles).count == ColorTheme.allCases.count)
         for theme in ColorTheme.allCases {
             #expect(ColorTheme(rawValue: theme.rawValue) == theme)
         }
@@ -173,7 +173,7 @@ import Testing
 
     @Test func themesDiffer() {
         let palettes = ColorTheme.allCases.map { theme in Hue.allCases.map { theme.color($0).hex } }
-        #expect(Set(palettes).count == 3)
+        #expect(Set(palettes).count == ColorTheme.allCases.count)
     }
 
     @Test func vividIsApplesSystemColors() {
