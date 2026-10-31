@@ -950,6 +950,16 @@
         }
       }
     },
+    "Choose Another Folder…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anderen Ordner auswählen …"
+          }
+        }
+      }
+    },
     "Choose Folder…" : {
       "localizations" : {
         "de" : {
@@ -2894,6 +2904,16 @@
         }
       }
     },
+    "None" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keiner"
+          }
+        }
+      }
+    },
     "Normalized Power" : {
       "localizations" : {
         "de" : {
@@ -3080,6 +3100,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geplante Route"
+          }
+        }
+      }
+    },
+    "Planned routes and settings are kept in one file in this folder. Choose the same folder, in iCloud Drive for instance, on every device: they update each other whenever the app opens or something changes. Garmin's data needs no syncing, each device fetches it; the calendar and background refresh stay with each device." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geplante Routen und Einstellungen liegen in einer Datei in diesem Ordner. Wähle auf jedem Gerät denselben Ordner, etwa in iCloud Drive: Sie gleichen sich an, sobald die App öffnet oder sich etwas ändert. Garmins Daten müssen nicht synchronisiert werden, jedes Gerät lädt sie selbst; Kalender und Aktualisierung im Hintergrund bleiben bei jedem Gerät."
           }
         }
       }
@@ -3884,6 +3914,16 @@
         }
       }
     },
+    "Stop Syncing" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisierung beenden"
+          }
+        }
+      }
+    },
     "Stop Updating" : {
       "localizations" : {
         "de" : {
@@ -3970,6 +4010,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Schwimmen"
+          }
+        }
+      }
+    },
+    "Sync Between Devices" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwischen Geräten synchronisieren"
+          }
+        }
+      }
+    },
+    "Sync Now" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jetzt synchronisieren"
+          }
+        }
+      }
+    },
+    "Synced" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisiert"
           }
         }
       }

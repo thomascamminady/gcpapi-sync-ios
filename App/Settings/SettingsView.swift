@@ -25,6 +25,11 @@ struct SettingsView: View {
                     NavigationLink("Export and Calendar") {
                         ExportView(export: export)
                     }
+                    if !session.isDemo {
+                        NavigationLink("Sync Between Devices") {
+                            SyncSettingsView()
+                        }
+                    }
                 } header: {
                     Text("Your Data")
                 } footer: {

@@ -130,11 +130,21 @@ final class Preferences {
     nonisolated static let unitsKey = "units"
     nonisolated static let weekStartKey = "weekStart"
     private static let settingsKey = "settings"
+    /// The key of when the settings last changed, for syncing.
+    nonisolated static let modifiedKey = "settingsModified"
 
     var settings: Settings {
-        didSet { save() }
+        didSet {
+            if !isAdopting {
+                modified = .now
+            }
+            save()
+        }
     }
 
+    /// When the settings last changed here, or on the device they were adopted from.
+    private(set) var modified: Date
+    private var isAdopting = false
     private let defaults: UserDefaults
 
     init(defaults: UserDefaults = .standard) {
@@ -142,12 +152,27 @@ final class Preferences {
         settings =
             defaults.data(forKey: Self.settingsKey)
             .flatMap { try? JSONDecoder().decode(Settings.self, from: $0) } ?? Settings()
+        modified = defaults.object(forKey: Self.modifiedKey) as? Date ?? .distantPast
+    }
+
+    /// Take `shared` settings, changed at `modified` on another device, keeping what belongs
+    /// to this one: the calendar, which needs its permission, and background refresh.
+    func adopt(_ shared: Settings, modified: Date) {
+        var adopted = shared
+        adopted.exportsToCalendar = settings.exportsToCalendar
+        adopted.refreshesInBackground = settings.refreshesInBackground
+        isAdopting = true
+        settings = adopted
+        isAdopting = false
+        self.modified = modified
+        save()
     }
 
     private func save() {
         if let data = try? JSONEncoder().encode(settings) {
             defaults.set(data, forKey: Self.settingsKey)
         }
+        defaults.set(modified, forKey: Self.modifiedKey)
         defaults.set(settings.units.rawValue, forKey: Self.unitsKey)
         defaults.set(settings.weekStart.rawValue, forKey: Self.weekStartKey)
     }

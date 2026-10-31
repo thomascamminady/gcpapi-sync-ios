@@ -1,232 +1,186 @@
 import Foundation
-import GCPAPISync
 import Testing
 
 @testable import GCPAPISyncApp
 
-/// A directory of its own, deleted when the test is done.
-private final class ScratchDirectory {
-    let url = URL.temporaryDirectory.appending(path: "sync-tests-\(UUID().uuidString)")
+@Suite struct SharedStateTests {
+    private let start = GeoPoint(latitude: 47.36, longitude: 8.54)
+    private let day = Date(timeIntervalSinceReferenceDate: 815_000_000)
 
-    var snapshots: SnapshotStore { SnapshotStore(directory: url.appending(path: "Snapshots")) }
-    var recordings: RecordingCache { RecordingCache(directory: url.appending(path: "Recordings")) }
-
-    deinit {
-        try? FileManager.default.removeItem(at: url)
-    }
-}
-
-@Suite struct StorageTests {
-    private let end = GarminDate.day("2026-10-29")
-
-    @Test func snapshotsRoundTrip() throws {
-        let scratch = ScratchDirectory()
-        let store = scratch.snapshots
-        #expect(store.load(HealthHistory.self, named: "week") == nil)
-        let week = HealthHistory.sample(endingOn: end)
-        let saved = Date(timeIntervalSince1970: 1_800_000_000)
-        try store.save(week, as: "week", at: saved)
-        let loaded = try #require(store.load(HealthHistory.self, named: "week"))
-        #expect(loaded.value == week)
-        #expect(loaded.saved == saved)
-        let training = TrainingData.sample(endingOn: end)
-        try store.save(training, as: "training")
-        #expect(store.load(TrainingData.self, named: "training")?.value == training)
-        // Snapshots can be fetched again, so they stay out of backups.
-        let values = try store.directory.resourceValues(forKeys: [.isExcludedFromBackupKey])
-        #expect(values.isExcludedFromBackup == true)
-        store.removeAll()
-        #expect(store.load(HealthHistory.self, named: "week") == nil)
+    private func route(
+        _ name: String, modified minutes: Double, id: UUID = UUID()
+    )
+        -> PlannedRoute
+    {
+        PlannedRoute(
+            id: id, name: name, created: day, modified: day.addingTimeInterval(minutes * 60),
+            waypoints: [start])
     }
 
-    @Test func aDamagedSnapshotIsIgnored() throws {
-        let scratch = ScratchDirectory()
-        try scratch.snapshots.save(HealthHistory.sample(endingOn: end), as: "week")
-        try Data("not json".utf8).write(
-            to: scratch.snapshots.directory.appending(path: "week.json"))
-        #expect(scratch.snapshots.load(HealthHistory.self, named: "week") == nil)
-        // A snapshot of another type does not decode as this one.
-        try scratch.snapshots.save(TrainingData.sample(endingOn: end), as: "training")
-        #expect(scratch.snapshots.load(HealthHistory.self, named: "training") == nil)
+    @Test func theNewerVersionOfARouteWins() {
+        let id = UUID()
+        let mine = SharedState(routes: [route("Old", modified: 1, id: id)])
+        let theirs = SharedState(routes: [
+            route("New", modified: 2, id: id), route("Other", modified: 0),
+        ])
+        let merged = mine.merged(with: theirs)
+        #expect(Set(merged.routes.map(\.name)) == ["New", "Other"])
+        #expect(theirs.merged(with: mine).routes.map(\.name).sorted() == ["New", "Other"])
     }
 
-    @Test func recordingsAreCached() {
-        let scratch = ScratchDirectory()
-        let cache = scratch.recordings
-        #expect(cache.data(for: 7) == nil)
-        cache.store(Data([1, 2, 3]), for: 7)
-        #expect(cache.data(for: 7) == Data([1, 2, 3]))
-        cache.removeAll()
-        #expect(cache.data(for: 7) == nil)
+    @Test func deletionsWinOverOlderVersions() {
+        let id = UUID()
+        let mine = SharedState(routes: [route("Lake", modified: 1, id: id)])
+        let theirs = SharedState(deletedRoutes: [id: day.addingTimeInterval(120)])
+        let merged = mine.merged(with: theirs)
+        #expect(merged.routes.isEmpty)
+        #expect(merged.deletedRoutes[id] != nil)
     }
 
-    @Test func recoveryResponsesRoundTrip() throws {
-        let scratch = ScratchDirectory()
-        let data = TrainingData.sample(endingOn: end)
-        let response = RecoveryResponse(
-            history: .sample(endingOn: end, days: data.loadHistory.count), loads: data.loadHistory)
-        try scratch.snapshots.save(response, as: "recovery")
-        #expect(scratch.snapshots.load(RecoveryResponse.self, named: "recovery")?.value == response)
+    @Test func aRouteChangedAfterItsDeletionIsBack() {
+        let id = UUID()
+        let mine = SharedState(routes: [route("Lake", modified: 5, id: id)])
+        let theirs = SharedState(deletedRoutes: [id: day.addingTimeInterval(120)])
+        let merged = mine.merged(with: theirs)
+        #expect(merged.routes.map(\.id) == [id])
+        #expect(merged.deletedRoutes[id] == nil)
     }
-}
 
-@Suite struct CachedModelTests {
-    private let end = GarminDate.day("2026-10-29")
+    @Test func theNewerSettingsWin() {
+        var dense = Settings()
+        dense.density = .dense
+        let mine = SharedState(settings: Settings(), settingsModified: day)
+        let theirs = SharedState(settings: dense, settingsModified: day.addingTimeInterval(1))
+        #expect(mine.merged(with: theirs).settings == dense)
+        #expect(theirs.merged(with: mine).settings == dense)
+        #expect(mine.merged(with: SharedState()).settings == Settings())
+    }
 
-    @Test func healthOpensWithTheSavedWeekAndSavesNewOnes() async throws {
-        let scratch = ScratchDirectory()
-        let saved = HealthHistory.sample(endingOn: end.adding(days: -1))
-        let then = Date(timeIntervalSince1970: 1_800_000_000)
-        try scratch.snapshots.save(saved, as: HealthModel.snapshot, at: then)
-        let model = HealthModel(store: scratch.snapshots) { end, days in
-            .sample(endingOn: end, days: days)
-        }
-        #expect(model.phase == .loaded(saved))
-        #expect(model.lastUpdated == then)
-        await model.load()
-        let fresh = HealthHistory.sample(endingOn: .today())
-        #expect(model.phase == .loaded(fresh))
+    @Test func twoDevicesMeetInTheFolder() throws {
+        let folder = URL.temporaryDirectory.appending(path: "sync-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        let phone = SharedState(routes: [route("From the phone", modified: 1)])
+        let mac = SharedState(routes: [route("From the Mac", modified: 2)])
+        let first = try SyncFolder.sync(phone, in: folder)
+        #expect(first == phone)
+        let second = try SyncFolder.sync(mac, in: folder)
+        #expect(Set(second.routes.map(\.name)) == ["From the phone", "From the Mac"])
+        // The phone gets the Mac's route the next time it syncs.
+        let again = try SyncFolder.sync(phone, in: folder)
+        #expect(again == second)
         #expect(
-            scratch.snapshots.load(HealthHistory.self, named: HealthModel.snapshot)?.value == fresh)
-    }
-
-    @Test func trainingOpensWithTheSavedDataAndSavesNewData() async throws {
-        let scratch = ScratchDirectory()
-        let saved = TrainingData.sample(endingOn: end.adding(days: -1))
-        try scratch.snapshots.save(saved, as: TrainingModel.snapshot)
-        let model = TrainingModel(
-            today: { end }, store: scratch.snapshots, fetch: { end, _ in .sample(endingOn: end) },
-            fetchHealth: { end, days in .sample(endingOn: end, days: days) })
-        #expect(model.phase == .loaded(saved))
-        #expect(model.recovery == .loading)
-        await model.load()
-        #expect(
-            scratch.snapshots.load(TrainingData.self, named: TrainingModel.snapshot)?.value
-                == .sample(endingOn: end))
-        let response = try #require(
-            scratch.snapshots.load(RecoveryResponse.self, named: TrainingModel.recoverySnapshot))
-        let reopened = TrainingModel(
-            store: scratch.snapshots, fetch: { end, _ in .sample(endingOn: end) },
-            fetchHealth: { end, days in .sample(endingOn: end, days: days) })
-        #expect(reopened.recovery == .loaded(response.value))
-    }
-
-    @Test func recordingsAreDownloadedOnce() async throws {
-        let scratch = ScratchDirectory()
-        let run = try #require(
-            (0..<7).lazy.compactMap { SummarizedActivity.sampleRun(on: end.adding(days: -$0)) }
-                .first)
-        let workout = try #require(Workout(run))
-        let archive = StoredZip.archive(
-            name: "\(run.activityId)_ACTIVITY.fit", content: FITWriter.encode(.sample(of: run)))
-        let transport = ZipTransport(archive: archive)
-        let first = TrainingModel(client: try client(transport), recordings: scratch.recordings)
-        await first.loadTrack(for: workout)
-        guard case .loaded = first.tracks[workout.id] else {
-            Issue.record("the recording did not load")
-            return
-        }
-        #expect(scratch.recordings.data(for: workout.id) != nil)
-        let second = TrainingModel(client: try client(transport), recordings: scratch.recordings)
-        await second.loadTrack(for: workout)
-        guard case .loaded = second.tracks[workout.id] else {
-            Issue.record("the cached recording did not load")
-            return
-        }
-        #expect(await transport.downloads == 1)
+            FileManager.default.fileExists(atPath: folder.appending(path: SyncFolder.file).path))
     }
 }
 
-/// Serves `archive` for every activity download and counts the downloads.
-private final class ZipTransport: HTTPTransport {
-    let archive: Data
-    private let counter = Counter()
+@Suite struct RouteSyncTests {
+    private let start = GeoPoint(latitude: 47.36, longitude: 8.54)
 
-    init(archive: Data) {
-        self.archive = archive
+    @Test func routesOfEarlierVersionsStillLoad() throws {
+        let file = URL.temporaryDirectory.appending(path: "routes-\(UUID().uuidString).json")
+        defer { try? FileManager.default.removeItem(at: file) }
+        // A file of an earlier version: an array of routes without modification dates.
+        let created = Date(timeIntervalSinceReferenceDate: 815_000_000)
+        let fields = [
+            #""id":"\#(UUID().uuidString)""#, #""name":"Lake""#,
+            #""created":\#(created.timeIntervalSinceReferenceDate)"#, #""waypoints":[]"#,
+            #""legs":[]"#,
+        ]
+        let old = "[{\(fields.joined(separator: ","))}]"
+        try Data(old.utf8).write(to: file)
+        let saved = RouteStore(file: file).loadSaved()
+        #expect(saved.routes.map(\.name) == ["Lake"])
+        #expect(saved.routes.first?.modified == created)
+        #expect(saved.deleted.isEmpty)
     }
 
-    var downloads: Int {
-        get async { await counter.count }
-    }
-
-    func send(_ request: HTTPRequest) async -> HTTPResponse {
-        if request.path == tokenPath {
-            return HTTPResponse(statusCode: 200, body: Data("token".utf8), request: request)
-        }
-        await counter.increment()
-        return HTTPResponse(statusCode: 200, body: archive, request: request)
-    }
-
-    private actor Counter {
-        var count = 0
-
-        func increment() {
-            count += 1
-        }
-    }
-}
-
-@Suite struct SessionStorageTests {
-    @Test func theStoredKeyMakesAClient() throws {
-        let keychain = ScratchKeychain()
-        #expect(Session.storedClient(keychain: keychain.store) == nil)
-        try keychain.store.set(Data("good-key".utf8), for: Session.keyAccount)
-        #expect(Session.storedClient(keychain: keychain.store) != nil)
-    }
-
-    @Test func signingOutDeletesWhatWasSaved() async throws {
-        let scratch = ScratchDirectory()
-        let keychain = ScratchKeychain()
-        let session = Session(
-            keychain: keychain.store, transport: garmin(), snapshots: scratch.snapshots,
-            recordings: scratch.recordings)
-        try await session.connect(apiKey: "good-key")
-        try scratch.snapshots.save(HealthHistory(days: []), as: "week")
-        scratch.recordings.store(Data([1]), for: 1)
-        session.signOut()
-        #expect(scratch.snapshots.load(HealthHistory.self, named: "week") == nil)
-        #expect(scratch.recordings.data(for: 1) == nil)
-    }
-
-    @Test func theDemoKeepsWhatWasSaved() throws {
-        let scratch = ScratchDirectory()
-        let session = Session(
-            keychain: ScratchKeychain().store, snapshots: scratch.snapshots,
-            recordings: scratch.recordings)
-        try scratch.snapshots.save(HealthHistory(days: []), as: "week")
-        session.startDemo()
-        session.signOut()
-        #expect(scratch.snapshots.load(HealthHistory.self, named: "week") != nil)
+    @Test func deletionsAreRemembered() {
+        let file = URL.temporaryDirectory.appending(path: "routes-\(UUID().uuidString).json")
+        defer { try? FileManager.default.removeItem(at: file) }
+        let library = RouteLibrary(store: RouteStore(file: file))
+        let route = PlannedRoute(name: "Lake", waypoints: [start])
+        library.save(route)
+        #expect(library.routes.first?.modified ?? .distantPast >= route.created)
+        library.delete(route)
+        #expect(library.deleted[route.id] != nil)
+        #expect(RouteLibrary(store: RouteStore(file: file)).deleted[route.id] != nil)
+        library.adopt([route], deleted: [:])
+        #expect(library.routes.map(\.id) == [route.id])
+        #expect(library.deleted.isEmpty)
     }
 }
 
-@Suite struct BackgroundRefreshTests {
-    private let end = GarminDate.day("2026-10-29")
+@Suite struct PreferencesSyncTests {
+    @Test func adoptedSettingsKeepWhatBelongsToTheDevice() {
+        let suite = "sync-tests-\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suite) ?? .standard
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let preferences = Preferences(defaults: defaults)
+        preferences.settings.exportsToCalendar = true
+        let changed = preferences.modified
+        #expect(changed > .distantPast)
+        var shared = Settings()
+        shared.density = .dense
+        shared.exportsToCalendar = false
+        let then = Date(timeIntervalSinceReferenceDate: 815_000_000)
+        preferences.adopt(shared, modified: then)
+        #expect(preferences.settings.density == .dense)
+        #expect(preferences.settings.exportsToCalendar)
+        #expect(preferences.modified == then)
+        #expect(Preferences(defaults: defaults).modified == then)
+    }
+}
 
-    @Test func refreshesAndSavesTheWeekAndTheTraining() async throws {
-        let scratch = ScratchDirectory()
-        await BackgroundRefresh.run(
-            settings: Settings(), client: try client(DemoTransport()), store: scratch.snapshots,
-            today: end)
-        #expect(
-            scratch.snapshots.load(HealthHistory.self, named: HealthModel.snapshot)?.value
-                == .sample(endingOn: end))
-        #expect(
-            scratch.snapshots.load(TrainingData.self, named: TrainingModel.snapshot)?.value
-                == .sample(endingOn: end))
+@Suite struct DeviceSyncTests {
+    @Test func syncAdoptsWhatIsNewer() async {
+        let routes = RouteLibrary(store: nil)
+        let suite = "device-sync-\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suite) ?? .standard
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let preferences = Preferences(defaults: defaults)
+        let remote = PlannedRoute(name: "From the Mac", waypoints: [])
+        let dense = {
+            var settings = Settings()
+            settings.density = .dense
+            return settings
+        }()
+        let sync = DeviceSync(
+            routes: routes, preferences: preferences, folderName: "Shared"
+        ) { local in
+            local.merged(
+                with: SharedState(routes: [remote], settings: dense, settingsModified: .now))
+        }
+        await sync.sync()
+        #expect(routes.routes.map(\.name) == ["From the Mac"])
+        #expect(preferences.settings.density == .dense)
+        #expect(sync.lastSynced != nil)
+        #expect(sync.problem == nil)
     }
 
-    @Test func doesNothingWhenTurnedOffOrSignedOut() async throws {
-        let scratch = ScratchDirectory()
-        var off = Settings()
-        off.refreshesInBackground = false
-        await BackgroundRefresh.run(
-            settings: off, client: try client(DemoTransport()), store: scratch.snapshots,
-            today: end)
-        await BackgroundRefresh.run(
-            settings: Settings(), client: nil, store: scratch.snapshots, today: end)
-        #expect(scratch.snapshots.load(HealthHistory.self, named: HealthModel.snapshot) == nil)
-        #expect(Settings().refreshesInBackground)
+    @Test func withoutAFolderOrInTheDemoNothingHappens() async {
+        let routes = RouteLibrary(store: nil)
+        let none = DeviceSync(routes: routes, preferences: .shared, folderName: nil) { _ in
+            Issue.record("synced without a folder")
+            return SharedState()
+        }
+        await none.sync()
+        let demo = DeviceSync(
+            routes: routes, preferences: .shared, isEnabled: false, folderName: "Shared"
+        ) { _ in
+            Issue.record("synced in the demo")
+            return SharedState()
+        }
+        await demo.sync()
+        #expect(demo.folderName == nil)
+    }
+
+    @Test func aFailureIsShown() async {
+        let sync = DeviceSync(
+            routes: RouteLibrary(store: nil), preferences: .shared, folderName: "Shared"
+        ) { _ in throw Problem.offline }
+        await sync.sync()
+        #expect(sync.problem == .offline)
+        #expect(sync.lastSynced == nil)
     }
 }

@@ -110,7 +110,11 @@ private struct FailingRouter: Router {
         var renamed = route
         renamed.name = "Lake Loop"
         library.save(renamed)
-        #expect(RouteLibrary(store: store).routes == [renamed])
+        // Saving stamps when, for syncing.
+        let restored = RouteLibrary(store: store).routes
+        #expect(restored.map(\.id) == [renamed.id])
+        #expect(restored.map(\.name) == ["Lake Loop"])
+        #expect((restored.first?.modified ?? .distantPast) >= renamed.created)
         library.delete(renamed)
         #expect(store.load().isEmpty)
         #expect(RouteLibrary(store: nil).routes.isEmpty)

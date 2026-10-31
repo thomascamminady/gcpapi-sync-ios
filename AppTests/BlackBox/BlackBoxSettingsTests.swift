@@ -267,7 +267,9 @@ import Testing
         let preferences = Preferences(defaults: suite.defaults)
         preferences.settings.units = .metric
         preferences.settings.showsTrends.toggle()
-        let keys = suite.storedKeys.subtracting([Preferences.unitsKey, Preferences.weekStartKey])
+        let keys = suite.storedKeys.subtracting([
+            Preferences.unitsKey, Preferences.weekStartKey, Preferences.modifiedKey,
+        ])
         let key = try #require(keys.first, "\(suite.storedKeys)")
         let garbage: [Any] = [Data("{not json".utf8), "garbage", 42, ["a": 1]]
         for value in garbage {
@@ -281,7 +283,9 @@ import Testing
     @Test func storedSettingsFromAnOlderVersionKeepTheirValues() throws {
         let suite = try BlackBoxDefaults()
         Preferences(defaults: suite.defaults).settings.density = .dense
-        let keys = suite.storedKeys.subtracting([Preferences.unitsKey, Preferences.weekStartKey])
+        let keys = suite.storedKeys.subtracting([
+            Preferences.unitsKey, Preferences.weekStartKey, Preferences.modifiedKey,
+        ])
         let key = try #require(keys.first)
         let stored = try #require(suite.defaults.data(forKey: key))
         #expect(try JSONDecoder().decode(Settings.self, from: stored).density == .dense)

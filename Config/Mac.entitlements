@@ -8,6 +8,9 @@
 	<true/>
 	<key>com.apple.security.files.user-selected.read-write</key>
 	<true/>
+	<!-- Folders picked once, for exports and syncing, stay reachable across launches. -->
+	<key>com.apple.security.files.bookmarks.app-scope</key>
+	<true/>
 	<key>com.apple.security.personal-information.calendars</key>
 	<true/>
 	<!-- The Keychain needs the app's identifier, which comes with a provisioning profile. -->
