@@ -223,10 +223,15 @@ private enum LoadRange: Int, CaseIterable, Identifiable {
 /// Fitness, fatigue and form in depth, with what the form zones mean.
 struct TrainingLoadDetailView: View {
     let days: [TrainingLoad.Day]
-    @State private var range = LoadRange.threeMonths
+    @State private var range = RangeChoice.last(LoadRange.threeMonths.rawValue)
     @State private var selectedDate: Date?
 
-    private var shown: [TrainingLoad.Day] { Array(days.suffix(range.rawValue)) }
+    /// The days in the range, of those loaded.
+    private var shown: [TrainingLoad.Day] {
+        guard let last = days.last?.date else { return [] }
+        let dates = range.dates(through: last)
+        return days.filter { dates.contains($0.date) }
+    }
 
     private var selectedDay: TrainingLoad.Day? {
         guard let selectedDate else { return shown.last }
@@ -238,10 +243,11 @@ struct TrainingLoadDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Picker("Range", selection: $range) {
-                    ForEach(LoadRange.allCases) { Text($0.label).tag($0) }
+                if let first = days.first?.date, let last = days.last?.date {
+                    RangePicker(
+                        choice: $range, presets: LoadRange.allCases.map { ($0.rawValue, $0.label) },
+                        bounds: first...last)
                 }
-                .pickerStyle(.segmented)
                 header
                 charts
                 zones

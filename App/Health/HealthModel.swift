@@ -23,6 +23,9 @@ final class HealthModel {
     private(set) var histories: [Int: HealthHistory] = [:]
     /// Why a history could not be fetched, by number of days.
     private(set) var historyProblems: [Int: Problem] = [:]
+    /// Days the user picked, by their dates.
+    private(set) var ranges: [ClosedRange<GarminDate>: HealthHistory] = [:]
+    private(set) var rangeProblems: [ClosedRange<GarminDate>: Problem] = [:]
 
     private let fetch: @Sendable (_ end: GarminDate, _ days: Int) async throws -> HealthHistory
     private let today: () -> GarminDate
@@ -84,6 +87,43 @@ final class HealthModel {
                 refreshProblem = Problem(error)
             } else {
                 phase = .failed(Problem(error))
+            }
+        }
+    }
+
+    /// The last day the presets end on.
+    var currentDay: GarminDate { today() }
+
+    /// The days of `choice`, as far as they are loaded.
+    func history(_ choice: RangeChoice) -> HealthHistory? {
+        switch choice {
+        case .last(let days): histories[days]
+        case .custom(let dates): ranges[dates]
+        }
+    }
+
+    /// Why the days of `choice` could not be loaded.
+    func problem(_ choice: RangeChoice) -> Problem? {
+        switch choice {
+        case .last(let days): historyProblems[days]
+        case .custom(let dates): rangeProblems[dates]
+        }
+    }
+
+    /// Fetch the days of `choice`, unless they are already loaded.
+    func loadHistory(_ choice: RangeChoice) async {
+        switch choice {
+        case .last(let days):
+            await loadHistory(days: days)
+        case .custom(let dates):
+            guard ranges[dates] == nil else { return }
+            rangeProblems[dates] = nil
+            do {
+                ranges[dates] = try await fetch(
+                    dates.upperBound, dates.lowerBound.days(to: dates.upperBound) + 1)
+            } catch {
+                guard !Task.isCancelled, !(error is CancellationError) else { return }
+                rangeProblems[dates] = Problem(error)
             }
         }
     }

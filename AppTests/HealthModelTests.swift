@@ -35,6 +35,27 @@ private actor Results {
         #expect(model.refreshProblem == nil)
     }
 
+    @Test func customDaysLoadThroughTheirLastDay() async {
+        let model = HealthModel(
+            today: { .day("2026-10-28") },
+            fetch: { end, days in .sample(endingOn: end, days: days) })
+        let dates = GarminDate.day("2026-09-01")...GarminDate.day("2026-09-14")
+        await model.loadHistory(.custom(dates))
+        #expect(model.history(.custom(dates)) == .sample(endingOn: dates.upperBound, days: 14))
+        #expect(model.problem(.custom(dates)) == nil)
+        await model.loadHistory(.last(30))
+        #expect(model.history(.last(30)) == model.histories[30])
+        #expect(model.currentDay == .day("2026-10-28"))
+    }
+
+    @Test func aFailedCustomRangeSaysWhy() async {
+        let model = HealthModel { _, _ in throw Problem.offline }
+        let dates = GarminDate.day("2026-09-01")...GarminDate.day("2026-09-02")
+        await model.loadHistory(.custom(dates))
+        #expect(model.history(.custom(dates)) == nil)
+        #expect(model.problem(.custom(dates)) == .offline)
+    }
+
     @Test func aFirstFailureIsShownInPlace() async {
         let model = HealthModel { _, _ in throw Problem.offline }
         await model.load()
@@ -215,5 +236,29 @@ private actor Results {
         if let level {
             _ = Format.stressColor(level)
         }
+    }
+}
+
+@Suite struct RangeChoiceTests {
+    private let today = GarminDate.day("2026-10-31")
+
+    @Test func lastDaysEndToday() {
+        #expect(RangeChoice.last(7).dates(through: today) == .day("2026-10-25")...today)
+        #expect(RangeChoice.last(7).dayCount(through: today) == 7)
+        #expect(RangeChoice.last(0).dayCount(through: today) == 1)
+        #expect(RangeChoice.last(30).caption == String(localized: "Last 30 days"))
+    }
+
+    @Test func customDaysAreTheirOwn() {
+        let dates = GarminDate.day("2026-02-27")...GarminDate.day("2026-03-02")
+        #expect(RangeChoice.custom(dates).dates(through: today) == dates)
+        #expect(RangeChoice.custom(dates).dayCount(through: today) == 4)
+        #expect(!RangeChoice.custom(dates).caption.isEmpty)
+    }
+
+    @Test func customRangesSpanAYear() {
+        let pickable = HistoryRange.pickable(through: today)
+        #expect(pickable.upperBound == today)
+        #expect(pickable.lowerBound.days(to: today) == 365)
     }
 }

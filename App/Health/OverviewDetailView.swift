@@ -7,7 +7,7 @@ import UIKit
 /// metric's real values for the day being scrubbed.
 struct OverviewDetailView: View {
     let model: HealthModel
-    @State private var range = HistoryRange.month
+    @State private var range = RangeChoice.last(HistoryRange.month.days)
     @State private var selectedDate: Date?
     @State private var hidden: Set<OverviewMetric> = []
     @AppStorage("overview.higherIsBetter") private var higherIsBetter = false
@@ -16,12 +16,9 @@ struct OverviewDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Picker("Range", selection: $range) {
-                    ForEach(HistoryRange.allCases) { range in
-                        Text(range.label).tag(range)
-                    }
-                }
-                .pickerStyle(.segmented)
+                RangePicker(
+                    choice: $range, presets: HistoryRange.allCases.map { ($0.days, $0.label) },
+                    bounds: HistoryRange.pickable(through: model.currentDay))
                 content
             }
             .padding()
@@ -30,23 +27,32 @@ struct OverviewDetailView: View {
         .background(Color(uiColor: .systemGroupedBackground))
         .navigationTitle("Trends")
         .navigationBarTitleDisplayMode(.inline)
-        .task(id: loadedDays) {
+        .task(id: loaded) {
             selectedDate = nil
-            await model.loadHistory(days: loadedDays)
+            await model.loadHistory(loaded)
         }
         .sensoryFeedback(.selection, trigger: selectedDay?.date)
     }
 
-    private var history: HealthHistory? { model.histories[loadedDays] }
+    private var history: HealthHistory? { model.history(loaded) }
+
+    /// Whether the range is longer than a week, which values can average.
+    private var isLong: Bool {
+        range.dayCount(through: model.currentDay) > 7
+    }
 
     /// The days each value averages: a week for the longer ranges, unless turned off.
     private var averaging: Int {
-        averagesWeeks && range != .week ? 7 : 1
+        averagesWeeks && isLong ? 7 : 1
     }
 
     /// The range plus the days that lead into the first average.
-    private var loadedDays: Int {
-        range.days + averaging - 1
+    private var loaded: RangeChoice {
+        switch range {
+        case .last(let days): .last(days + averaging - 1)
+        case .custom(let dates):
+            .custom(dates.lowerBound.adding(days: 1 - averaging)...dates.upperBound)
+        }
     }
 
     private var shown: [OverviewMetric] {
@@ -63,14 +69,14 @@ struct OverviewDetailView: View {
             chart(history)
             values(history)
             about
-        } else if let problem = model.historyProblems[loadedDays] {
+        } else if let problem = model.problem(loaded) {
             ContentUnavailableView {
                 Label(problem.title, systemImage: problem.symbol)
             } description: {
                 Text(problem.message)
             } actions: {
                 Button("Try Again") {
-                    Task { await model.loadHistory(days: loadedDays) }
+                    Task { await model.loadHistory(loaded) }
                 }
                 .buttonStyle(.glassProminent)
             }
@@ -97,7 +103,7 @@ struct OverviewDetailView: View {
                     }
                 }
             }
-            if range != .week {
+            if isLong {
                 Toggle(isOn: $averagesWeeks) {
                     ToggleLabel(
                         title: "7-Day Average",
