@@ -30,16 +30,11 @@ struct ConnectView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Image(systemName: "waveform.path.ecg")
-                .font(.system(size: 34, weight: .semibold))
-                .foregroundStyle(.white)
+            // The app's icon: a whistle that is a running track.
+            Image(.logo)
+                .resizable()
                 .frame(width: 72, height: 72)
-                .background(
-                    LinearGradient(
-                        colors: [.pink, .orange], startPoint: .topLeading, endPoint: .bottomTrailing
-                    ),
-                    in: .rect(cornerRadius: 20)
-                )
+                .clipShape(.rect(cornerRadius: 16))
                 .accessibilityHidden(true)
             Text("Connect Garmin")
                 .font(.largeTitle.bold())
