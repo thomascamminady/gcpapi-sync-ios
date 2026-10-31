@@ -242,7 +242,7 @@ struct TrainingLoadDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 14) {
                 if let first = days.first?.date, let last = days.last?.date {
                     RangePicker(
                         choice: $range, presets: LoadRange.allCases.map { ($0.rawValue, $0.label) },
@@ -256,7 +256,7 @@ struct TrainingLoadDetailView: View {
             .padding()
             .readableWidth()
         }
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(Color.page)
         .navigationTitle("Training Load")
         .navigationBarTitleDisplayMode(.inline)
         .sensoryFeedback(.selection, trigger: selectedDay?.date)
@@ -329,8 +329,7 @@ struct TrainingLoadDetailView: View {
                 }
             }
             .padding(.horizontal, 16)
-            .background(
-                Color(uiColor: .secondarySystemGroupedBackground), in: .rect(cornerRadius: 20))
+            .surface(cornerRadius: 14)
         }
     }
 

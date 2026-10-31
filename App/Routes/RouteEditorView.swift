@@ -15,6 +15,8 @@ struct RouteEditorView: View {
     @State private var name: String
     /// The point being dragged, and how far.
     @State private var drag: (index: Int, offset: CGSize)?
+    /// The leg whose middle is being dragged to make a new point, and how far.
+    @State private var legDrag: (index: Int, offset: CGSize)?
     @Environment(\.dismiss) private var dismiss
 
     /// Where the drags of points are measured, to find the map coordinate they end on.
@@ -53,13 +55,8 @@ struct RouteEditorView: View {
                 MapPolyline(coordinates: planner.route.path.map(\.coordinate))
                     .stroke(
                         .tint, style: StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round))
-                ForEach(Array(planner.waypoints.enumerated()), id: \.offset) { index, point in
-                    Annotation("Point \(index + 1)", coordinate: point.coordinate, anchor: .center)
-                    {
-                        waypoint(index, proxy: proxy)
-                    }
-                    .annotationTitles(.hidden)
-                }
+                legHandles(proxy: proxy)
+                waypointMarkers(proxy: proxy)
             }
             .coordinateSpace(.named(Self.mapSpace))
             .mapStyle(RouteMap.style(Preferences.shared.settings.mapStyle))
@@ -99,6 +96,66 @@ struct RouteEditorView: View {
                 .disabled(planner.waypoints.count < 2)
             }
         }
+    }
+
+    /// The middle of every leg, where a new point can be pulled out.
+    @MapContentBuilder
+    private func legHandles(proxy: MapProxy) -> some MapContent {
+        ForEach(planner.route.legs.indices, id: \.self) { index in
+            if let middle = planner.route.midpoint(ofLeg: index) {
+                Annotation(
+                    "Add a Point", coordinate: middle.coordinate, anchor: .center
+                ) {
+                    legHandle(index, at: middle, proxy: proxy)
+                }
+                .annotationTitles(.hidden)
+            }
+        }
+    }
+
+    /// The route's points.
+    @MapContentBuilder
+    private func waypointMarkers(proxy: MapProxy) -> some MapContent {
+        ForEach(Array(planner.waypoints.enumerated()), id: \.offset) { index, point in
+            Annotation("Point \(index + 1)", coordinate: point.coordinate, anchor: .center) {
+                waypoint(index, proxy: proxy)
+            }
+            .annotationTitles(.hidden)
+        }
+    }
+
+    /// The middle of leg `index`: drag it, or click it, to put a new point between the leg's
+    /// ends there.
+    private func legHandle(_ index: Int, at middle: GeoPoint, proxy: MapProxy) -> some View {
+        Circle()
+            .fill(Color.white.opacity(0.85))
+            .stroke(Color.accentColor, lineWidth: 2)
+            .frame(width: 12, height: 12)
+            .padding(6)
+            .contentShape(.circle)
+            .offset(legDrag?.index == index ? legDrag?.offset ?? .zero : .zero)
+            .highPriorityGesture(
+                DragGesture(coordinateSpace: .named(Self.mapSpace))
+                    .onChanged { value in legDrag = (index, value.translation) }
+                    .onEnded { value in
+                        legDrag = nil
+                        guard
+                            let coordinate = proxy.convert(
+                                value.location, from: .named(Self.mapSpace))
+                        else { return }
+                        Task {
+                            await planner.insert(
+                                GeoPoint(
+                                    latitude: coordinate.latitude, longitude: coordinate.longitude),
+                                at: index + 1)
+                        }
+                    }
+            )
+            .onTapGesture {
+                Task { await planner.insert(middle, at: index + 1) }
+            }
+            .accessibilityLabel(Text("Add a Point"))
+            .accessibilityAddTraits(.isButton)
     }
 
     /// A point of the route: the start flagged, the others white; drag it to move it, and remove
@@ -213,12 +270,14 @@ private struct RoutePanel: View {
             ? String(
                 localized: """
                     Click the map to add a point; the route follows roads and paths to it. Drag a \
-                    point to move it, right-click it to remove it.
+                    point to move it, right-click it to remove it; drag the dot in the middle of a \
+                    stretch to bend the route through a new point.
                     """)
             : String(
                 localized: """
                     Tap the map to add a point; the route follows roads and paths to it. Drag a \
-                    point to move it, touch and hold it to remove it.
+                    point to move it, touch and hold it to remove it; drag the dot in the middle \
+                    of a stretch to bend the route through a new point.
                     """)
     }
 

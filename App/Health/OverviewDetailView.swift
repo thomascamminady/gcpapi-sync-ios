@@ -15,7 +15,7 @@ struct OverviewDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 14) {
                 RangePicker(
                     choice: $range, presets: HistoryRange.allCases.map { ($0.days, $0.label) },
                     bounds: HistoryRange.pickable(through: model.currentDay))
@@ -24,7 +24,7 @@ struct OverviewDetailView: View {
             .padding()
             .readableWidth()
         }
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(Color.page)
         .navigationTitle("Trends")
         .navigationBarTitleDisplayMode(.inline)
         .task(id: loaded) {
@@ -116,8 +116,8 @@ struct OverviewDetailView: View {
                     detail: "Flips resting heart rate and stress, so up always means a better day")
             }
         }
-        .padding(20)
-        .background(Color(uiColor: .secondarySystemGroupedBackground), in: .rect(cornerRadius: 26))
+        .padding(14)
+        .surface(cornerRadius: 14)
     }
 
     /// Hides or shows `metric`, keeping at least one line on the chart.
@@ -157,8 +157,7 @@ struct OverviewDetailView: View {
                 }
             }
             .padding(.horizontal, 16)
-            .background(
-                Color(uiColor: .secondarySystemGroupedBackground), in: .rect(cornerRadius: 20))
+            .surface(cornerRadius: 14)
         }
         .animation(.snappy, value: selectedDay?.date)
     }

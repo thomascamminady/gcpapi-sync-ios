@@ -47,6 +47,22 @@ final class RoutePlanner {
         await findLeg(index)
     }
 
+    /// Add `point` between the points at `index` − 1 and `index`, and find the paths to and
+    /// from it; at the end for any other `index`.
+    func insert(_ point: GeoPoint, at index: Int) async {
+        guard index > 0, index < route.waypoints.count, route.legs.indices.contains(index - 1)
+        else {
+            await add(point)
+            return
+        }
+        route.waypoints.insert(point, at: index)
+        route.legs.replaceSubrange(
+            (index - 1)...(index - 1),
+            with: [[route.waypoints[index - 1], point], [point, route.waypoints[index + 1]]])
+        await findLeg(index - 1)
+        await findLeg(index)
+    }
+
     /// Remove the point at `index`, joining its neighbours by a path of their own.
     func remove(at index: Int) async {
         guard route.waypoints.indices.contains(index) else { return }

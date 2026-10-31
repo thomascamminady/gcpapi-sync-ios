@@ -52,6 +52,26 @@ nonisolated struct PlannedRoute: Identifiable, Hashable, Codable, Sendable {
     }
 
     /// The route as GPX, for importing as a course in Garmin Connect or other apps.
+    /// The point halfway along leg `index`, by distance: where a new point between its ends
+    /// is offered.
+    func midpoint(ofLeg index: Int) -> GeoPoint? {
+        guard legs.indices.contains(index) else { return nil }
+        let leg = legs[index]
+        let half = Self.length(leg) / 2
+        var covered = 0.0
+        for (point, next) in zip(leg, leg.dropFirst()) {
+            let step = point.distance(to: next)
+            if covered + step >= half, step > 0 {
+                let share = (half - covered) / step
+                return GeoPoint(
+                    latitude: point.latitude + (next.latitude - point.latitude) * share,
+                    longitude: point.longitude + (next.longitude - point.longitude) * share)
+            }
+            covered += step
+        }
+        return leg.first
+    }
+
     /// The name, or `Planned Route` without one.
     var title: String {
         name.isEmpty ? String(localized: "Planned Route") : name

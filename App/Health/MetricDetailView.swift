@@ -40,7 +40,7 @@ struct MetricDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 14) {
                 RangePicker(
                     choice: $range, presets: HistoryRange.allCases.map { ($0.days, $0.label) },
                     bounds: HistoryRange.pickable(through: model.currentDay))
@@ -49,7 +49,7 @@ struct MetricDetailView: View {
             .padding()
             .readableWidth()
         }
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(Color.page)
         .navigationTitle(metric.title)
         .navigationBarTitleDisplayMode(.inline)
         .task(id: range) {
@@ -120,9 +120,8 @@ struct MetricDetailView: View {
         MetricChart(metric: metric, days: history.days, selected: selectedDay?.start)
             .chartXSelection(value: $selectedDate)
             .chartHeight(260)
-            .padding(20)
-            .background(
-                Color(uiColor: .secondarySystemGroupedBackground), in: .rect(cornerRadius: 26))
+            .padding(14)
+            .surface(cornerRadius: 14)
     }
 
     private func dayList(_ history: HealthHistory) -> some View {
@@ -139,8 +138,7 @@ struct MetricDetailView: View {
                 }
             }
             .padding(.horizontal, 16)
-            .background(
-                Color(uiColor: .secondarySystemGroupedBackground), in: .rect(cornerRadius: 20))
+            .surface(cornerRadius: 14)
         }
     }
 

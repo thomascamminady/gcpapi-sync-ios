@@ -198,7 +198,7 @@ struct RecoveryDetailView: View {
             .padding()
             .readableWidth()
         }
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(Color.page)
         .navigationTitle("Recovery Response")
         .navigationBarTitleDisplayMode(.inline)
     }

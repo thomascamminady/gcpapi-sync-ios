@@ -204,6 +204,22 @@ private struct FailingRouter: Router {
         #expect(planner.waypoints.isEmpty)
     }
 
+    @Test func pointsGoInBetween() async {
+        let planner = RoutePlanner(router: StraightRouter())
+        await planner.add(start)
+        await planner.add(north)
+        let middle = planner.route.midpoint(ofLeg: 0)
+        #expect(middle.map { abs($0.distance(to: start) - $0.distance(to: north)) < 1 } == true)
+        await planner.insert(east, at: 1)
+        #expect(planner.waypoints == [start, east, north])
+        #expect(planner.route.legs == [[start, east], [east, north]])
+        // Anywhere else, the point goes at the end.
+        let west = GeoPoint(latitude: 47.36, longitude: 8.53)
+        await planner.insert(west, at: 0)
+        #expect(planner.waypoints.last == west)
+        #expect(planner.route.midpoint(ofLeg: 9) == nil)
+    }
+
     @Test func straightLinesAskNobody() async {
         let router = DetourRouter()
         let planner = RoutePlanner(router: router)

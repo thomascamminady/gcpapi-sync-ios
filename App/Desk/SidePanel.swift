@@ -21,7 +21,7 @@ struct SidePanel: View {
         if isGrid {
             LazyVGrid(
                 columns: [GridItem(.adaptive(minimum: 300), spacing: 32, alignment: .top)],
-                alignment: .leading, spacing: 28
+                alignment: .leading, spacing: 20
             ) {
                 sections
             }
@@ -152,7 +152,7 @@ private struct SportTotal: View {
                 .accessibilityHidden(true)
         }
         .padding(8)
-        .background(.background.secondary, in: .rect(cornerRadius: 8))
+        .surface(cornerRadius: 8)
         .accessibilityElement(children: .combine)
     }
 }

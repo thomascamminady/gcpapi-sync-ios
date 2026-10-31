@@ -46,7 +46,7 @@ struct DashboardView: View {
 
     var body: some View {
         ScrollView {
-            LazyVStack(spacing: isDense ? 10 : 16) {
+            LazyVStack(spacing: isDense ? 8 : 12) {
                 if let refreshProblem {
                     ProblemBanner(problem: refreshProblem)
                 }
@@ -66,7 +66,7 @@ struct DashboardView: View {
             .padding(.horizontal)
             .readableWidth()
         }
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(Color.page)
     }
 }
 
