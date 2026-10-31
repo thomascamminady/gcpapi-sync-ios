@@ -51,7 +51,9 @@ struct MainView: View {
         TabView(selection: selection) {
             if isWide {
                 Tab("Dashboard", systemImage: "rectangle.split.3x1", value: .dashboard) {
-                    DeskView(training: training, health: health) { tab = .settings }
+                    DeskView(
+                        training: training, health: health,
+                        openSettings: Self.isMac ? nil : { tab = .settings })
                 }
             }
             // A wide window's dashboard shows the summary's metrics too.
@@ -74,12 +76,11 @@ struct MainView: View {
             Tab("Settings", systemImage: "gearshape", value: .settings) {
                 SettingsView(lastUpdated: health.lastUpdated, export: export)
             }
-            // A wide window's top tab bar has no room for it in every language: the sidebar and
-            // the dashboard's toolbar open it there.
-            .defaultVisibility(isWide ? .hidden : .automatic, for: .tabBar)
+            // An iPad's top tab bar has no room for it in every language: the sidebar and the
+            // dashboard's toolbar open it there. The Mac's window has room.
+            .defaultVisibility(isWide && !Self.isMac ? .hidden : .automatic, for: .tabBar)
         }
-        // A tab bar on the iPhone, a sidebar on the iPad and the Mac.
-        .tabViewStyle(.sidebarAdaptable)
+        .tabStyle(isMac: Self.isMac)
         // Units change every number; drawing everything again picks them up.
         .id(preferences.settings.units)
         .tabBarMinimizeBehavior(.onScrollDown)
@@ -114,6 +115,12 @@ struct MainView: View {
         .onChange(of: routes.deleted) { Task { await deviceSync.sync() } }
         .onChange(of: preferences.settings) { Task { await deviceSync.sync() } }
         .environment(deviceSync)
+        .focusedSceneValue(\.openSettings) { tab = .settings }
+    }
+
+    /// Whether this is the Mac app, whose tabs are a bar at the top of the window.
+    static var isMac: Bool {
+        ProcessInfo.processInfo.isMacCatalystApp
     }
 
     /// Whether the window is wide enough for the dashboard.
@@ -175,5 +182,31 @@ struct MainView: View {
         export.sync(
             days: days, workouts: data.history, folder: FolderSync(),
             calendar: preferences.settings.exportsToCalendar ? CalendarSync() : nil)
+    }
+}
+
+extension View {
+    /// The tabs as a Liquid Glass bar at the top of the Mac's window; on the iPhone a tab bar,
+    /// on the iPad a tab bar that becomes a sidebar.
+    @ViewBuilder
+    func tabStyle(isMac: Bool) -> some View {
+        if isMac {
+            tabViewStyle(.tabBarOnly)
+        } else {
+            tabViewStyle(.sidebarAdaptable)
+        }
+    }
+}
+
+/// Switches the focused window to its settings, for the menu's Settings… (⌘,).
+private struct OpenSettingsKey: FocusedValueKey {
+    typealias Value = () -> Void
+}
+
+extension FocusedValues {
+    /// Switches the focused window to its settings, for the menu's Settings… (⌘,).
+    var openSettings: (() -> Void)? {
+        get { self[OpenSettingsKey.self] }
+        set { self[OpenSettingsKey.self] = newValue }
     }
 }

@@ -40,6 +40,9 @@ struct GCPAPISyncApp: App {
                 .environment(session)
                 .task { Self.limitWindowSize() }
         }
+        .commands {
+            SettingsCommands()
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background, session.isSignedIn, !session.isDemo {
                 BackgroundRefresh.schedule()
@@ -50,6 +53,19 @@ struct GCPAPISyncApp: App {
             await BackgroundRefresh.run(
                 settings: settings, client: Session.storedClient(), store: .standard,
                 today: .today())
+        }
+    }
+}
+
+/// The app menu's Settings… (⌘,), which opens the settings tab of the focused window.
+struct SettingsCommands: Commands {
+    @FocusedValue(\.openSettings) private var openSettings
+
+    var body: some Commands {
+        CommandGroup(replacing: .appSettings) {
+            Button("Settings…") { openSettings?() }
+                .keyboardShortcut(",")
+                .disabled(openSettings == nil)
         }
     }
 }

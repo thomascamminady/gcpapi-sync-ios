@@ -3624,6 +3624,16 @@
         }
       }
     },
+    "Settings…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen …"
+          }
+        }
+      }
+    },
     "Shade by Value" : {
       "localizations" : {
         "de" : {

@@ -14,8 +14,9 @@ enum DeskRoute: Hashable {
 struct DeskView: View {
     let training: TrainingModel
     let health: HealthModel
-    /// Switches to the settings, which a wide window's tab bar leaves out.
-    let openSettings: () -> Void
+    /// Switches to the settings, which an iPad's tab bar leaves out; `nil` on the Mac, whose
+    /// tab bar has them.
+    let openSettings: (() -> Void)?
     /// How many weeks before this one the table shows.
     @State private var weeksBack = 0
     /// The sport of the monthly statistics, by raw value; empty for all sports.
@@ -36,8 +37,10 @@ struct DeskView: View {
                 .toolbarTitleDisplayMode(.inline)
                 .navigationSubtitle(SyncStatus.text(training.lastUpdated))
                 .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        Button("Settings", systemImage: "gearshape", action: openSettings)
+                    if let openSettings {
+                        ToolbarItem(placement: .primaryAction) {
+                            Button("Settings", systemImage: "gearshape", action: openSettings)
+                        }
                     }
                 }
                 .navigationDestination(for: ActivityRoute.self, destination: activity)
