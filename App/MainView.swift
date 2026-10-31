@@ -62,7 +62,9 @@ struct MainView: View {
                 TrainingView(model: training)
             }
             Tab("Routes", systemImage: RoutesView.symbol, value: .routes) {
-                RoutesView(library: routes, home: home, usualSpeed: usualRunningSpeed)
+                RoutesView(
+                    library: routes, home: home, usualSpeed: usualRunningSpeed,
+                    myRoutes: myRoutes, loadMyRoutes: loadMyRoutes)
             }
             Tab("Settings", systemImage: "gearshape", value: .settings) {
                 SettingsView(lastUpdated: health.lastUpdated, export: export)
@@ -126,6 +128,26 @@ struct MainView: View {
     private var home: GeoPoint? {
         guard case .loaded(let data) = training.phase else { return nil }
         return data.history.lazy.compactMap(\.startPoint).first
+    }
+
+    /// The activities of the last 60 days with a route.
+    private var recentWithRoutes: [Workout] {
+        guard case .loaded(let data) = training.phase, let last = data.loadHistory.last?.date
+        else { return [] }
+        return data.history.filter { $0.startPoint != nil && $0.date > last.adding(days: -60) }
+    }
+
+    /// Their routes, as far as they are loaded: where you usually go, to plan along.
+    private var myRoutes: [[GeoPoint]] {
+        recentWithRoutes.compactMap { workout in
+            training.route(of: workout)?.map {
+                GeoPoint(latitude: $0.latitude, longitude: $0.longitude)
+            }
+        }
+    }
+
+    private func loadMyRoutes() async {
+        await training.loadTracks(for: recentWithRoutes)
     }
 
     /// The median speed of the recent runs, for estimating how long a route takes.

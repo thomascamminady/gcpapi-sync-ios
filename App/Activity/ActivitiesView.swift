@@ -10,9 +10,11 @@ enum ActivityRoute: Hashable {
 enum ActivityLayout: String {
     case list
     case calendar
+    case map
 }
 
-/// The activities tab: every activity of the last 90 days as a list, or month by month.
+/// The activities tab: every activity of the last 90 days as a list, month by month, or as
+/// routes on a map.
 struct ActivitiesView: View {
     let model: TrainingModel
     @SceneStorage("activityLayout") private var layout = ActivityLayout.list
@@ -34,6 +36,7 @@ struct ActivitiesView: View {
                         Picker("Layout", selection: $layout) {
                             Label("List", systemImage: "list.bullet").tag(ActivityLayout.list)
                             Label("Calendar", systemImage: "calendar").tag(ActivityLayout.calendar)
+                            Label("Map", systemImage: "map").tag(ActivityLayout.map)
                         }
                         .pickerStyle(.segmented)
                         .labelStyle(.iconOnly)
@@ -53,6 +56,7 @@ struct ActivitiesView: View {
             switch layout {
             case .list: ActivityListView(data: data)
             case .calendar: ActivityCalendarView(model: model)
+            case .map: ActivityMapView(model: model, data: data)
             }
         case .failed(let problem):
             ContentUnavailableView {

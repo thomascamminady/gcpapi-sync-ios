@@ -18,6 +18,9 @@ struct RoutesView: View {
     /// Where new routes start, and the usual running speed for time estimates.
     let home: GeoPoint?
     let usualSpeed: Double?
+    /// The routes of recent activities, drawn under the route being planned.
+    var myRoutes: [[GeoPoint]] = []
+    var loadMyRoutes: (() async -> Void)?
     @State private var path: [RouteScreen] = []
 
     var body: some View {
@@ -27,6 +30,7 @@ struct RoutesView: View {
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button("New Route", systemImage: "plus") { path.append(.new) }
+                            .accessibilityIdentifier("route.new")
                     }
                 }
                 .navigationDestination(for: RouteScreen.self) { screen in
@@ -34,10 +38,11 @@ struct RoutesView: View {
                     case .new:
                         RouteEditorView(
                             route: PlannedRoute(), library: library, home: home,
-                            usualSpeed: usualSpeed)
+                            usualSpeed: usualSpeed, myRoutes: myRoutes, loadMyRoutes: loadMyRoutes)
                     case .edit(let route):
                         RouteEditorView(
-                            route: route, library: library, home: home, usualSpeed: usualSpeed)
+                            route: route, library: library, home: home, usualSpeed: usualSpeed,
+                            myRoutes: myRoutes, loadMyRoutes: loadMyRoutes)
                     }
                 }
         }
@@ -101,8 +106,21 @@ struct RouteFile: Transferable {
         DataRepresentation(exportedContentType: .xml) { file in
             Data(file.route.gpx().utf8)
         }
-        .suggestedFileName { file in
-            "\(file.route.name.isEmpty ? String(localized: "Planned Route") : file.route.name).gpx"
+        .suggestedFileName { file in "\(file.route.title).gpx" }
+    }
+}
+
+/// A planned route as a FIT course, which Garmin devices follow: copied into a device's
+/// `GARMIN/NewFiles` folder, or imported into Garmin Connect under Courses.
+struct RouteCourseFile: Transferable {
+    let route: PlannedRoute
+    /// Metres per second the course is timed at.
+    let speed: Double
+
+    static var transferRepresentation: some TransferRepresentation {
+        DataRepresentation(exportedContentType: .data) { file in
+            file.route.fitCourse(speed: file.speed)
         }
+        .suggestedFileName { file in "\(file.route.title).fit" }
     }
 }

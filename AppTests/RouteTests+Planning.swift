@@ -61,6 +61,30 @@ private struct FailingRouter: Router {
         #expect(PlannedRoute().gpx().contains(String(localized: "Planned Route")))
     }
 
+    @Test func fitCoursesFollowThePath() throws {
+        let route = PlannedRoute(
+            name: "Zürichsee Runde, lang", waypoints: [start, east, north],
+            legs: [[start, east], [east, north]])
+        let begin = FITActivity.epoch.addingTimeInterval(1_100_000_000)
+        let data = route.fitCourse(speed: 4, start: begin)
+        let course = try FITActivity(decoding: data)
+        #expect(course.records.count == 3)
+        for (record, point) in zip(course.records, route.path) {
+            #expect(abs((record.latitude ?? 0) - point.latitude) < 1e-6)
+            #expect(abs((record.longitude ?? 0) - point.longitude) < 1e-6)
+        }
+        let distance = try #require(course.records.last?.distance)
+        #expect(abs(distance - route.distance) < 0.01)
+        // Timed at 4 m/s from the start.
+        let seconds = try #require(course.records.last?.time.timeIntervalSince(begin))
+        #expect(abs(seconds - route.distance / 4) <= 1)
+        #expect(course.timerEvents.map(\.isStart) == [true, false])
+        // The name is cut to 15 bytes without breaking a character ("Zürichsee Rund" is 15),
+        // ends with a zero, and running follows.
+        let name = Data("Zürichsee Rund".utf8) + Data([0, 1])
+        #expect(data.contains(name))
+    }
+
     @Test func routesAreSavedAndRestored() {
         let file = URL.temporaryDirectory.appending(path: "routes-\(UUID().uuidString).json")
         defer { try? FileManager.default.removeItem(at: file) }

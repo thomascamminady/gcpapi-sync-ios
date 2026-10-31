@@ -219,6 +219,31 @@ final class TrainingModel {
         }
     }
 
+    /// Download and analyze the recordings of `workouts`, `width` at a time, skipping those
+    /// loaded already.
+    func loadTracks(for workouts: [Workout], width: Int = 4) async {
+        var pending = workouts.filter { tracks[$0.id] == nil }[...]
+        await withTaskGroup(of: Void.self) { group in
+            for _ in 0..<max(width, 1) {
+                guard let next = pending.popFirst() else { break }
+                group.addTask { await self.loadTrack(for: next) }
+            }
+            while await group.next() != nil {
+                if let next = pending.popFirst() {
+                    group.addTask { await self.loadTrack(for: next) }
+                }
+            }
+        }
+    }
+
+    /// The route of `workout`'s recording, once it is loaded.
+    func route(of workout: Workout) -> [ActivityTrack.Point]? {
+        guard case .loaded(let track) = tracks[workout.id], track.route.count > 1 else {
+            return nil
+        }
+        return track.route
+    }
+
     /// Load unless the data is less than `maxAge` seconds old.
     func loadIfNeeded(maxAge: TimeInterval = 15 * 60) async {
         if let lastUpdated, now().timeIntervalSince(lastUpdated) < maxAge {

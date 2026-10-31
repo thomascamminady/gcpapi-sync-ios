@@ -1,6 +1,7 @@
 import Foundation
 
-/// Writes the parts of a FIT file that ``FITActivity`` reads, for the demo and the tests.
+/// Writes the parts of a FIT file that ``FITActivity`` reads, for the demo and the tests, and
+/// courses of planned routes.
 nonisolated enum FITWriter {
     /// A FIT file of `activity`'s records, laps, sets and timer events.
     static func encode(_ activity: FITActivity) -> Data {
@@ -15,6 +16,102 @@ nonisolated enum FITWriter {
             body.put(0, size: 1)
             body.put(event.isStart ? 0 : 4, size: 1)
         }
+        return file(body)
+    }
+
+    /// A FIT course along `points`, timed at `speed` metres per second from `start`: a file
+    /// Garmin devices follow as a course, copied to one or imported into Garmin Connect.
+    static func course(name: String, points: [GeoPoint], speed: Double, start: Date) -> Data {
+        var distances = [0.0]
+        for (point, next) in zip(points, points.dropFirst()) {
+            distances.append((distances.last ?? 0) + point.distance(to: next))
+        }
+        distances = Array(distances.prefix(points.count))
+        let pace = max(speed, 0.5)
+        let times = distances.map { seconds(start) + Int64(($0 / pace).rounded()) }
+        let end = times.last ?? seconds(start)
+        var body = Bytes()
+        writeCourseHeader(name: name, start: start, to: &body)
+        writeCourseLap(
+            points: points, distance: distances.last ?? 0, times: seconds(start)...end,
+            to: &body)
+        // The timer starts, the points follow, the timer stops.
+        body.define(local: 3, global: 21, fields: [(253, 4, 0x86), (0, 1, 0x00), (1, 1, 0x00)])
+        body.append(0x03)
+        body.put(seconds(start), size: 4)
+        body.put(0, size: 1)
+        body.put(0, size: 1)
+        body.define(
+            local: 4, global: 20,
+            fields: [(253, 4, 0x86), (0, 4, 0x85), (1, 4, 0x85), (5, 4, 0x86)])
+        for (index, point) in points.enumerated() {
+            body.append(0x04)
+            body.put(times[index], size: 4)
+            body.put(semicircles(point.latitude), size: 4)
+            body.put(semicircles(point.longitude), size: 4)
+            body.put(scaled(distances[index], scale: 100), size: 4)
+        }
+        body.append(0x03)
+        body.put(end, size: 4)
+        body.put(0, size: 1)
+        body.put(4, size: 1)
+        return file(body)
+    }
+
+    /// The file ID of a course made by a development tool, and the course's name and sport.
+    private static func writeCourseHeader(name: String, start: Date, to body: inout Bytes) {
+        body.define(
+            local: 0, global: 0,
+            fields: [(0, 1, 0x00), (1, 2, 0x84), (2, 2, 0x84), (4, 4, 0x86), (3, 4, 0x8C)])
+        body.append(0x00)
+        body.put(6, size: 1)
+        body.put(255, size: 2)
+        body.put(0, size: 2)
+        body.put(seconds(start), size: 4)
+        body.put(seconds(start) & 0x7FFF_FFFF, size: 4)
+        // At most 15 bytes of whole characters and a terminating zero, for running.
+        body.define(local: 1, global: 31, fields: [(5, 16, 0x07), (4, 1, 0x00)])
+        body.append(0x01)
+        var title: [UInt8] = []
+        for character in name {
+            let bytes = Array(String(character).utf8)
+            guard title.count + bytes.count <= 15 else { break }
+            title += bytes
+        }
+        body.bytes += title + Array(repeating: 0, count: 16 - title.count)
+        body.put(1, size: 1)
+    }
+
+    /// One lap over the whole course, from the first of `times` to the last.
+    private static func writeCourseLap(
+        points: [GeoPoint], distance: Double, times: ClosedRange<Int64>, to body: inout Bytes
+    ) {
+        let duration = Double(times.upperBound - times.lowerBound)
+        body.define(
+            local: 2, global: 19,
+            fields: [
+                (253, 4, 0x86), (2, 4, 0x86), (3, 4, 0x85), (4, 4, 0x85), (5, 4, 0x85),
+                (6, 4, 0x85), (7, 4, 0x86), (8, 4, 0x86), (9, 4, 0x86),
+            ])
+        body.append(0x02)
+        body.put(times.upperBound, size: 4)
+        body.put(times.lowerBound, size: 4)
+        body.put(points.first.map { semicircles($0.latitude) }, size: 4, invalid: 0x7FFF_FFFF)
+        body.put(points.first.map { semicircles($0.longitude) }, size: 4, invalid: 0x7FFF_FFFF)
+        body.put(points.last.map { semicircles($0.latitude) }, size: 4, invalid: 0x7FFF_FFFF)
+        body.put(points.last.map { semicircles($0.longitude) }, size: 4, invalid: 0x7FFF_FFFF)
+        body.put(scaled(duration, scale: 1000), size: 4)
+        body.put(scaled(duration, scale: 1000), size: 4)
+        body.put(scaled(distance, scale: 100), size: 4)
+    }
+
+    /// Degrees in FIT's semicircles.
+    private static func semicircles(_ degrees: Double) -> Int64 {
+        Int64((degrees * 2_147_483_648.0 / 180).rounded())
+    }
+
+    /// The header, `body` and the checksum.
+    private static func file(_ body: Bytes) -> Data {
         var file = Bytes()
         file.append(14)
         file.append(0x20)

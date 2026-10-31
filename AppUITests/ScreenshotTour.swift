@@ -52,6 +52,17 @@ final class ScreenshotTour: XCTestCase {
             case "activities":
                 open(app.buttons["workout.running"].firstMatch, in: app, named: "\(prefix)-run")
                 select(index, symbol: tabs[index], in: app)
+                // The map of the week's routes, then back to the list.
+                app.buttons["map"].firstMatch.tap()
+                sleep(4)
+                keep(app, named: "\(prefix)-map")
+                app.buttons["list.bullet"].firstMatch.tap()
+            case "routes":
+                // Planning a route over the routes of recent activities.
+                app.buttons["route.new"].firstMatch.tap()
+                sleep(4)
+                keep(app, named: "\(prefix)-new")
+                select(index, symbol: tabs[index], in: app)
             default:
                 break
             }
