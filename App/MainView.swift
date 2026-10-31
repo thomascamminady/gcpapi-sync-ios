@@ -24,6 +24,7 @@ struct MainView: View {
     @State private var training: TrainingModel
     @State private var export: DataExport
     @State private var routes: RouteLibrary
+    @State private var deviceSync: DeviceSync
     /// Whether loaded data may leave the app: not in the demo.
     private let exportsData: Bool
     @SceneStorage("selectedTab") private var tab = AppTab.dashboard
@@ -38,7 +39,11 @@ struct MainView: View {
         _health = State(initialValue: HealthModel(client: client, store: snapshots))
         _training = State(initialValue: training)
         _export = State(initialValue: DataExport(client: client))
-        _routes = State(initialValue: RouteLibrary(store: snapshots == nil ? nil : .standard))
+        let routes = RouteLibrary(store: snapshots == nil ? nil : .standard)
+        _routes = State(initialValue: routes)
+        _deviceSync = State(
+            initialValue: DeviceSync(
+                routes: routes, preferences: .shared, isEnabled: snapshots != nil))
         exportsData = snapshots != nil
     }
 
@@ -100,9 +105,15 @@ struct MainView: View {
             Task {
                 async let week: Void = health.loadIfNeeded(maxAge: 5 * 60)
                 async let activities: Void = training.loadIfNeeded(maxAge: 5 * 60)
-                _ = await (week, activities)
+                async let shared: Void = deviceSync.sync()
+                _ = await (week, activities, shared)
             }
         }
+        // Routes and settings reach the other devices as soon as they change.
+        .onChange(of: routes.routes) { Task { await deviceSync.sync() } }
+        .onChange(of: routes.deleted) { Task { await deviceSync.sync() } }
+        .onChange(of: preferences.settings) { Task { await deviceSync.sync() } }
+        .environment(deviceSync)
     }
 
     /// Whether the window is wide enough for the dashboard.

@@ -5,6 +5,8 @@ nonisolated struct PlannedRoute: Identifiable, Hashable, Codable, Sendable {
     let id: UUID
     var name: String
     let created: Date
+    /// When the route was last saved, which decides between the versions of two devices.
+    var modified: Date
     /// The points the user placed, in order.
     var waypoints: [GeoPoint]
     /// The path from each waypoint to the next, along roads and paths or straight; one fewer
@@ -12,12 +14,13 @@ nonisolated struct PlannedRoute: Identifiable, Hashable, Codable, Sendable {
     var legs: [[GeoPoint]]
 
     init(
-        id: UUID = UUID(), name: String = "", created: Date = .now, waypoints: [GeoPoint] = [],
-        legs: [[GeoPoint]] = []
+        id: UUID = UUID(), name: String = "", created: Date = .now, modified: Date? = nil,
+        waypoints: [GeoPoint] = [], legs: [[GeoPoint]] = []
     ) {
         self.id = id
         self.name = name
         self.created = created
+        self.modified = modified ?? created
         self.waypoints = waypoints
         self.legs = legs
     }
@@ -100,20 +103,47 @@ nonisolated struct StraightRouter: Router {
 /// The routes the user saved, kept on the device (and in its backups: they cannot be fetched
 /// again).
 nonisolated struct RouteStore: Sendable {
+    /// The routes and the ids of those deleted, with when.
+    struct Saved: Codable, Sendable {
+        var routes: [PlannedRoute] = []
+        var deleted: [UUID: Date] = [:]
+    }
+
     let file: URL
 
     static let standard = Self(
         file: URL.applicationSupportDirectory.appending(path: "PlannedRoutes.json"))
 
     func load() -> [PlannedRoute] {
-        guard let data = try? Data(contentsOf: file) else { return [] }
-        return (try? JSONDecoder().decode([PlannedRoute].self, from: data)) ?? []
+        loadSaved().routes
     }
 
-    func save(_ routes: [PlannedRoute]) throws {
+    /// The routes and deletions, also from files of earlier versions, which hold only routes.
+    func loadSaved() -> Saved {
+        guard let data = try? Data(contentsOf: file) else { return Saved() }
+        if let saved = try? JSONDecoder().decode(Saved.self, from: data) {
+            return saved
+        }
+        return Saved(routes: (try? JSONDecoder().decode([PlannedRoute].self, from: data)) ?? [])
+    }
+
+    func save(_ routes: [PlannedRoute], deleted: [UUID: Date] = [:]) throws {
         try FileManager.default.createDirectory(
             at: file.deletingLastPathComponent(), withIntermediateDirectories: true)
-        try JSONEncoder().encode(routes).write(
+        try JSONEncoder().encode(Saved(routes: routes, deleted: deleted)).write(
             to: file, options: [.atomic, .completeFileProtection])
+    }
+}
+
+extension PlannedRoute {
+    /// Routes of earlier versions have no modification date: their creation stands in.
+    nonisolated init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        created = try container.decode(Date.self, forKey: .created)
+        modified = try container.decodeIfPresent(Date.self, forKey: .modified) ?? created
+        waypoints = try container.decode([GeoPoint].self, forKey: .waypoints)
+        legs = try container.decode([[GeoPoint]].self, forKey: .legs)
     }
 }
