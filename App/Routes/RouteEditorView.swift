@@ -5,14 +5,24 @@ import SwiftUI
 struct RouteEditorView: View {
     let library: RouteLibrary
     let usualSpeed: Double?
+    /// The routes of recent activities, to plan along, and how to load them.
+    let myRoutes: [[GeoPoint]]
+    let loadMyRoutes: (() async -> Void)?
+    @AppStorage("routes.showsMyRoutes") private var showsMyRoutes = true
     @State private var planner: RoutePlanner
     @State private var position: MapCameraPosition
     @State private var name: String
     @Environment(\.dismiss) private var dismiss
 
-    init(route: PlannedRoute, library: RouteLibrary, home: GeoPoint?, usualSpeed: Double?) {
+    init(
+        route: PlannedRoute, library: RouteLibrary, home: GeoPoint?, usualSpeed: Double?,
+        myRoutes: [[GeoPoint]] = [],
+        loadMyRoutes: (() async -> Void)? = nil
+    ) {
         self.library = library
         self.usualSpeed = usualSpeed
+        self.myRoutes = myRoutes
+        self.loadMyRoutes = loadMyRoutes
         _planner = State(initialValue: RoutePlanner(router: MapsRouter(), route: route))
         _name = State(initialValue: route.name)
         let center = route.waypoints.first ?? home
@@ -30,6 +40,7 @@ struct RouteEditorView: View {
     var body: some View {
         MapReader { proxy in
             Map(position: $position) {
+                myRoutesLayer
                 MapPolyline(coordinates: planner.route.path.map(\.coordinate))
                     .stroke(
                         .tint, style: StrokeStyle(lineWidth: 5, lineCap: .round, lineJoin: .round))
@@ -57,8 +68,17 @@ struct RouteEditorView: View {
         }
         .ignoresSafeArea(edges: .bottom)
         .safeAreaInset(edge: .bottom) {
-            RoutePanel(planner: planner, name: $name, usualSpeed: usualSpeed)
-                .padding()
+            RoutePanel(
+                planner: planner, name: $name, usualSpeed: usualSpeed,
+                showsMyRoutes: $showsMyRoutes
+            )
+            .padding()
+            .readableWidth(640)
+        }
+        .task(id: showsMyRoutes) {
+            if showsMyRoutes {
+                await loadMyRoutes?()
+            }
         }
         .navigationTitle(name.isEmpty ? String(localized: "New Route") : name)
         .navigationBarTitleDisplayMode(.inline)
@@ -70,6 +90,18 @@ struct RouteEditorView: View {
                     dismiss()
                 }
                 .disabled(planner.waypoints.count < 2)
+            }
+        }
+    }
+
+    /// Recent activities' routes, faint, under the route being planned.
+    @MapContentBuilder private var myRoutesLayer: some MapContent {
+        if showsMyRoutes {
+            ForEach(Array(myRoutes.enumerated()), id: \.offset) { _, route in
+                MapPolyline(coordinates: route.map(\.coordinate))
+                    .stroke(
+                        Color.secondary.opacity(0.55),
+                        style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
             }
         }
     }
@@ -88,6 +120,7 @@ private struct RoutePanel: View {
     let planner: RoutePlanner
     @Binding var name: String
     let usualSpeed: Double?
+    @Binding var showsMyRoutes: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -103,12 +136,14 @@ private struct RoutePanel: View {
                 .foregroundStyle(.secondary)
             Toggle("Follow Roads and Paths", isOn: followsPaths)
                 .font(.subheadline)
+            Toggle("Show My Routes", isOn: $showsMyRoutes)
+                .font(.subheadline)
             if let problem = planner.problem {
                 Label(problem.message, systemImage: problem.symbol)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
-            RouteControls(planner: planner, name: name)
+            RouteControls(planner: planner, usualSpeed: usualSpeed)
         }
         .padding()
         .glassEffect(in: .rect(cornerRadius: 24))
@@ -132,7 +167,7 @@ private struct RoutePanel: View {
 /// Undo, back to start, reverse and export.
 private struct RouteControls: View {
     let planner: RoutePlanner
-    let name: String
+    let usualSpeed: Double?
 
     var body: some View {
         HStack {
@@ -145,11 +180,19 @@ private struct RouteControls: View {
             Button("Reverse", systemImage: "arrow.left.arrow.right") { planner.reverse() }
                 .disabled(planner.waypoints.count < 2)
             Spacer()
-            ShareLink(
-                item: RouteFile(route: planner.route),
-                preview: SharePreview(name.isEmpty ? String(localized: "Planned Route") : name)
-            ) {
-                Label("Export GPX", systemImage: "square.and.arrow.up")
+            Menu("Export", systemImage: "square.and.arrow.up") {
+                ShareLink(
+                    item: RouteCourseFile(route: planner.route, speed: usualSpeed ?? 3),
+                    preview: SharePreview(planner.route.title)
+                ) {
+                    Label("Course for Garmin (FIT)", systemImage: "applewatch")
+                }
+                ShareLink(
+                    item: RouteFile(route: planner.route),
+                    preview: SharePreview(planner.route.title)
+                ) {
+                    Label("Export GPX", systemImage: "map")
+                }
             }
             .disabled(planner.waypoints.count < 2)
         }

@@ -974,6 +974,16 @@
         }
       }
     },
+    "Close" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schließen"
+          }
+        }
+      }
+    },
     "Color Map" : {
       "localizations" : {
         "de" : {
@@ -1074,6 +1084,16 @@
         }
       }
     },
+    "Course for Garmin (FIT)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strecke für Garmin (FIT)"
+          }
+        }
+      }
+    },
     "Crunch" : {
       "localizations" : {
         "de" : {
@@ -1150,6 +1170,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Daten aus Garmin Connect. Nicht mit Garmin verbunden."
+          }
+        }
+      }
+    },
+    "Date" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datum"
           }
         }
       }
@@ -3558,6 +3588,16 @@
         }
       }
     },
+    "Show My Routes" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meine Strecken zeigen"
+          }
+        }
+      }
+    },
     "Shown" : {
       "localizations" : {
         "de" : {
@@ -4534,6 +4574,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "^[%lld Datei](inflect: true)"
+          }
+        }
+      }
+    },
+    "^[%lld route](inflect: true) loading" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lädt ^[%lld Strecke](inflect: true)"
           }
         }
       }

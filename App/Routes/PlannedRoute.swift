@@ -49,6 +49,16 @@ nonisolated struct PlannedRoute: Identifiable, Hashable, Codable, Sendable {
     }
 
     /// The route as GPX, for importing as a course in Garmin Connect or other apps.
+    /// The name, or `Planned Route` without one.
+    var title: String {
+        name.isEmpty ? String(localized: "Planned Route") : name
+    }
+
+    /// The route as a FIT course, timed at `speed` metres per second from `start`.
+    func fitCourse(speed: Double, start: Date = .now) -> Data {
+        FITWriter.course(name: title, points: path, speed: speed, start: start)
+    }
+
     func gpx() -> String {
         let title = name.isEmpty ? String(localized: "Planned Route") : name
         var lines = [

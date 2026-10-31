@@ -12,6 +12,15 @@ struct GCPAPISyncApp: App {
             session.startDemo()
         }
         _session = State(initialValue: session)
+        #if DEBUG
+            // Development builds connect with the key in GARMIN_PERSONAL_API_KEY, once, so that
+            // it need not be pasted; the Keychain keeps it from then on.
+            if !session.isSignedIn,
+                let key = ProcessInfo.processInfo.environment["GARMIN_PERSONAL_API_KEY"]
+            {
+                Task { try? await session.connect(apiKey: key) }
+            }
+        #endif
     }
 
     @Environment(\.scenePhase) private var scenePhase

@@ -269,6 +269,44 @@ nonisolated private func demoRunActivity() -> SummarizedActivity? {
         #expect(model.tracks[workout.id] == .loaded(track))
     }
 
+    @Test func manyRecordingsLoadAFewAtATime() async throws {
+        let run = try demoRun()
+        let activity = try #require(SummarizedActivity.sample(id: run.id))
+        let data = FITWriter.encode(.sample(of: activity))
+        let gauge = Gauge()
+        let model = model { _ in
+            await gauge.enter()
+            try await Task.sleep(for: .milliseconds(20))
+            await gauge.leave()
+            return data
+        }
+        // Ten copies of the run under different ids.
+        let runs = try (1...10).map { offset in
+            var copy = activity
+            copy.activityId = activity.activityId + offset
+            return try #require(Workout(copy))
+        }
+        await model.loadTracks(for: runs, width: 3)
+        #expect(runs.allSatisfy { model.route(of: $0) != nil })
+        #expect(await gauge.most <= 3)
+        #expect(await gauge.most >= 2)
+    }
+
+    /// How many downloads run at once, at most.
+    private actor Gauge {
+        private var current = 0
+        private(set) var most = 0
+
+        func enter() {
+            current += 1
+            most = max(most, current)
+        }
+
+        func leave() {
+            current -= 1
+        }
+    }
+
     @Test func activitiesWithoutARecording() async throws {
         let workout = try demoRun()
         let manual = model { _ in nil }

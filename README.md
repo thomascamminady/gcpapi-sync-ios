@@ -119,6 +119,10 @@ pick the phone as the run destination:
 echo 'DEVELOPMENT_TEAM = ABCDE12345' > Config/Signing.local.xcconfig
 ```
 
+Debug builds connect on their own when started with `GARMIN_PERSONAL_API_KEY` set (in the
+scheme's environment, or `open --env` on the Mac), and keep the key in the Keychain from then on.
+Release builds ignore it.
+
 A free Apple Account works: its Personal Team ID is shown in Xcode under *Settings → Apple
 Accounts*. The phone needs Developer Mode (*Settings → Privacy & Security*), and apps signed by a
 Personal Team must be trusted once under *Settings → General → VPN & Device Management* and
