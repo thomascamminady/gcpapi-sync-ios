@@ -26,7 +26,7 @@ struct MonthActivities: View {
             ActivityLogTable(
                 workouts: shown, days: Array(Set(shown.map(\.date))).sorted(by: >)
             )
-            .padding(20)
+            .padding(16)
         }
         .navigationTitle(title)
         .toolbarTitleDisplayMode(.inline)

@@ -228,9 +228,9 @@ struct OverviewCard: View {
                 }
             }
         }
-        .padding(20)
+        .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(uiColor: .secondarySystemGroupedBackground), in: .rect(cornerRadius: 26))
+        .surface(cornerRadius: 14)
         .contentShape(.rect(cornerRadius: 26))
         .accessibilityElement(children: .combine)
         .accessibilityHint("Shows details")

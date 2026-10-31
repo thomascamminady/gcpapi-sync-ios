@@ -1,10 +1,29 @@
 import SwiftUI
 import UIKit
 
+extension Color {
+    /// The background of every screen: plain white, or black in dark mode.
+    static var page: Color { Color(uiColor: .systemBackground) }
+}
+
 extension View {
-    /// The rounded, grouped background of dashboard cards; tighter in dense mode.
+    /// A card on the page: outlined by a hairline, tighter in dense mode.
     func cardStyle() -> some View {
         modifier(CardStyle())
+    }
+
+    /// The page's color with a hairline around it, rounded by `cornerRadius`.
+    func surface(cornerRadius: CGFloat = 14) -> some View {
+        background(Color.page, in: .rect(cornerRadius: cornerRadius))
+            .overlay {
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .strokeBorder(Color(uiColor: .separator).opacity(0.6), lineWidth: 1)
+            }
+    }
+
+    /// Lists and forms on the plain page instead of the grouped gray.
+    func pageBackground() -> some View {
+        scrollContentBackground(.hidden).background(Color.page)
     }
 
     /// Content no wider than reads well, centered on iPad and the Mac.
@@ -23,11 +42,9 @@ private struct CardStyle: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .padding(isDense ? 12 : 20)
+            .padding(isDense ? 10 : 14)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                Color(uiColor: .secondarySystemGroupedBackground),
-                in: .rect(cornerRadius: isDense ? 18 : 26))
+            .surface(cornerRadius: isDense ? 10 : 14)
     }
 }
 

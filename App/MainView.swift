@@ -84,6 +84,9 @@ struct MainView: View {
         .id(preferences.settings.units)
         .tabBarMinimizeBehavior(.onScrollDown)
         .tint(ColorRole.accent.color)
+        // Lists and forms on the plain page, like every other screen.
+        .scrollContentBackground(.hidden)
+        .background(Color.page)
         .environment(\.isDense, preferences.isDense)
         .onChange(of: preferences.settings.units) {
             training.resetTracks()

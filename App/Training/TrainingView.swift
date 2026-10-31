@@ -80,7 +80,7 @@ struct TrainingDashboard: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: isDense ? 10 : 16) {
+            VStack(spacing: isDense ? 8 : 12) {
                 if let refreshProblem {
                     ProblemBanner(problem: refreshProblem)
                 }
@@ -88,9 +88,9 @@ struct TrainingDashboard: View {
                 LazyVGrid(
                     columns: [
                         GridItem(
-                            .adaptive(minimum: 440), spacing: isDense ? 10 : 16, alignment: .top)
+                            .adaptive(minimum: 440), spacing: isDense ? 8 : 12, alignment: .top)
                     ],
-                    spacing: isDense ? 10 : 16
+                    spacing: isDense ? 8 : 12
                 ) {
                     NavigationLink(value: TrainingRoute.load) {
                         LoadCard(days: data.load)
@@ -108,7 +108,7 @@ struct TrainingDashboard: View {
             .padding(.horizontal)
             .readableWidth(1400)
         }
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(Color.page)
     }
 
     @ViewBuilder private var recoveryCard: some View {

@@ -123,23 +123,22 @@ struct DeskView: View {
             HStack(alignment: .top, spacing: 0) {
                 ScrollView {
                     tables(data, isNarrow: width - Self.panelWidth < 900)
-                        .padding(20)
+                        .padding(16)
                 }
                 Divider()
                 ScrollView {
                     SidePanel(data: data, health: healthHistory)
-                        .padding(20)
+                        .padding(16)
                 }
                 .frame(width: Self.panelWidth)
-                .background(.background.secondary)
             }
         } else {
             ScrollView {
-                VStack(alignment: .leading, spacing: 28) {
+                VStack(alignment: .leading, spacing: 20) {
                     tables(data, isNarrow: width < 900)
                     SidePanel(data: data, health: healthHistory, isGrid: true)
                 }
-                .padding(20)
+                .padding(16)
             }
         }
     }
@@ -157,7 +156,7 @@ struct DeskView: View {
             sport.map { sport in data.history.filter { $0.sport == sport } } ?? data.history
         let months = ActivityTotals.months(
             workouts, count: Self.coveredMonths(from: earliest, through: today), through: today)
-        return VStack(alignment: .leading, spacing: 28) {
+        return VStack(alignment: .leading, spacing: 20) {
             VStack(alignment: .leading, spacing: 8) {
                 WeekNavigator(
                     start: start, end: end, weeksBack: $weeksBack, canGoBack: start > earliest)

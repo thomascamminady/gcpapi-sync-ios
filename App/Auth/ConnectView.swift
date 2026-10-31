@@ -24,7 +24,7 @@ struct ConnectView: View {
                 .readableWidth(560)
             }
             .scrollDismissesKeyboard(.interactively)
-            .background(Color(uiColor: .systemGroupedBackground))
+            .background(Color.page)
         }
     }
 
@@ -82,7 +82,7 @@ struct ConnectView: View {
                     .onSubmit(connect)
                     .padding(.horizontal, 16)
                     .frame(height: 52)
-                    .background(Color(uiColor: .secondarySystemGroupedBackground), in: .capsule)
+                    .background(Color(uiColor: .secondarySystemBackground), in: .capsule)
                 PasteButton(payloadType: String.self) { strings in
                     apiKey = strings.first ?? ""
                 }

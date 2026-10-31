@@ -23,11 +23,11 @@ struct WorkoutDetailView: View {
                 if width >= Self.twoColumns {
                     // The overview on the left, the recording's charts and tables on the right.
                     HStack(alignment: .top, spacing: 16) {
-                        VStack(alignment: .leading, spacing: 16) {
+                        VStack(alignment: .leading, spacing: 12) {
                             overview
                         }
                         .frame(maxWidth: .infinity)
-                        VStack(alignment: .leading, spacing: 16) {
+                        VStack(alignment: .leading, spacing: 12) {
                             recording
                         }
                         .frame(maxWidth: .infinity)
@@ -35,7 +35,7 @@ struct WorkoutDetailView: View {
                     .frame(maxWidth: 1600)
                     .frame(maxWidth: .infinity)
                 } else {
-                    VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 12) {
                         header
                         map
                         stats
@@ -56,7 +56,7 @@ struct WorkoutDetailView: View {
         } action: {
             width = $0
         }
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(Color.page)
         .navigationTitle(workout.name)
         .navigationBarTitleDisplayMode(.inline)
         .task { await model.loadTrack(for: workout) }
@@ -418,7 +418,7 @@ private struct StatTile: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
-        .background(Color(uiColor: .secondarySystemGroupedBackground), in: .rect(cornerRadius: 16))
+        .surface(cornerRadius: 14)
         .accessibilityElement(children: .combine)
     }
 }

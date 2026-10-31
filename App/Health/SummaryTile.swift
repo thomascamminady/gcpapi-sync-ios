@@ -94,7 +94,7 @@ struct SummaryTile: View {
         }
         .padding(isDense ? 9 : 14)
         .frame(maxWidth: .infinity, minHeight: isDense ? 92 : 126, alignment: .leading)
-        .background(Color(uiColor: .secondarySystemGroupedBackground), in: .rect(cornerRadius: 20))
+        .surface(cornerRadius: 14)
         .contentShape(.rect(cornerRadius: 20))
         .accessibilityElement(children: .combine)
         .accessibilityHint("Shows details")

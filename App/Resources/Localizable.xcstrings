@@ -501,6 +501,16 @@
         }
       }
     },
+    "Add a Point" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkt hinzufügen"
+          }
+        }
+      }
+    },
     "Adds a calendar named Activities to the Calendar app with your activities of the last 365 days, kept up to date. Calendar access is asked for only now and used only for this calendar; it syncs wherever your calendars sync." : {
       "localizations" : {
         "de" : {
@@ -1000,12 +1010,12 @@
         }
       }
     },
-    "Click the map to add a point; the route follows roads and paths to it. Drag a point to move it, right-click it to remove it." : {
+    "Click the map to add a point; the route follows roads and paths to it. Drag a point to move it, right-click it to remove it; drag the dot in the middle of a stretch to bend the route through a new point." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Klicke auf die Karte, um einen Punkt hinzuzufügen; die Route folgt Straßen und Wegen dorthin. Ziehe einen Punkt, um ihn zu verschieben, und klicke mit der rechten Maustaste, um ihn zu entfernen."
+            "value" : "Klicke auf die Karte, um einen Punkt hinzuzufügen; die Route folgt Straßen und Wegen dorthin. Ziehe einen Punkt, um ihn zu verschieben, klicke mit der rechten Maustaste, um ihn zu entfernen, und ziehe den Punkt in der Mitte eines Abschnitts, um die Route über einen neuen Punkt zu führen."
           }
         }
       }
@@ -4074,12 +4084,12 @@
         }
       }
     },
-    "Tap the map to add a point; the route follows roads and paths to it. Drag a point to move it, touch and hold it to remove it." : {
+    "Tap the map to add a point; the route follows roads and paths to it. Drag a point to move it, touch and hold it to remove it; drag the dot in the middle of a stretch to bend the route through a new point." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tippe auf die Karte, um einen Punkt hinzuzufügen; die Route folgt Straßen und Wegen dorthin. Ziehe einen Punkt, um ihn zu verschieben, und halte ihn gedrückt, um ihn zu entfernen."
+            "value" : "Tippe auf die Karte, um einen Punkt hinzuzufügen; die Route folgt Straßen und Wegen dorthin. Ziehe einen Punkt, um ihn zu verschieben, halte ihn gedrückt, um ihn zu entfernen, und ziehe den Punkt in der Mitte eines Abschnitts, um die Route über einen neuen Punkt zu führen."
           }
         }
       }
