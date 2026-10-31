@@ -52,7 +52,10 @@ struct SidePanel: View {
         return PanelSection(title: "This Month") {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 130), spacing: 8)], spacing: 8) {
                 ForEach(ActivityTotals.bySport(month), id: \.sport) { item in
-                    SportTotal(sport: item.sport, totals: item.totals)
+                    NavigationLink(value: DeskRoute.month(first, item.sport)) {
+                        SportTotal(sport: item.sport, totals: item.totals)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
             if month.isEmpty {
@@ -70,7 +73,9 @@ struct SidePanel: View {
                     label: Self.raceName(prediction.metres),
                     value: Format.clock(seconds: prediction.seconds),
                     detail: Format.pace(
-                        metresPerSecond: prediction.metresPerSecond, sport: .running))
+                        metresPerSecond: prediction.metresPerSecond, sport: .running)
+                )
+                .linked(to: Route.metric(.vo2max))
             }
             Text("From the VO2max estimated from your runs, by Daniels' formulas.")
                 .font(.caption)
@@ -85,7 +90,9 @@ struct SidePanel: View {
                     PanelRow(
                         label: intensity.title,
                         value: Self.paceRange(speeds),
-                        detail: Self.shareRange(intensity.shares))
+                        detail: Self.shareRange(intensity.shares)
+                    )
+                    .linked(to: Route.metric(.vo2max))
                 }
             }
         }
@@ -163,7 +170,8 @@ private struct TrainingFigures: View {
                 row(
                     String(localized: "VO2max"),
                     vo2max.formatted(.number.precision(.fractionLength(1))),
-                    (vo2max - 30) / 40, ColorRole.metric(.vo2max).color)
+                    (vo2max - 30) / 40, ColorRole.metric(.vo2max).color, link: Route.metric(.vo2max)
+                )
             }
             if let day = loads.last {
                 loadRows(day)
@@ -199,6 +207,7 @@ private struct TrainingFigures: View {
             )
             .frame(width: barWidth)
         }
+        .linked(to: DeskRoute.trainingLoad)
         if let ratio = LoadBalance.workloadRatio(day) {
             row(
                 String(localized: "Workload Ratio"),
@@ -221,13 +230,16 @@ private struct TrainingFigures: View {
         }
     }
 
+    /// A figure with its bar, opening `link`: the training load unless said otherwise.
     private func row(
-        _ label: String, _ value: String, _ fraction: Double, _ color: Color
+        _ label: String, _ value: String, _ fraction: Double, _ color: Color,
+        link: some Hashable = DeskRoute.trainingLoad
     ) -> some View {
         PanelRow(label: label, value: value) {
             MeterBar(fraction: fraction, color: color)
                 .frame(width: barWidth)
         }
+        .linked(to: link)
     }
 
     /// About 0.8 to 1.3 is training as usual; above 1.5, far more than usual.

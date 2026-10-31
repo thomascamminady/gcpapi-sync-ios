@@ -179,31 +179,21 @@ struct MonthlyStatisticsTable: View {
     /// averages from the lowest to the highest.
     var isShaded = false
     @ScaledMetric(relativeTo: .subheadline) private var unit: CGFloat = 8
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            DeskHeader {
-                Text("Month").cell(unit * 11.5, alignment: .leading)
-                Text(verbatim: "").cell(unit * 4)
-                Text("Distance").cell(unit * 9.5)
-                Text(verbatim: "").cell(unit * 5.5)
-                Text("Time").cell(unit * 10.5)
-                if hasPace {
-                    Text("Pace").cell(unit * 8.5)
-                }
-                if !isNarrow {
-                    Text("Ascent").cell(unit * 8)
-                    Text("Energy").cell(unit * 10.5)
-                }
-                Text("Avg HR").cell(unit * 8.5)
-                Text("Load").cell(unit * 6.5)
-                Text("Volume").flexibleCell()
-            }
+            monthHeader
             Divider()
             ForEach(Array(months.enumerated()), id: \.element.id) { index, month in
-                DeskRow(index: index) {
-                    row(month, before: months.indices.contains(index + 1) ? months[index + 1] : nil)
+                NavigationLink(value: DeskRoute.month(month.first, sport)) {
+                    DeskRow(index: index) {
+                        row(
+                            month,
+                            before: months.indices.contains(index + 1) ? months[index + 1] : nil)
+                    }
                 }
+                .buttonStyle(.plain)
             }
             if isShaded {
                 shadingLegend
@@ -217,19 +207,39 @@ struct MonthlyStatisticsTable: View {
     private var shadingLegend: some View {
         HStack(spacing: 8) {
             Capsule()
-                .fill(Preferences.shared.valueGradient)
+                .fill(Preferences.shared.inkGradient(isDark: colorScheme == .dark))
                 .frame(width: 80, height: 6)
                 .accessibilityHidden(true)
             Text(
                 """
-                Distance, time and load from zero to the largest month; pace and heart \
-                rate from the lowest to the highest.
+                Sums from zero to the largest month; pace and heart rate from the lowest to \
+                the highest.
                 """)
         }
         .font(.caption)
         .foregroundStyle(.secondary)
         .padding(.top, 8)
         .padding(.horizontal, 8)
+    }
+
+    private var monthHeader: some View {
+        DeskHeader {
+            Text("Month").cell(unit * 11.5, alignment: .leading)
+            Text(verbatim: "").cell(unit * 4)
+            Text("Distance").cell(unit * 9.5)
+            Text(verbatim: "").cell(unit * 5.5)
+            Text("Time").cell(unit * 10.5)
+            if hasPace {
+                Text("Pace").cell(unit * 8.5)
+            }
+            if !isNarrow {
+                Text("Ascent").cell(unit * 8)
+                Text("Energy").cell(unit * 10.5)
+            }
+            Text("Avg HR").cell(unit * 8.5)
+            Text("Load").cell(unit * 6.5)
+            Text("Volume").flexibleCell()
+        }
     }
 
     /// The months that have activities, which shading compares.
@@ -241,17 +251,12 @@ struct MonthlyStatisticsTable: View {
     private func figure(_ text: String, _ fraction: Double?, width: CGFloat) -> some View {
         let shade = isShaded ? fraction : nil
         return Text(text)
-            .foregroundStyle(shade.map { Preferences.shared.valueTextColor($0) } ?? .primary)
+            .fontWeight(shade == nil ? .regular : .semibold)
+            .foregroundStyle(
+                shade.map { Preferences.shared.valueInk($0, isDark: colorScheme == .dark) }
+                    ?? .primary
+            )
             .cell(width)
-            .background {
-                // Into the space between the columns, so that the figure keeps its width.
-                if let shade {
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Preferences.shared.valueColor(shade))
-                        .padding(.horizontal, -4)
-                        .padding(.vertical, -3)
-                }
-            }
     }
 
     /// Pace or speed only means something for a single sport that has a distance.
@@ -286,8 +291,13 @@ struct MonthlyStatisticsTable: View {
                 width: unit * 8.5)
         }
         if !isNarrow {
-            Text(totals.ascent > 0 ? Format.elevation(metres: totals.ascent) : "").cell(unit * 8)
-            Text(totals.calories > 0 ? Format.energy(totals.calories) : "").cell(unit * 10.5)
+            figure(
+                totals.ascent > 0 ? Format.elevation(metres: totals.ascent) : "",
+                ValueScale.fromZero(totals.ascent, among: active.map(\.ascent)), width: unit * 8)
+            figure(
+                totals.calories > 0 ? Format.energy(totals.calories) : "",
+                ValueScale.fromZero(totals.calories, among: active.map(\.calories)),
+                width: unit * 10.5)
         }
         figure(
             totals.averageHeartRate.map { Format.heartRate($0) } ?? "",

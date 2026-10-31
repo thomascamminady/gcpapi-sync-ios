@@ -85,7 +85,8 @@ nonisolated struct PlannedRoute: Identifiable, Hashable, Codable, Sendable {
 
 /// How the path between two points is found.
 protocol Router: Sendable {
-    /// The points from `start` to `end`, both included.
+    /// The points from `start` to `end`: from exactly those, or from where roads and paths
+    /// pass them.
     func path(from start: GeoPoint, to end: GeoPoint) async throws -> [GeoPoint]
 }
 
