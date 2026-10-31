@@ -249,6 +249,16 @@
     "+%lld" : {
       "shouldTranslate" : false
     },
+    "1Y" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1J"
+          }
+        }
+      }
+    },
     "30D" : {
       "localizations" : {
         "de" : {
@@ -1080,6 +1090,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Curl"
+          }
+        }
+      }
+    },
+    "Custom" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eigener"
           }
         }
       }

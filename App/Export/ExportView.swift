@@ -6,7 +6,7 @@ import UniformTypeIdentifiers
 struct ExportView: View {
     let export: DataExport
     @Bindable private var preferences = Preferences.shared
-    @State private var days = 90
+    @State private var period = RangeChoice.last(90)
     @State private var contents: Set<DataExport.Content> = [.daily, .activities]
     @State private var choosesFolder = false
     @State private var folder = FolderSync().folder
@@ -19,7 +19,7 @@ struct ExportView: View {
             calendarSection
         }
         .navigationTitle("Export")
-        .onChange(of: days) { export.reset() }
+        .onChange(of: period) { export.reset() }
         .onChange(of: contents) { export.reset() }
         .fileImporter(isPresented: $choosesFolder, allowedContentTypes: [.folder]) { result in
             if case .success(let url) = result, (try? FolderSync().choose(url)) != nil {
@@ -30,10 +30,15 @@ struct ExportView: View {
 
     private var filesSection: some View {
         Section {
-            Picker("Period", selection: $days) {
-                ForEach([7, 30, 90, 365], id: \.self) { days in
-                    Text(String(localized: "Last \(days) days")).tag(days)
-                }
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Period")
+                RangePicker(
+                    choice: $period,
+                    presets: [
+                        (7, String(localized: "7D")), (30, String(localized: "30D")),
+                        (90, String(localized: "90D")), (365, String(localized: "1Y")),
+                    ],
+                    bounds: GarminDate.today().adding(days: -3 * 365)...GarminDate.today())
             }
             ForEach(DataExport.Content.allCases) { content in
                 Toggle(content.title, isOn: included(content))
@@ -56,7 +61,7 @@ struct ExportView: View {
         switch export.phase {
         case .idle:
             Button("Prepare Files", systemImage: "doc.badge.arrow.up") {
-                Task { await export.prepare(days: days, contents: contents) }
+                Task { await prepare() }
             }
             .disabled(contents.isEmpty)
         case .preparing:
@@ -74,9 +79,17 @@ struct ExportView: View {
             Label(problem.message, systemImage: problem.symbol)
                 .foregroundStyle(.secondary)
             Button("Try Again") {
-                Task { await export.prepare(days: days, contents: contents) }
+                Task { await prepare() }
             }
         }
+    }
+
+    /// Fetch the period's data and write the chosen files.
+    private func prepare() async {
+        let today = GarminDate.today()
+        await export.prepare(
+            days: period.dayCount(through: today), contents: contents,
+            today: period.dates(through: today).upperBound)
     }
 
     private func included(_ content: DataExport.Content) -> Binding<Bool> {

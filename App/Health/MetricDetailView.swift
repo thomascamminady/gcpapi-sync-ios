@@ -23,25 +23,27 @@ enum HistoryRange: Int, CaseIterable, Identifiable {
     var caption: String {
         String(localized: "Last \(days) days")
     }
+
+    /// The days a custom range can span: the last year, through `today`.
+    static func pickable(through today: GarminDate) -> ClosedRange<GarminDate> {
+        today.adding(days: -365)...today
+    }
 }
 
 /// One metric in depth: a longer range, a chart to scrub through, every day's value.
 struct MetricDetailView: View {
     let metric: Metric
     let model: HealthModel
-    @State private var range =
-        HistoryRange(rawValue: Preferences.shared.settings.detailDays) ?? .week
+    @State private var range = RangeChoice.last(
+        (HistoryRange(rawValue: Preferences.shared.settings.detailDays) ?? .week).days)
     @State private var selectedDate: Date?
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Picker("Range", selection: $range) {
-                    ForEach(HistoryRange.allCases) { range in
-                        Text(range.label).tag(range)
-                    }
-                }
-                .pickerStyle(.segmented)
+                RangePicker(
+                    choice: $range, presets: HistoryRange.allCases.map { ($0.days, $0.label) },
+                    bounds: HistoryRange.pickable(through: model.currentDay))
                 content
             }
             .padding()
@@ -52,12 +54,12 @@ struct MetricDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task(id: range) {
             selectedDate = nil
-            await model.loadHistory(days: range.days)
+            await model.loadHistory(range)
         }
         .sensoryFeedback(.selection, trigger: selectedDay?.date)
     }
 
-    private var history: HealthHistory? { model.histories[range.days] }
+    private var history: HealthHistory? { model.history(range) }
 
     private var selectedDay: DayHealth? {
         guard let selectedDate else { return nil }
@@ -70,14 +72,14 @@ struct MetricDetailView: View {
             chart(history)
             dayList(history)
             about
-        } else if let problem = model.historyProblems[range.days] {
+        } else if let problem = model.problem(range) {
             ContentUnavailableView {
                 Label(problem.title, systemImage: problem.symbol)
             } description: {
                 Text(problem.message)
             } actions: {
                 Button("Try Again") {
-                    Task { await model.loadHistory(days: range.days) }
+                    Task { await model.loadHistory(range) }
                 }
                 .buttonStyle(.glassProminent)
             }
